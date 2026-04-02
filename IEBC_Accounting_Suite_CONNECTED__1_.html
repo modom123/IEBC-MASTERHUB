@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>IEBC Accounting & Payroll Suite — Start Free for 30 Days</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B2140;--navy2:#102A54;--navy3:#17377A;
+  --gold:#C8902A;--gold2:#E4A830;--gold3:#F5C842;
+  --gold-lt:rgba(200,144,42,.10);--gold-md:rgba(200,144,42,.22);
+  --white:#fff;--off:#F7F9FC;--off2:#EEF2F8;
+  --border:#DDE4EF;--border2:#C8D4E8;
+  --muted:#5A6A82;--text:#0B1D35;--text2:#3A4A60;--text3:#7A8AA0;
+  --green:#047857;--green-lt:rgba(4,120,87,.09);--green-md:rgba(4,120,87,.18);
+  --red:#DC2626;--red-lt:rgba(220,38,38,.08);
+  --amber:#92400E;--amber-lt:rgba(146,64,14,.09);
+  --blue:#1D4ED8;--blue-lt:rgba(29,78,216,.08);
+  --shadow:0 2px 20px rgba(11,33,64,.08);
+  --shadow-lg:0 8px 48px rgba(11,33,64,.15);
+  --ff-h:'Playfair Display',Georgia,serif;
+  --ff-b:'Inter',system-ui,sans-serif;
+  --ff-m:'JetBrains Mono','Courier New',monospace;
+  --qb:#166534;--zoho:#991B1B;--ns:#4C1D95;
+  --nav-h:64px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-b);color:var(--text);background:var(--off);-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:var(--nav-h)}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--off2)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:4px}
+
+/* ══ NAVBAR ══ */
+.navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--navy);border-bottom:2px solid var(--gold);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 28px;box-shadow:0 4px 24px rgba(11,33,64,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0}
+.nav-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.75rem;font-weight:900;color:var(--navy)}
+.nav-name{font-family:var(--ff-h);font-size:.95rem;font-weight:800;color:#fff}
+.nav-name em{color:var(--gold3);font-style:italic}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-link{font-family:var(--ff-m);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:7px 13px;border-radius:7px;color:rgba(255,255,255,.88);cursor:pointer;transition:all .15s;border:none;background:transparent;white-space:nowrap}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-link.active{color:var(--gold3);background:rgba(200,144,42,.15)}
+.nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-h);font-size:.78rem;font-weight:800;padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-style:italic;transition:all .2s;margin-left:10px;white-space:nowrap}
+.nav-cta:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 4px 14px rgba(200,144,42,.4)}
+.nav-hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px;background:none;border:none}
+.nav-hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.7);border-radius:2px}
+.nav-mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--navy2);border-bottom:2px solid var(--gold);z-index:999;padding:12px 16px;flex-direction:column;gap:4px}
+.nav-mobile-menu.open{display:flex}
+.nav-mobile-link{font-family:var(--ff-m);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:10px 14px;border-radius:7px;color:rgba(255,255,255,.7);cursor:pointer;border:none;background:transparent;text-align:left;transition:all .15s}
+.nav-mobile-link:hover,.nav-mobile-link.active{color:var(--gold3);background:rgba(200,144,42,.12)}
+
+/* ══ PAGES ══ */
+.page{display:none}.page.active{display:block}
+
+/* ══ MODAL ══ */
+.overlay{position:fixed;inset:0;background:rgba(11,33,64,.6);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:12px;opacity:0;pointer-events:none;transition:opacity .22s}
+.overlay.open{opacity:1;pointer-events:all}
+.mbox{background:var(--white);border-radius:18px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(11,33,64,.3);transform:translateY(18px) scale(.98);transition:transform .25s}
+.overlay.open .mbox{transform:translateY(0) scale(1)}
+.mhd{background:var(--navy);padding:22px 26px 18px;position:relative}
+.mhd::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.mclose{position:absolute;top:12px;right:14px;background:rgba(255,255,255,.12);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.mclose:hover{background:rgba(255,255,255,.25)}
+.mhd-brand{font-family:var(--ff-h);font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:2px}
+.mhd-brand em{color:var(--gold3);font-style:italic}
+.mhd-tag{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9)}
+.mtrial{background:var(--green-lt);border-bottom:1px solid rgba(4,120,87,.15);padding:10px 26px;display:flex;align-items:center;gap:9px}
+.mtrial-txt{font-size:.78rem;color:var(--green);font-weight:600}
+.mtrial-txt span{font-weight:400;color:var(--muted);font-size:.73rem}
+.msteps{display:flex;padding:16px 26px 0;gap:4px;border-bottom:1px solid var(--border)}
+.mstep{flex:1;text-align:center;padding-bottom:12px;position:relative;cursor:default}
+.mstep::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:transparent;border-radius:2px}
+.mstep.active::after{background:var(--gold)}
+.mstep-n{width:22px;height:22px;border-radius:50%;font-family:var(--ff-m);font-size:.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;transition:all .2s}
+.mstep-n.done{background:var(--green);color:#fff}
+.mstep-n.act{background:var(--navy);color:var(--gold2)}
+.mstep-n.pend{background:var(--off2);color:var(--text3);border:1px solid var(--border2)}
+.mstep-lbl{font-family:var(--ff-m);font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.mbody{padding:20px 26px 24px}
+.mslabel{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;display:block;font-weight:700}
+.mscreen{display:none}.mscreen.show{display:block}
+.con-sel-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
+.con-chip{border:1.5px solid var(--border);border-radius:8px;padding:9px 8px;text-align:center;cursor:pointer;transition:all .18s}
+.con-chip:hover{border-color:var(--border2)}
+.con-chip.sel{border-color:var(--navy);background:rgba(11,33,64,.04)}
+.con-av{width:34px;height:34px;border-radius:8px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.7rem;font-weight:800;color:#fff}
+.av1{background:linear-gradient(135deg,#0B2140,#17377A)}
+.av2{background:linear-gradient(135deg,#17377A,#1e4fa8)}
+.av3{background:linear-gradient(135deg,var(--gold),var(--gold2))}
+.con-n{font-size:.67rem;font-weight:700;color:var(--navy);line-height:1.2}
+.con-sp{font-size:.55rem;color:var(--muted);font-family:var(--ff-m);margin-top:1px}
+.frow{margin-bottom:13px}
+.frow-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.flbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:5px;display:block;font-weight:600}
+.fi{width:100%;background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--ff-b);font-size:.83rem;outline:none;transition:all .15s}
+.fi:focus{border-color:var(--navy);background:var(--white);box-shadow:0 0 0 3px rgba(11,33,64,.08)}
+.fi::placeholder{color:var(--text3)}
+.card-wrap{position:relative}
+.card-icons{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;gap:3px}
+.ci-badge{font-family:var(--ff-m);font-size:.42rem;font-weight:800;padding:2px 5px;border-radius:3px;border:1px solid}
+.ci-v{background:#1A1F71;color:#fff;border-color:#1A1F71}
+.ci-m{background:#EB001B;color:#fff;border-color:#EB001B}
+.ci-a{background:#2E77BC;color:#fff;border-color:#2E77BC}
+.sec-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--off2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:14px}
+.sb-item{display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);font-family:var(--ff-m)}
+.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.bank-tile{border:1.5px solid var(--border);border-radius:9px;padding:11px 12px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:all .18s}
+.bank-tile:hover{border-color:var(--border2);background:var(--off)}
+.bank-tile.sel{border-color:var(--navy);background:rgba(11,33,64,.04)}
+.bank-tile.sel .bt-check{background:var(--green);border-color:var(--green);color:#fff}
+.bt-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.bt-name{font-size:.76rem;font-weight:600;color:var(--navy)}
+.bt-type{font-size:.6rem;color:var(--muted);font-family:var(--ff-m)}
+.bt-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border2);margin-left:auto;display:flex;align-items:center;justify-content:center;font-size:.5rem;flex-shrink:0;transition:all .15s}
+.manual-link{display:flex;align-items:center;gap:7px;padding:10px 12px;border:1.5px dashed var(--border2);border-radius:9px;cursor:pointer;transition:all .18s;margin-top:4px}
+.manual-link:hover{border-color:var(--navy);background:var(--off)}
+.manual-link span{font-size:.78rem;color:var(--text2);font-weight:500}
+.skip-link{display:block;text-align:center;font-size:.72rem;color:var(--text3);cursor:pointer;margin-top:10px;font-family:var(--ff-m);text-decoration:underline;text-underline-offset:3px}
+.skip-link:hover{color:var(--navy)}
+.import-grid{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.import-row{display:flex;align-items:center;justify-content:space-between;border:1.5px solid var(--border);border-radius:9px;padding:10px 13px}
+.ir-left{display:flex;align-items:center;gap:9px}
+.ir-icon{font-size:1.1rem}
+.ir-name{font-size:.78rem;font-weight:600;color:var(--navy)}
+.ir-desc{font-size:.62rem;color:var(--muted);font-family:var(--ff-m)}
+.ir-btn{font-family:var(--ff-m);font-size:.6rem;font-weight:700;padding:5px 12px;border-radius:6px;border:1.5px solid var(--border2);background:var(--off);cursor:pointer;color:var(--navy);transition:all .15s;white-space:nowrap}
+.ir-btn:hover{border-color:var(--navy);background:var(--navy);color:var(--gold2)}
+.mbtn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:9px;padding:13px;font-family:var(--ff-h);font-size:.95rem;font-weight:800;cursor:pointer;transition:all .2s;font-style:italic;letter-spacing:.02em;box-shadow:0 4px 16px rgba(200,144,42,.32)}
+.mbtn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,144,42,.42)}
+.mbtn-ghost{width:100%;background:transparent;color:var(--muted);border:1.5px solid var(--border2);border-radius:9px;padding:11px;font-family:var(--ff-m);font-size:.62rem;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.06em;text-transform:uppercase;margin-top:7px}
+.mbtn-ghost:hover{border-color:var(--navy);color:var(--navy);background:var(--off)}
+.success-wrap{padding:30px 26px;text-align:center;display:none}
+.success-wrap.show{display:block}
+.sw-icon{font-size:2.8rem;margin-bottom:12px}
+.sw-title{font-family:var(--ff-h);font-size:1.35rem;font-weight:800;color:var(--navy);font-style:italic;margin-bottom:8px}
+.sw-sub{font-size:.8rem;color:var(--text2);line-height:1.75;max-width:360px;margin:0 auto 18px}
+.sw-list{text-align:left;background:var(--off2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
+.sw-item{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--text2)}
+.sw-item span{color:var(--green);font-weight:700;font-size:.85rem}
+.sw-btn{background:var(--navy);color:var(--gold2);border:none;border-radius:8px;padding:12px 28px;font-family:var(--ff-h);font-size:.88rem;font-weight:800;cursor:pointer;font-style:italic}
+
+/* ══ SHARED LAYOUT ══ */
+.hero{background:var(--navy);padding:72px 24px 60px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--gold)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% -5%,rgba(200,144,42,.25),transparent 68%);pointer-events:none}
+.hero-eyebrow{font-family:var(--ff-m);font-size:.57rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;display:block}
+.hero-title{font-family:var(--ff-h);font-size:clamp(1.9rem,5.5vw,3.5rem);color:#fff;font-weight:900;line-height:1.05;margin-bottom:12px}
+.hero-title em{color:var(--gold3);font-style:italic}
+.hero-desc{font-size:.93rem;color:rgba(255,255,255,.92);max-width:550px;margin:0 auto 24px;line-height:1.8;font-weight:300}
+.hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:26px}
+.hp{display:inline-flex;align-items:center;gap:5px;font-family:var(--ff-m);font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;padding:5px 13px;border-radius:20px;border:1px solid}
+.hp-g{background:rgba(200,144,42,.15);border-color:rgba(228,168,48,.5);color:var(--gold3)}
+.hp-gr{background:rgba(4,120,87,.15);border-color:rgba(4,120,87,.4);color:#6ee7b7}
+.hp-w{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.95)}
+.hero-cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-h);font-size:1rem;font-weight:800;padding:14px 36px;border-radius:10px;border:none;cursor:pointer;letter-spacing:.02em;box-shadow:0 4px 24px rgba(200,144,42,.4);transition:all .2s;font-style:italic}
+.hero-cta:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:translateY(-2px);box-shadow:0 8px 32px rgba(200,144,42,.5)}
+.hero-note{font-family:var(--ff-m);font-size:.54rem;color:rgba(255,255,255,.82);margin-top:10px;letter-spacing:.1em}
+.page-hero{background:var(--navy);padding:52px 24px 44px;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid var(--gold)}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(200,144,42,.18),transparent 70%);pointer-events:none}
+.page-hero-eyebrow{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;display:block}
+.page-hero-title{font-family:var(--ff-h);font-size:clamp(1.6rem,4vw,2.6rem);color:#fff;font-weight:900;line-height:1.05;margin-bottom:10px}
+.page-hero-title em{color:var(--gold3);font-style:italic}
+.page-hero-desc{font-size:.88rem;color:rgba(255,255,255,.92);max-width:500px;margin:0 auto;line-height:1.8;font-weight:300}
+.wrap{max-width:1120px;margin:0 auto;padding:56px 24px}
+.wrap-narrow{max-width:760px;margin:0 auto;padding:56px 24px}
+.wrap-md{max-width:900px;margin:0 auto;padding:56px 24px}
+.shd{text-align:center;margin-bottom:40px}
+.shd h2{font-family:var(--ff-h);font-size:clamp(1.45rem,3.5vw,2rem);color:var(--navy);font-weight:900;margin-bottom:8px}
+.shd h2 em{font-style:italic;color:var(--gold)}
+.shd p{font-size:.86rem;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.72}
+
+/* ══ HOME — OVERVIEW CARDS ══ */
+.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.ov-card{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow);text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.ov-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.ov-card:nth-child(1)::before{background:linear-gradient(90deg,var(--navy),var(--navy3))}
+.ov-card:nth-child(2)::before{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.ov-card:nth-child(3)::before{background:linear-gradient(90deg,var(--green),#059669)}
+.ov-card:nth-child(4)::before{background:linear-gradient(90deg,var(--blue),#3b82f6)}
+.ov-card:nth-child(5)::before{background:linear-gradient(90deg,#7c3aed,#a855f7)}
+.ov-card:nth-child(6)::before{background:linear-gradient(90deg,#dc2626,#f87171)}
+.ov-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.ov-icon{font-size:2.2rem;margin-bottom:14px}
+.ov-title{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:6px;font-style:italic}
+.ov-desc{font-size:.76rem;color:var(--text2);line-height:1.65}
+.ov-arrow{font-family:var(--ff-m);font-size:.55rem;color:var(--gold);margin-top:12px;display:block;font-weight:700;letter-spacing:.08em}
+
+/* ══ PRICING CARD ══ */
+.tcard{background:var(--white);border:1.5px solid var(--gold);border-top:3px solid var(--gold);border-radius:16px;padding:32px 36px 28px;box-shadow:var(--shadow-lg);position:relative;max-width:620px;margin:0 auto}
+.tc-badge{display:block;position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-m);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:4px 14px;border-radius:0 0 8px 8px;white-space:nowrap}
+.tc-plan-select-wrap{margin:22px 0 18px}
+.tc-plan-select-wrap label{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:7px;font-weight:700}
+.tc-plan-select{width:100%;background:var(--off);border:1.5px solid var(--border2);border-radius:9px;padding:12px 16px;font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);font-style:italic;outline:none;cursor:pointer;transition:border-color .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6A82' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.tc-plan-select:focus{border-color:var(--gold);background-color:var(--white)}
+.tc-price-row{display:flex;align-items:flex-end;gap:14px;margin-bottom:6px}
+.tc-price{font-family:var(--ff-h);font-size:3.2rem;font-weight:900;color:var(--navy);line-height:1}
+.tc-price sub{font-size:.8rem;font-family:var(--ff-b);font-weight:400;color:var(--muted);vertical-align:baseline}
+.tc-billed{font-family:var(--ff-m);font-size:.64rem;color:var(--muted);margin-top:4px}
+.tc-save{display:inline-block;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2);font-family:var(--ff-m);font-size:.57rem;font-weight:700;padding:3px 10px;border-radius:20px;margin:10px 0 4px}
+.tc-trial{display:inline-block;background:var(--blue-lt);color:var(--blue);border:1px solid rgba(29,78,216,.2);font-family:var(--ff-m);font-size:.56rem;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:14px}
+.tc-divider{height:1px;background:var(--border);margin:18px 0}
+.tc-features{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-bottom:18px}
+.tc-features li{font-size:.78rem;color:var(--text2);display:flex;gap:7px;align-items:flex-start;line-height:1.4}
+.tc-features li .chk{flex-shrink:0;color:var(--green);font-weight:700;font-size:.8rem;margin-top:1px}
+.tc-cancel{font-size:.63rem;color:var(--text3);font-family:var(--ff-m);line-height:1.5;margin-bottom:18px;padding:8px 12px;background:var(--off2);border-radius:8px;border:1px solid var(--border)}
+.tc-btn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:10px;padding:15px;font-family:var(--ff-h);font-size:1.05rem;font-weight:800;cursor:pointer;transition:all .2s;font-style:italic;box-shadow:0 4px 18px rgba(200,144,42,.32)}
+.tc-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:translateY(-1px);box-shadow:0 8px 28px rgba(200,144,42,.42)}
+.price-tbl-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;margin-top:24px;overflow-x:auto;box-shadow:var(--shadow);max-width:620px;margin-left:auto;margin-right:auto}
+.price-tbl-wrap table{width:100%;border-collapse:collapse;min-width:460px}
+.price-tbl-wrap thead th{padding:11px 16px;font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-weight:700}
+.price-tbl-wrap thead th:first-child{text-align:left;background:var(--off2);border-right:2px solid var(--border2)}
+.price-tbl-wrap tbody tr{border-bottom:1px solid var(--border)}
+.price-tbl-wrap tbody tr:last-child{border-bottom:none}
+.price-tbl-wrap tbody td{padding:10px 14px;font-size:.78rem;text-align:center}
+.price-tbl-wrap tbody td:first-child{background:var(--off2);text-align:left;font-weight:600;border-right:2px solid var(--border2);font-size:.8rem}
+
+/* ══ FEATURES — equal-height cards ══ */
+.feat-blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fblock{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.fblock-icon{font-size:2.2rem;margin-bottom:14px}
+.fblock-title{font-family:var(--ff-h);font-size:1.08rem;font-weight:800;color:var(--navy);font-style:italic;margin-bottom:10px}
+.fblock-desc{font-size:.8rem;color:var(--text2);line-height:1.72;margin-bottom:16px}
+.fblock-list{list-style:none;display:flex;flex-direction:column;gap:7px;flex:1}
+.fblock-list li{font-size:.77rem;color:var(--text2);display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.fblock-list li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ══ COMPARE TABLE ══ */
+.tbl-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);box-shadow:var(--shadow);background:var(--white)}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead th{padding:14px 15px;font-family:var(--ff-m);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;vertical-align:bottom;white-space:nowrap}
+thead th:first-child{text-align:left;color:var(--text3);background:var(--off2);border-right:2px solid var(--border2);min-width:210px}
+th.ci{background:rgba(200,144,42,.07);color:var(--navy);border-bottom:3px solid var(--gold)}
+th.cq{background:rgba(22,101,52,.06);color:var(--qb);border-bottom:3px solid var(--qb)}
+th.cz{background:rgba(153,27,27,.05);color:var(--zoho);border-bottom:3px solid var(--zoho)}
+th.cn{background:rgba(76,29,149,.05);color:var(--ns);border-bottom:3px solid var(--ns)}
+th .tl{font-family:var(--ff-h);font-size:.9rem;font-weight:800;display:block;margin-bottom:2px}
+th .tp{font-family:var(--ff-m);font-size:.5rem;opacity:.7;display:block}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:var(--off)}
+tbody tr:last-child{border-bottom:none}
+.rl{padding:10px 15px;font-size:.78rem;color:var(--text2);background:var(--off2);font-weight:600;border-right:2px solid var(--border2);vertical-align:middle;text-align:left}
+.rl small{display:block;font-size:.61rem;color:var(--text3);font-family:var(--ff-m);font-weight:400;margin-top:2px}
+td.ci{background:rgba(200,144,42,.035);border-left:1px solid rgba(200,144,42,.12)}
+td.cq{background:rgba(22,101,52,.025);border-left:1px solid rgba(22,101,52,.1)}
+td.cz{background:rgba(153,27,27,.025);border-left:1px solid rgba(153,27,27,.1)}
+td.cn{background:rgba(76,29,149,.02);border-left:1px solid rgba(76,29,149,.1)}
+td{padding:10px 15px;font-size:.77rem;vertical-align:middle;text-align:center;color:var(--text);line-height:1.4}
+.yes{color:var(--green);font-weight:700}
+.no{color:var(--red);font-weight:700}
+.part{color:var(--amber);font-size:.72rem;font-weight:600}
+.nt{font-size:.62rem;color:var(--text3);display:block;margin-top:2px;font-family:var(--ff-m)}
+.pill{display:inline-flex;font-size:.62rem;padding:2px 8px;border-radius:20px;font-weight:600;font-family:var(--ff-m);white-space:nowrap}
+.pg{background:var(--gold-lt);color:var(--gold);border:1px solid var(--gold-md)}
+.pgr{background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.22)}
+.pr{background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2)}
+.pa{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(146,64,14,.2)}
+tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
+.slbl{font-family:var(--ff-m);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);text-align:left}
+
+/* ══ SECURITY ══ */
+.sec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px}
+.scard{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:22px 18px;box-shadow:var(--shadow);text-align:center}
+.scard-icon{font-size:1.9rem;margin-bottom:12px}
+.scard-title{font-family:var(--ff-h);font-size:.92rem;font-weight:800;color:var(--navy);font-style:italic;margin-bottom:6px}
+.scard-text{font-size:.74rem;color:var(--text2);line-height:1.65}
+.sec-strip{background:var(--navy);border-radius:14px;padding:22px 26px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+.ss-badge{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px 16px;flex-shrink:0}
+.ss-badge-icon{font-size:1rem}
+.ss-badge-text{font-family:var(--ff-m);font-size:.58rem;font-weight:700;color:#fff;letter-spacing:.06em;text-transform:uppercase}
+.ss-badge-sub{font-size:.52rem;color:rgba(255,255,255,.85);font-family:var(--ff-m);display:block;margin-top:1px}
+
+/* ══ CONSULTANTS ══ */
+.con-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.ccard{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:26px 20px;box-shadow:var(--shadow);text-align:center;transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.ccard:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.ccard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.cav-lg{width:64px;height:64px;border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.85rem;font-weight:800;color:#fff;box-shadow:0 4px 16px rgba(11,33,64,.2)}
+.cname{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:2px}
+.ctitle{font-family:var(--ff-m);font-size:.51rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.cbio{font-size:.76rem;color:var(--text2);line-height:1.65;margin-bottom:14px;flex:1}
+.ctags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:16px}
+.ctag{font-family:var(--ff-m);font-size:.53rem;padding:3px 8px;border-radius:20px;background:var(--gold-lt);color:var(--gold);border:1px solid var(--gold-md)}
+.cbtn{width:100%;background:var(--navy);color:var(--gold2);border:none;border-radius:9px;padding:11px;font-family:var(--ff-h);font-size:.88rem;font-weight:800;cursor:pointer;transition:all .18s;font-style:italic}
+.cbtn:hover{background:var(--navy2);box-shadow:0 4px 16px rgba(11,33,64,.24);transform:translateY(-1px)}
+
+/* ══ CTA + FOOTER ══ */
+.cta-band{background:linear-gradient(135deg,var(--navy),var(--navy2));border-top:3px solid var(--gold);padding:56px 24px;text-align:center}
+.cta-title{font-family:var(--ff-h);font-size:clamp(1.5rem,4vw,2.4rem);color:#fff;font-weight:900;margin-bottom:8px}
+.cta-title em{color:var(--gold3);font-style:italic}
+.cta-sub{font-size:.87rem;color:rgba(255,255,255,.90);max-width:430px;margin:0 auto 26px;line-height:1.8}
+.cta-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-h);font-size:1rem;font-weight:800;padding:15px 40px;border-radius:10px;border:none;cursor:pointer;letter-spacing:.02em;box-shadow:0 4px 24px rgba(200,144,42,.4);transition:all .2s;font-style:italic}
+.cta-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:translateY(-2px);box-shadow:0 8px 30px rgba(200,144,42,.5)}
+.cta-fine{font-family:var(--ff-m);font-size:.54rem;color:rgba(255,255,255,.80);margin-top:14px;letter-spacing:.08em}
+.footer{background:var(--navy2);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;border-top:1px solid rgba(255,255,255,.06)}
+.footer span{font-family:var(--ff-m);font-size:.5rem;color:rgba(255,255,255,.75);letter-spacing:.06em}
+
+/* ══ AUTOMATION PAGE ══ */
+.auto-section{margin-bottom:44px}
+.auto-section-hd{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--border)}
+.auto-section-icon{font-size:1.6rem;flex-shrink:0}
+.auto-section-title{font-family:var(--ff-h);font-size:1.1rem;font-weight:800;color:var(--navy);font-style:italic}
+.auto-section-sub{font-size:.73rem;color:var(--muted);font-family:var(--ff-m);margin-top:2px}
+.auto-all-on{margin-left:auto;font-family:var(--ff-m);font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.22);padding:4px 10px;border-radius:20px;white-space:nowrap}
+.auto-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.auto-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);transition:box-shadow .18s}
+.auto-card.active{border-color:rgba(4,120,87,.28)}
+.auto-card:hover{box-shadow:var(--shadow-lg)}
+.auto-card-top{display:flex;align-items:flex-start;gap:12px}
+.auto-card-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.auto-card-name{font-family:var(--ff-h);font-size:.9rem;font-weight:800;color:var(--navy);font-style:italic;margin-bottom:3px}
+.auto-card-desc{font-size:.74rem;color:var(--text2);line-height:1.55}
+.auto-toggle{width:40px;height:22px;border-radius:12px;background:var(--border2);cursor:pointer;position:relative;flex-shrink:0;margin-left:auto;margin-top:3px;transition:background .2s}
+.auto-toggle.active{background:var(--green)}
+.auto-knob{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.auto-toggle.active .auto-knob{left:21px}
+.auto-last{font-family:var(--ff-m);font-size:.56rem;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);letter-spacing:.04em}
+.auto-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;background:var(--navy);border-radius:16px;padding:28px;margin-top:8px}
+.auto-stat{text-align:center}
+.auto-stat-val{font-family:var(--ff-h);font-size:2rem;font-weight:900;color:var(--gold3);font-style:italic;line-height:1}
+.auto-stat-lbl{font-family:var(--ff-m);font-size:.54rem;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+
+/* ══ LEAD ADVISOR CARD ══ */
+.lead-card{background:var(--white);border:2px solid var(--gold);border-radius:18px;padding:28px 32px;display:flex;gap:24px;align-items:flex-start;box-shadow:var(--shadow-lg);margin-bottom:16px;position:relative;overflow:hidden}
+.lead-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3))}
+.lead-av{width:80px;height:80px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:1.1rem;font-weight:900;color:var(--navy);box-shadow:0 6px 20px rgba(200,144,42,.4)}
+.lead-info{flex:1}
+.lead-badge{font-family:var(--ff-m);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;background:var(--gold-lt);color:var(--gold);border:1px solid var(--gold-md);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.lead-name{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--navy);margin-bottom:2px}
+.lead-title{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.lead-bio{font-size:.8rem;color:var(--text2);line-height:1.7;margin-bottom:12px}
+.lead-actions{flex-shrink:0;display:flex;flex-direction:column;align-items:stretch;min-width:180px}
+.online-dot{display:flex;align-items:center;gap:6px;font-family:var(--ff-m);font-size:.57rem;color:var(--green);margin-top:8px;justify-content:center;font-weight:600}
+.dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse-dot 1.5s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(4,120,87,.5)}50%{box-shadow:0 0 0 5px rgba(4,120,87,0)}}
+
+/* ══ ADVISOR CARDS — online badge ══ */
+.online-badge{position:absolute;top:14px;right:14px;font-family:var(--ff-m);font-size:.52rem;font-weight:700;color:var(--green);letter-spacing:.06em}
+
+/* ══ CHAT BUTTON ══ */
+.chat-btn{width:100%;background:var(--navy);color:var(--gold2);border:none;border-radius:9px;padding:11px;font-family:var(--ff-h);font-size:.88rem;font-weight:800;cursor:pointer;transition:all .18s;font-style:italic;display:flex;align-items:center;justify-content:center;gap:6px}
+.chat-btn:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 4px 14px rgba(11,33,64,.24)}
+.lead-chat{background:linear-gradient(135deg,var(--navy),var(--navy3));padding:13px}
+
+/* ══ CHAT PANEL ══ */
+.chat-overlay{position:fixed;inset:0;background:rgba(11,33,64,.45);z-index:1100;display:none;backdrop-filter:blur(4px)}
+.chat-overlay.open{display:block}
+.chat-panel{position:fixed;right:0;top:0;bottom:0;width:420px;background:var(--white);z-index:1101;display:flex;flex-direction:column;box-shadow:-8px 0 48px rgba(11,33,64,.25);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.chat-panel.open{transform:translateX(0)}
+.chat-panel-hd{background:var(--navy);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);flex-shrink:0}
+.chat-av{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.72rem;font-weight:900;color:var(--navy);flex-shrink:0}
+.chat-advisor-name{font-family:var(--ff-h);font-size:.95rem;font-weight:800;color:#fff;margin-bottom:1px}
+.chat-advisor-title{font-family:var(--ff-m);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.88)}
+.chat-close{background:rgba(255,255,255,.12);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.chat-close:hover{background:rgba(255,255,255,.25)}
+.chat-messages{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:12px}
+.chat-msg{display:flex;gap:8px;align-items:flex-start}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-bubble{max-width:84%;padding:10px 14px;border-radius:12px;font-size:.8rem;line-height:1.6;color:var(--text)}
+.chat-msg.advisor .chat-bubble{background:var(--off2);border:1px solid var(--border);border-radius:0 12px 12px 12px}
+.chat-msg.user .chat-bubble{background:var(--navy);color:#fff;border-radius:12px 0 12px 12px}
+.chat-msg-av{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.55rem;font-weight:900;flex-shrink:0;margin-top:2px}
+.chat-typing{display:flex;gap:4px;padding:12px 16px;background:var(--off2);border-radius:0 12px 12px 12px;border:1px solid var(--border);width:fit-content}
+.chat-typing span{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:bounce-dot .9s ease-in-out infinite}
+.chat-typing span:nth-child(2){animation-delay:.15s}
+.chat-typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce-dot{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+.chat-suggestions{padding:0 16px 10px;display:flex;flex-wrap:wrap;gap:6px}
+.chat-chip{font-family:var(--ff-m);font-size:.55rem;padding:5px 10px;border:1.5px solid var(--border2);border-radius:20px;cursor:pointer;color:var(--navy);background:var(--white);transition:all .15s;white-space:nowrap}
+.chat-chip:hover{border-color:var(--navy);background:var(--navy);color:var(--gold2)}
+.chat-input-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;background:var(--white)}
+.chat-input{flex:1;background:var(--off);border:1.5px solid var(--border2);border-radius:9px;padding:10px 14px;font-family:var(--ff-b);font-size:.82rem;color:var(--text);outline:none;transition:border-color .15s}
+.chat-input:focus{border-color:var(--navy);background:var(--white)}
+.chat-send{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:9px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .18s;flex-shrink:0}
+.chat-send:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:scale(1.06)}
+.chat-send:disabled{opacity:.5;cursor:default}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1000px){
+  .overview-grid{grid-template-columns:1fr 1fr}
+  .feat-blocks{grid-template-columns:1fr 1fr}
+  .sec-grid{grid-template-columns:1fr 1fr}
+  .con-grid{grid-template-columns:1fr 1fr}
+  .tc-features{grid-template-columns:1fr}
+  .auto-grid{grid-template-columns:1fr 1fr}
+  .auto-stats{grid-template-columns:1fr 1fr}
+  .lead-card{flex-wrap:wrap}
+  .lead-actions{width:100%}
+}
+@media(max-width:700px){
+  .nav-links,.nav-cta{display:none}
+  .nav-hamburger{display:flex}
+  .overview-grid{grid-template-columns:1fr}
+  .feat-blocks{grid-template-columns:1fr}
+  .con-grid{grid-template-columns:1fr}
+  .auto-grid{grid-template-columns:1fr}
+  .auto-stats{grid-template-columns:1fr 1fr}
+  .wrap,.wrap-narrow,.wrap-md{padding:36px 16px}
+  .hero{padding:52px 16px 44px}
+  .page-hero{padding:40px 16px 36px}
+  .frow-2{grid-template-columns:1fr}
+  .ss-badge{flex:1}
+  .bank-grid{grid-template-columns:1fr}
+  .footer{flex-direction:column;text-align:center}
+  .tcard{padding:24px 18px 22px}
+  .chat-panel{width:100%}
+  .lead-card{padding:20px 18px}
+}
+@media(max-width:480px){
+  .sec-grid{grid-template-columns:1fr}
+  .auto-stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand" onclick="showPage('home')">
+    <div class="nav-logo">IB</div>
+    <div class="nav-name">IEBC <em>Suite</em></div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" id="nl-home" onclick="showPage('home')">Home</button>
+    <button class="nav-link" id="nl-features" onclick="showPage('features')">Features</button>
+    <button class="nav-link" id="nl-pricing" onclick="showPage('pricing')">Pricing</button>
+    <button class="nav-link" id="nl-compare" onclick="showPage('compare')">Compare</button>
+    <button class="nav-link" id="nl-automation" onclick="showPage('automation')">Automation</button>
+    <button class="nav-link" id="nl-security" onclick="showPage('security')">Security</button>
+    <button class="nav-link" id="nl-consultants" onclick="showPage('consultants')">Advisors</button>
+  </div>
+  <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-mobile-menu" id="mobile-menu">
+  <button class="nav-mobile-link active" id="mnl-home" onclick="showPage('home');toggleMenu()">Home</button>
+  <button class="nav-mobile-link" id="mnl-features" onclick="showPage('features');toggleMenu()">Features</button>
+  <button class="nav-mobile-link" id="mnl-pricing" onclick="showPage('pricing');toggleMenu()">Pricing</button>
+  <button class="nav-mobile-link" id="mnl-compare" onclick="showPage('compare');toggleMenu()">Compare</button>
+  <button class="nav-mobile-link" id="mnl-automation" onclick="showPage('automation');toggleMenu()">Automation</button>
+  <button class="nav-mobile-link" id="mnl-security" onclick="showPage('security');toggleMenu()">Security</button>
+  <button class="nav-mobile-link" id="mnl-consultants" onclick="showPage('consultants');toggleMenu()">Advisors</button>
+  <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="modal">
+  <div class="mbox">
+    <div class="mhd">
+      <button class="mclose" onclick="closeModal()">✕</button>
+      <div class="mhd-brand">IEBC <em>Accounting & Payroll Suite</em></div>
+      <div class="mhd-tag">Start Your 30-Day Free Trial</div>
+    </div>
+    <div class="mtrial">
+      <span>🔒</span>
+      <div class="mtrial-txt">Card held securely — not charged for 30 days <span>· Cancel anytime · 7-day notice before renewal</span></div>
+    </div>
+    <div class="msteps" id="msteps">
+      <div class="mstep active" id="step-ind-1"><div class="mstep-n act" id="sn1">1</div><div class="mstep-lbl">Plan</div></div>
+      <div class="mstep" id="step-ind-2"><div class="mstep-n pend" id="sn2">2</div><div class="mstep-lbl">Consultant</div></div>
+      <div class="mstep" id="step-ind-3"><div class="mstep-n pend" id="sn3">3</div><div class="mstep-lbl">Account</div></div>
+      <div class="mstep" id="step-ind-4"><div class="mstep-n pend" id="sn4">4</div><div class="mstep-lbl">Payment</div></div>
+      <div class="mstep" id="step-ind-5"><div class="mstep-n pend" id="sn5">5</div><div class="mstep-lbl">Connect</div></div>
+    </div>
+    <!-- Screen 1: Plan -->
+    <div class="mbody mscreen show" id="ms1">
+      <span class="mslabel">Choose Your Plan</span>
+      <div style="margin-bottom:10px">
+        <select class="fi" id="modal-plan-picker" onchange="pickPlanFromSelect(this.value)" style="font-family:var(--ff-h);font-size:.9rem;font-weight:800;color:var(--navy);font-style:italic;appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%277%27 viewBox=%270 0 12 7%27%3E%3Cpath d=%27M1 1l5 5 5-5%27 stroke=%27%235A6A82%27 stroke-width=%271.5%27 fill=%27none%27 stroke-linecap=%27round%27/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;padding-right:36px">
+          <option value="mm">Month-to-Month — $22/mo (Most Flexible)</option>
+          <option value="6m">6 Months — $19/mo (Save 14%)</option>
+          <option value="1y" selected>1 Year — $17/mo ⭐ Most Popular</option>
+          <option value="2y">2 Years — $14/mo (Best Value)</option>
+        </select>
+      </div>
+      <div id="modal-plan-detail" style="background:var(--off2);border:1px solid var(--border2);border-radius:9px;padding:14px 16px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div>
+            <div id="mpd-name" style="font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);font-style:italic">1 Year</div>
+            <div id="mpd-billed" style="font-family:var(--ff-m);font-size:.58rem;color:var(--muted);margin-top:2px">$204 billed annually</div>
+          </div>
+          <div style="text-align:right">
+            <div id="mpd-price" style="font-family:var(--ff-h);font-size:1.5rem;font-weight:900;color:var(--navy);line-height:1">$17<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></div>
+            <div id="mpd-save" style="display:inline-block;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2);font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:3px">Save $60 vs monthly</div>
+          </div>
+        </div>
+        <div id="mpd-cancel" style="font-size:.62rem;color:var(--text3);font-family:var(--ff-m);line-height:1.5;padding:6px 10px;background:var(--white);border-radius:6px;border:1px solid var(--border)">⚠ Renews annually. Cancel 7 days before annual renewal date. Prorated refund available.</div>
+      </div>
+      <div style="font-family:var(--ff-m);font-size:.62rem;color:var(--green);background:var(--green-lt);border:1px solid rgba(4,120,87,.18);border-radius:7px;padding:8px 12px;margin-bottom:14px">✓ All plans start with a FREE 30-day trial. Your card will not be charged until day 31.</div>
+      <button class="mbtn" onclick="goStep(2)">Continue — Choose Your Consultant →</button>
+    </div>
+    <!-- Screen 2: Consultant -->
+    <div class="mbody mscreen" id="ms2">
+      <span class="mslabel">Choose Your Dedicated Consultant</span>
+      <div class="con-sel-row">
+        <div class="con-chip sel" id="cc1" onclick="pickCon(1)"><div class="con-av av1">MR</div><div class="con-n">Marcus R.</div><div class="con-sp">Tax · Freelance</div></div>
+        <div class="con-chip" id="cc2" onclick="pickCon(2)"><div class="con-av av2">TP</div><div class="con-n">Tanya P.</div><div class="con-sp">Small Biz · LLC</div></div>
+        <div class="con-chip" id="cc3" onclick="pickCon(3)"><div class="con-av av3" style="color:var(--navy)">DK</div><div class="con-n">Derek K.</div><div class="con-sp">Agencies · Tech</div></div>
+      </div>
+      <div id="con-detail" style="background:var(--off2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.76rem;color:var(--text2);line-height:1.65;margin-top:8px;margin-bottom:14px"></div>
+      <button class="mbtn" onclick="goStep(3)">Continue →</button>
+      <button class="mbtn-ghost" onclick="goStep(1)">← Back</button>
+    </div>
+    <!-- Screen 3: Account -->
+    <div class="mbody mscreen" id="ms3">
+      <span class="mslabel">Your Account</span>
+      <div class="frow-2">
+        <div><label class="flbl">First Name</label><input class="fi" type="text" id="fn" placeholder="Jane"></div>
+        <div><label class="flbl">Last Name</label><input class="fi" type="text" id="ln" placeholder="Smith"></div>
+      </div>
+      <div class="frow"><label class="flbl">Business Email</label><input class="fi" type="email" id="em" placeholder="jane@yourbusiness.com"></div>
+      <div class="frow"><label class="flbl">Business Name</label><input class="fi" type="text" id="biz" placeholder="Smith Consulting LLC"></div>
+      <div class="frow-2">
+        <div><label class="flbl">Phone</label><input class="fi" type="tel" id="ph" placeholder="(555) 000-0000"></div>
+        <div><label class="flbl">Business Type</label>
+          <select class="fi" id="btype">
+            <option value="">Select...</option>
+            <option>Sole Proprietor / 1099</option><option>LLC (Single Member)</option>
+            <option>LLC (Multi Member)</option><option>S-Corp</option>
+            <option>C-Corp</option><option>Partnership</option><option>Nonprofit</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow"><label class="flbl">Number of Employees</label>
+        <select class="fi" id="empcnt">
+          <option>Just me (self-employed)</option><option>2–5 employees</option>
+          <option>6–15 employees</option><option>16–30 employees</option><option>30+ employees</option>
+        </select>
+      </div>
+      <button class="mbtn" onclick="goStep(4)">Continue — Payment →</button>
+      <button class="mbtn-ghost" onclick="goStep(2)">← Back</button>
+    </div>
+    <!-- Screen 4: Payment -->
+    <div class="mbody mscreen" id="ms4">
+      <span class="mslabel">Payment Information</span>
+      <div class="sec-bar">
+        <div class="sb-item">🔒 256-bit SSL</div>
+        <div class="sb-item">✓ PCI DSS Compliant</div>
+        <div class="sb-item">🛡 No charge for 30 days</div>
+        <div class="sb-item">↩ Cancel anytime</div>
+      </div>
+      <div class="frow"><label class="flbl">Cardholder Name</label><input class="fi" type="text" id="cname" placeholder="Jane Smith"></div>
+      <div class="frow">
+        <label class="flbl">Card Number</label>
+        <div class="card-wrap">
+          <input class="fi" type="text" id="cnum" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fmtCard(this)" style="padding-right:96px">
+          <div class="card-icons"><span class="ci-badge ci-v">VISA</span><span class="ci-badge ci-m">MC</span><span class="ci-badge ci-a">AMX</span></div>
+        </div>
+      </div>
+      <div class="frow-2">
+        <div><label class="flbl">Expiry</label><input class="fi" type="text" id="cexp" placeholder="MM / YY" maxlength="7" oninput="fmtExp(this)"></div>
+        <div><label class="flbl">CVV</label><input class="fi" type="text" id="ccvv" placeholder="•••" maxlength="4"></div>
+      </div>
+      <div class="frow"><label class="flbl">Billing ZIP</label><input class="fi" type="text" id="czip" placeholder="90210" maxlength="5"></div>
+      <div style="background:var(--blue-lt);border:1px solid rgba(29,78,216,.18);border-radius:8px;padding:9px 12px;font-size:.72rem;color:var(--blue);font-family:var(--ff-m);margin-bottom:14px;line-height:1.6">
+        ℹ Your card is securely tokenized and held. <strong>Zero dollars charged today.</strong> Billing begins after your 30-day trial. You'll receive an email reminder 7 days before your first charge.
+      </div>
+      <button class="mbtn" onclick="goStep(5)">Secure Card &amp; Continue →</button>
+      <button class="mbtn-ghost" onclick="goStep(3)">← Back</button>
+    </div>
+    <!-- Screen 5: Connect -->
+    <div class="mbody mscreen" id="ms5">
+      <span class="mslabel">Connect Accounts &amp; Import Data</span>
+      <div style="font-size:.78rem;color:var(--text2);line-height:1.65;margin-bottom:14px;background:var(--gold-lt);border:1px solid var(--gold-md);border-radius:8px;padding:9px 12px">
+        ⚡ <strong>Connect your accounts now</strong> to instantly import transactions, auto-categorize expenses, and start your books clean from day one.
+      </div>
+      <span class="mslabel">Link Bank Accounts</span>
+      <div class="bank-grid">
+        <div class="bank-tile" id="bt-chk" onclick="toggleBank('bt-chk')"><div class="bt-icon" style="background:#e8f0fe">🏦</div><div><div class="bt-name">Checking Account</div><div class="bt-type">ACH · Auto-import transactions</div></div><div class="bt-check">✓</div></div>
+        <div class="bank-tile" id="bt-sav" onclick="toggleBank('bt-sav')"><div class="bt-icon" style="background:#e8f5e9">💰</div><div><div class="bt-name">Savings Account</div><div class="bt-type">ACH · Balance tracking</div></div><div class="bt-check">✓</div></div>
+        <div class="bank-tile" id="bt-cc" onclick="toggleBank('bt-cc')"><div class="bt-icon" style="background:#fce4ec">💳</div><div><div class="bt-name">Credit Card</div><div class="bt-type">Import charges · Match receipts</div></div><div class="bt-check">✓</div></div>
+        <div class="bank-tile" id="bt-dc" onclick="toggleBank('bt-dc')"><div class="bt-icon" style="background:#fff8e1">🏧</div><div><div class="bt-name">Debit Card</div><div class="bt-type">Real-time purchase capture</div></div><div class="bt-check">✓</div></div>
+      </div>
+      <div class="manual-link" onclick="alert('Manual bank details entry would open here.')"><span>🔗</span><span>Connect with routing &amp; account number instead</span></div>
+      <span class="mslabel" style="margin-top:16px">Import Existing Data</span>
+      <div class="import-grid">
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">📊</div><div><div class="ir-name">QuickBooks Export</div><div class="ir-desc">.QBO / .IIF / .CSV — full history</div></div></div><button class="ir-btn" onclick="alert('QBO import wizard would open here.')">Import</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">📄</div><div><div class="ir-name">CSV / Excel File</div><div class="ir-desc">Bank statements, transaction exports</div></div></div><button class="ir-btn" onclick="alert('CSV import wizard would open here.')">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">🧾</div><div><div class="ir-name">Receipt Batch Upload</div><div class="ir-desc">Photos or PDFs — AI extracts data</div></div></div><button class="ir-btn" onclick="alert('Bulk receipt uploader would open here.')">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">🏦</div><div><div class="ir-name">Bank Statement PDF</div><div class="ir-desc">AI parses &amp; auto-categorizes</div></div></div><button class="ir-btn" onclick="alert('PDF parser would open here.')">Upload</button></div>
+      </div>
+      <div class="skip-link" onclick="submitAll()">Skip for now — I'll connect later</div>
+      <button class="mbtn" style="margin-top:12px" onclick="submitAll()">Complete Setup →</button>
+      <button class="mbtn-ghost" onclick="goStep(4)">← Back</button>
+    </div>
+    <!-- Success -->
+    <div class="success-wrap" id="msuccess">
+      <div class="sw-icon">🎉</div>
+      <div class="sw-title">You're Live — Save Your Credentials!</div>
+      <div class="sw-sub">Your 30-day free trial is active. <strong>Screenshot or copy your login credentials below</strong> — you'll need them to access your Accounting Suite in the IEBC Hub.</div>
+
+      <!-- CREDENTIALS BOX -->
+      <div style="background:var(--navy);border-radius:12px;padding:18px 20px;margin:16px 0;text-align:left">
+        <div style="font-family:var(--ff-m);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);margin-bottom:12px;font-weight:700">🔑 YOUR LOGIN CREDENTIALS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-family:var(--ff-m);font-size:.48rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px">Client ID</div>
+            <div id="sw-client-id" style="font-family:var(--ff-m);font-size:.8rem;font-weight:700;color:var(--gold3)">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-family:var(--ff-m);font-size:.48rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px">Username / Email</div>
+            <div id="sw-username" style="font-family:var(--ff-m);font-size:.78rem;font-weight:700;color:#fff">—</div>
+          </div>
+          <div style="background:rgba(200,144,42,.18);border:1.5px solid rgba(200,144,42,.4);border-radius:8px;padding:10px 12px">
+            <div style="font-family:var(--ff-m);font-size:.48rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px">Temp Password</div>
+            <div id="sw-password" style="font-family:var(--ff-m);font-size:.9rem;font-weight:800;color:var(--gold3);letter-spacing:.08em">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-family:var(--ff-m);font-size:.48rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px">Plan</div>
+            <div id="sw-plan" style="font-family:var(--ff-m);font-size:.72rem;font-weight:700;color:#fff">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-family:var(--ff-m);font-size:.48rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px">Trial Ends</div>
+            <div id="sw-trial-end" style="font-family:var(--ff-m);font-size:.72rem;font-weight:700;color:var(--gold2)">—</div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px 12px">
+            <div style="font-family:var(--ff-m);font-size:.48rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px">Your Consultant</div>
+            <div id="sw-consultant" style="font-family:var(--ff-m);font-size:.72rem;font-weight:700;color:var(--gold2)">—</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:7px;font-family:var(--ff-m);font-size:.6rem;color:rgba(255,255,255,.5);line-height:1.6">
+          Billing: <span id="sw-total" style="color:rgba(255,255,255,.8)">—</span> · Change your password after first login · Your card will not be charged until your trial ends
+        </div>
+      </div>
+
+      <!-- COPY BUTTON -->
+      <button onclick="copyCreds()" style="width:100%;margin-bottom:10px;padding:10px;background:rgba(200,144,42,.15);border:1.5px solid var(--gold-md);color:var(--gold);border-radius:8px;font-family:var(--ff-m);font-size:.62rem;font-weight:700;cursor:pointer;letter-spacing:.08em;text-transform:uppercase">📋 Copy All Credentials</button>
+
+      <div class="sw-list">
+        <div class="sw-item"><span>✓</span> Client ID issued — saved in IEBC MasterHub</div>
+        <div class="sw-item"><span>✓</span> Trial active — card not charged for 30 days</div>
+        <div class="sw-item"><span>✓</span> Consultant assigned &amp; notified</div>
+        <div class="sw-item"><span>✓</span> All account data saved to Hub</div>
+        <div class="sw-item"><span>✓</span> Confirmation email on its way</div>
+      </div>
+
+      <button class="sw-btn" style="width:100%;margin-bottom:8px" onclick="launchHub()">🚀 Launch Accounting Suite in Hub</button>
+      <button class="sw-btn" style="width:100%;background:transparent;color:var(--navy);border:1.5px solid var(--border2)" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <span class="hero-eyebrow">IEBC Accounting & Payroll Suite · 2026</span>
+    <div class="hero-title">Accounting. Payroll. HR.<br><em>One Suite. One Consultant.</em></div>
+    <div class="hero-desc">AI-powered financial management, full payroll & HR tools, bank account linking, and a real dedicated consultant — all from $14/month. Start free for 30 days.</div>
+    <div class="hero-pills">
+      <span class="hp hp-g">⭐ 30-Day Free Trial</span>
+      <span class="hp hp-gr">✓ Bank & Card Linking</span>
+      <span class="hp hp-w">💳 From $14/mo (2-year plan)</span>
+      <span class="hp hp-w">🔒 Bank-Level Security</span>
+    </div>
+    <button class="hero-cta" onclick="openModal()">Start Free — From $22/Month</button>
+    <div class="hero-note">Card held · Zero charge for 30 days · 7-day cancel notice · Cancel anytime</div>
+  </div>
+  <div class="wrap">
+    <div class="shd">
+      <h2>Everything Your Business Needs, <em>In One Place</em></h2>
+      <p>Explore what's included — click any section to learn more, or start your free trial right now.</p>
+    </div>
+    <div class="overview-grid">
+      <div class="ov-card" onclick="showPage('features')"><div class="ov-icon">🏦</div><div class="ov-title">Bank & Card Linking</div><div class="ov-desc">Connect checking, savings, credit, and debit accounts. Transactions auto-import and AI categorizes everything — zero manual entry.</div><span class="ov-arrow">EXPLORE FEATURES →</span></div>
+      <div class="ov-card" onclick="showPage('features')"><div class="ov-icon">📥</div><div class="ov-title">Data Capture & Import</div><div class="ov-desc">Scan receipts, upload CSVs, migrate from QuickBooks. AI reads, sorts, and categorizes every document automatically.</div><span class="ov-arrow">EXPLORE FEATURES →</span></div>
+      <div class="ov-card" onclick="showPage('features')"><div class="ov-icon">💵</div><div class="ov-title">Payroll & HR Suite</div><div class="ov-desc">Full payroll, direct deposit, W-2/1099 filing, employee self-service, PTO, onboarding — all built in at no extra cost.</div><span class="ov-arrow">EXPLORE FEATURES →</span></div>
+      <div class="ov-card" onclick="showPage('automation')"><div class="ov-icon">⚙️</div><div class="ov-title">Smart Automation</div><div class="ov-desc">20 automations run 24/7 — bank syncs, payroll runs, receipt scanning, tax alerts, P&amp;L reports, duplicate detection, and more.</div><span class="ov-arrow">VIEW AUTOMATIONS →</span></div>
+      <div class="ov-card" onclick="showPage('security')"><div class="ov-icon">🔒</div><div class="ov-title">Bank-Level Security</div><div class="ov-desc">256-bit SSL, 2FA, PCI DSS, AES-256 at rest, SOC 2 Type II, read-only bank access, full audit log, daily backups.</div><span class="ov-arrow">VIEW SECURITY →</span></div>
+      <div class="ov-card" onclick="showPage('consultants')"><div class="ov-icon">👤</div><div class="ov-title">Expert Advisory Team</div><div class="ov-desc">A Chief Advisor + 3 Expert Advisors. Chat live right now, then get your dedicated advisor within 1 business day.</div><span class="ov-arrow">MEET THE TEAM →</span></div>
+    </div>
+  </div>
+  <div class="cta-band">
+    <div class="cta-title">30 Days Free.<br><em>Pick Your Plan. Pick Your Expert.</em></div>
+    <div class="cta-sub">Card held, not charged. Cancel with 7-day notice before any billing date. No contracts. No surprises.</div>
+    <button class="cta-btn" onclick="openModal()">Start My Free 30-Day Trial</button>
+    <div class="cta-fine">Month-to-month $22 · 6 months $19/mo · Annual $17/mo · 2-year $14/mo &nbsp;·&nbsp; All plans include full suite + dedicated consultant</div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>Competitor pricing from official websites as of Q1 2026 · This page does not process real payments · Plaid integration required for live bank linking</span>
+  </div>
+</div>
+
+<!-- PAGE: FEATURES -->
+<div class="page" id="page-features">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Features</span>
+    <div class="page-hero-title">Every Tool You Need,<br><em>Built Right In</em></div>
+    <div class="page-hero-desc">No add-ons. No separate products. Accounting, payroll, HR, bank linking, and AI — all in one place at one price.</div>
+  </div>
+  <div class="wrap">
+    <div class="feat-blocks">
+      <div class="fblock" style="border-top:3px solid var(--navy)">
+        <div class="fblock-icon">🏦</div>
+        <div class="fblock-title">Bank & Card Account Linking</div>
+        <div class="fblock-desc">Connect all your accounts in minutes. Transactions flow in automatically and get categorized by AI — no manual entry, no missed expenses.</div>
+        <ul class="fblock-list">
+          <li>Checking & savings account sync (ACH)</li>
+          <li>Credit card transaction import (daily)</li>
+          <li>Debit card real-time purchase capture</li>
+          <li>Multi-account dashboard view</li>
+          <li>Automated transaction matching to receipts</li>
+          <li>Duplicate detection & smart merge</li>
+          <li>Connect via routing number or Plaid-style link</li>
+        </ul>
+      </div>
+      <div class="fblock" style="border-top:3px solid var(--gold)">
+        <div class="fblock-icon">📥</div>
+        <div class="fblock-title">Data Capture & Import</div>
+        <div class="fblock-desc">Bring in data from anywhere — scan, upload, or connect. AI does the work of reading, categorizing, and organizing everything automatically.</div>
+        <ul class="fblock-list">
+          <li>AI receipt scanning (photo or PDF → auto-fill)</li>
+          <li>Bulk receipt drag-and-drop upload</li>
+          <li>CSV & Excel bank statement import</li>
+          <li>QuickBooks .QBO / .IIF export migration</li>
+          <li>Bank statement PDF parsing (AI-powered)</li>
+          <li>Zoho Books / FreshBooks CSV import</li>
+          <li>Email receipt forwarding (auto-capture)</li>
+          <li>Auto-categorization rules engine</li>
+        </ul>
+      </div>
+      <div class="fblock" style="border-top:3px solid var(--green)">
+        <div class="fblock-icon">💵</div>
+        <div class="fblock-title">Payroll & HR Suite</div>
+        <div class="fblock-desc">Full payroll processing with direct deposit, tax filing, and employee self-service — built into your subscription, not bolted on as an expensive extra.</div>
+        <ul class="fblock-list">
+          <li>Automated payroll runs & direct deposit</li>
+          <li>Federal, state & local tax filing (W-2, 1099)</li>
+          <li>Employee self-service portal & mobile app</li>
+          <li>Time & attendance tracking</li>
+          <li>PTO / leave management with auto-approvals</li>
+          <li>Digital onboarding (I-9, e-sign, docs)</li>
+          <li>Benefits administration tracking</li>
+          <li>Garnishment management & ACA compliance</li>
+          <li>AI payroll verification before runs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="cta-band">
+    <div class="cta-title"><em>All Features Included</em><br>on Every Plan</div>
+    <div class="cta-sub">No tier-gating, no add-ons, no surprise fees. One price gets you everything above.</div>
+    <button class="cta-btn" onclick="openModal()">Start My Free 30-Day Trial</button>
+    <div class="cta-fine">From $14/mo · All plans include every feature listed above</div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>This page does not process real payments · Plaid integration required for live bank linking</span>
+  </div>
+</div>
+
+<!-- PAGE: PRICING -->
+<div class="page" id="page-pricing">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Pricing</span>
+    <div class="page-hero-title">Simple, Transparent <em>Pricing</em></div>
+    <div class="page-hero-desc">Start with a 30-day free trial on any plan. The longer you commit, the more you save — no hidden fees ever.</div>
+  </div>
+  <div class="wrap-md">
+    <div class="tcard">
+      <div class="tc-badge">⭐ 30-Day Free Trial — All Plans</div>
+      <div class="tc-plan-select-wrap">
+        <label for="plan-picker">Choose Your Subscription</label>
+        <select class="tc-plan-select" id="plan-picker" onchange="updatePricingCard(this.value)">
+          <option value="mm">Month-to-Month — $22/mo (Most Flexible)</option>
+          <option value="6m">6 Months — $19/mo (Save 14%)</option>
+          <option value="1y" selected>1 Year — $17/mo ⭐ Most Popular</option>
+          <option value="2y">2 Years — $14/mo (Best Value — Save 36%)</option>
+        </select>
+      </div>
+      <div class="tc-price-row">
+        <div>
+          <div id="tc-price-display" class="tc-price">$17<sub>/mo</sub></div>
+          <div id="tc-billed-display" class="tc-billed">$204 billed annually</div>
+        </div>
+        <div id="tc-save-display" class="tc-save" style="margin-bottom:8px">Save $60 vs monthly</div>
+      </div>
+      <div class="tc-trial">30-day free trial — card not charged</div>
+      <div id="tc-cancel-display" class="tc-cancel">⚠ Renews annually. Cancel 7 days before annual renewal date. Prorated refund available.</div>
+      <div class="tc-divider"></div>
+      <ul class="tc-features">
+        <li><span class="chk">✓</span>Full accounting suite</li>
+        <li><span class="chk">✓</span>Dedicated IEBC consultant</li>
+        <li><span class="chk">✓</span>Bank &amp; card account linking</li>
+        <li><span class="chk">✓</span>AI receipt scanning</li>
+        <li><span class="chk">✓</span>Full payroll processing</li>
+        <li><span class="chk">✓</span>Direct deposit &amp; W-2/1099 filing</li>
+        <li><span class="chk">✓</span>Employee self-service portal</li>
+        <li><span class="chk">✓</span>Time &amp; attendance tracking</li>
+        <li><span class="chk">✓</span>PTO / leave management</li>
+        <li><span class="chk">✓</span>Digital onboarding &amp; I-9</li>
+        <li><span class="chk">✓</span>256-bit SSL &amp; 2FA security</li>
+        <li><span class="chk">✓</span>Cancel anytime (7-day notice)</li>
+      </ul>
+      <button class="tc-btn" onclick="openModal()">Start My Free 30-Day Trial →</button>
+    </div>
+    <div class="price-tbl-wrap" style="margin-top:28px">
+      <table>
+        <thead><tr>
+          <th style="text-align:left;background:var(--off2);padding:11px 16px;font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border-right:2px solid var(--border2)">PLAN</th>
+          <th style="padding:11px 14px;font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:center">Monthly Rate</th>
+          <th style="padding:11px 14px;font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:center">Billed As</th>
+          <th style="padding:11px 14px;font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:center">You Save</th>
+          <th style="padding:11px 14px;font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);text-align:center">Renewal Notice</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="background:var(--off2);padding:11px 16px;font-weight:600;font-size:.8rem;border-right:2px solid var(--border2)">Month-to-Month</td><td style="text-align:center;font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy)">$22<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></td><td style="text-align:center;font-size:.78rem;color:var(--text2)">$22 monthly</td><td style="text-align:center;color:var(--text3);font-size:.75rem">—</td><td style="text-align:center;font-size:.72rem;color:var(--amber);font-family:var(--ff-m)">7 days before billing</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="background:var(--off2);padding:11px 16px;font-weight:600;font-size:.8rem;border-right:2px solid var(--border2)">6 Months</td><td style="text-align:center;font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy)">$19<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></td><td style="text-align:center;font-size:.78rem;color:var(--text2)">$114 every 6 months</td><td style="text-align:center;font-size:.75rem;color:var(--green);font-family:var(--ff-m);font-weight:700">$18/period</td><td style="text-align:center;font-size:.72rem;color:var(--amber);font-family:var(--ff-m)">7 days before renewal</td></tr>
+          <tr style="border-bottom:1px solid var(--border);background:rgba(200,144,42,.04)"><td style="background:rgba(200,144,42,.08);padding:11px 16px;font-weight:700;font-size:.8rem;border-right:2px solid var(--gold-md);color:var(--navy)">1 Year ⭐ Popular</td><td style="text-align:center;font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy)">$17<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></td><td style="text-align:center;font-size:.78rem;color:var(--text2)">$204 annually</td><td style="text-align:center;font-size:.75rem;color:var(--green);font-family:var(--ff-m);font-weight:700">$60/year</td><td style="text-align:center;font-size:.72rem;color:var(--amber);font-family:var(--ff-m)">7 days before renewal</td></tr>
+          <tr><td style="background:var(--off2);padding:11px 16px;font-weight:600;font-size:.8rem;border-right:2px solid var(--border2)">2 Years</td><td style="text-align:center;font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy)">$14<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></td><td style="text-align:center;font-size:.78rem;color:var(--text2)">$336 every 2 years</td><td style="text-align:center;font-size:.75rem;color:var(--green);font-family:var(--ff-m);font-weight:700">$192 total</td><td style="text-align:center;font-size:.72rem;color:var(--amber);font-family:var(--ff-m)">7 days before renewal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>This page does not process real payments · All prices in USD</span>
+  </div>
+</div>
+
+<!-- PAGE: COMPARE -->
+<div class="page" id="page-compare">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Comparison</span>
+    <div class="page-hero-title">How We Compare <em>Side by Side</em></div>
+    <div class="page-hero-desc">IEBC vs. the established players — features, pricing, and what's actually included at the base price.</div>
+  </div>
+  <div class="wrap">
+    <div class="tbl-wrap"><table>
+      <thead><tr>
+        <th style="text-align:left">FEATURE</th>
+        <th class="ci"><span class="tl">IEBC Suite</span><span class="tp">From $14–$22/mo</span></th>
+        <th class="cq"><span class="tl">QuickBooks</span><span class="tp">$38–$115/mo</span></th>
+        <th class="cz"><span class="tl">Zoho Books</span><span class="tp">$10–$50/mo</span></th>
+        <th class="cn"><span class="tl">NetSuite</span><span class="tp">$999+/mo</span></th>
+      </tr></thead>
+      <tbody>
+        <tr class="sep"><td colspan="5" class="slbl">💬 SUPPORT & PRICING</td></tr>
+        <tr><td class="rl">Dedicated Consultant Included</td><td class="ci"><span class="pill pg">✓ You pick them</span></td><td class="cq"><span class="no">–</span></td><td class="cz"><span class="no">–</span></td><td class="cn"><span class="no">–</span><span class="nt">Requires extra fees</span></td></tr>
+        <tr><td class="rl">Free Trial</td><td class="ci"><span class="pill pgr">30 Days · Card held, not charged</span></td><td class="cq"><span class="part">30 days (card charged after)</span></td><td class="cz"><span class="part">14 days</span></td><td class="cn"><span class="no">Demo only</span></td></tr>
+        <tr><td class="rl">Base Monthly Price</td><td class="ci"><span class="pill pg">From $14/mo (2-yr) · $22 M-t-M</span></td><td class="cq"><span class="pill pa">$38/mo</span></td><td class="cz"><span class="pill pgr">$10/mo</span><span class="nt">Very limited</span></td><td class="cn"><span class="pill pr">$999+/mo</span></td></tr>
+        <tr><td class="rl">Annual Price Increases</td><td class="ci"><span class="yes">✓</span><span class="nt">Rate locked for your term</span></td><td class="cq"><span class="no">–</span><span class="nt">10–15% increase each year</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="part">Negotiated</span></td></tr>
+        <tr class="sep"><td colspan="5" class="slbl">🏦 BANK & CARD LINKING</td></tr>
+        <tr><td class="rl">Bank Account Sync<small>Checking & savings</small></td><td class="ci"><span class="yes">✓</span><span class="nt">ACH + real-time sync</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Credit Card Import</td><td class="ci"><span class="yes">✓</span><span class="nt">Daily transaction pull</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Debit Card Capture</td><td class="ci"><span class="yes">✓</span><span class="nt">Real-time purchase capture</span></td><td class="cq"><span class="part">Via bank feed only</span></td><td class="cz"><span class="part">Via bank feed only</span></td><td class="cn"><span class="part">Via bank feed</span></td></tr>
+        <tr><td class="rl">Multi-Account Dashboard</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Receipt-to-Transaction Matching</td><td class="ci"><span class="yes">✓</span><span class="nt">AI-powered auto-match</span></td><td class="cq"><span class="part">Basic matching</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr class="sep"><td colspan="5" class="slbl">📥 DATA CAPTURE & IMPORT</td></tr>
+        <tr><td class="rl">AI Receipt Scanning</td><td class="ci"><span class="yes">✓</span><span class="nt">Claude API · Photo + PDF</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span><span class="nt">Limited on free</span></td><td class="cn"><span class="part">Add-on module</span></td></tr>
+        <tr><td class="rl">Bulk Receipt Upload</td><td class="ci"><span class="yes">✓</span><span class="nt">Multi-file drag & drop</span></td><td class="cq"><span class="part">Limited</span></td><td class="cz"><span class="part">Paid add-on</span></td><td class="cn"><span class="part">Via module</span></td></tr>
+        <tr><td class="rl">CSV / Excel Import</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">QuickBooks Migration</td><td class="ci"><span class="yes">✓</span><span class="nt">.QBO / .IIF / .CSV</span></td><td class="cq"><span class="yes">✓</span><span class="nt">Native format</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Bank Statement PDF Parsing</td><td class="ci"><span class="yes">✓</span><span class="nt">AI reads & categorizes</span></td><td class="cq"><span class="part">Limited</span></td><td class="cz"><span class="part">Limited</span></td><td class="cn"><span class="part">Via module</span></td></tr>
+        <tr><td class="rl">Auto-Categorization Rules Engine</td><td class="ci"><span class="yes">✓</span><span class="nt">Keyword → category rules</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr class="sep"><td colspan="5" class="slbl">💵 PAYROLL & HR</td></tr>
+        <tr><td class="rl">Payroll Processing<small>Included in base price?</small></td><td class="ci"><span class="pill pgr">✓ Included</span></td><td class="cq"><span class="pill pr">Add-on +$6.50–$12/emp</span></td><td class="cz"><span class="pill pa">Separate product</span></td><td class="cn"><span class="yes">✓</span><span class="nt">SuitePeople module</span></td></tr>
+        <tr><td class="rl">Direct Deposit</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="part">Payroll add-on required</span></td><td class="cz"><span class="part">Zoho Payroll required</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">W-2 & 1099 Tax Filing</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="part">Add-on + e-file fee</span></td><td class="cz"><span class="part">Limited</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Employee Self-Service Portal</td><td class="ci"><span class="yes">✓</span><span class="nt">Web + mobile app</span></td><td class="cq"><span class="no">–</span></td><td class="cz"><span class="no">–</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Time & Attendance</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="no">–</span></td><td class="cz"><span class="no">–</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">PTO / Leave Management</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="no">–</span></td><td class="cz"><span class="no">–</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Digital Onboarding & I-9</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="no">–</span></td><td class="cz"><span class="no">–</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr class="sep"><td colspan="5" class="slbl">🔒 SECURITY</td></tr>
+        <tr><td class="rl">256-bit SSL / TLS Encryption</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Two-Factor Authentication (2FA)</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">PCI DSS Compliance</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="yes">✓</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+        <tr><td class="rl">Data Owned by Client</td><td class="ci"><span class="pill pgr">✓ You own it</span></td><td class="cq"><span class="part">Intuit-owned</span></td><td class="cz"><span class="part">Zoho-owned</span></td><td class="cn"><span class="part">Oracle-owned</span></td></tr>
+        <tr><td class="rl">Full Audit Log</td><td class="ci"><span class="yes">✓</span></td><td class="cq"><span class="part">Advanced plan only</span></td><td class="cz"><span class="yes">✓</span></td><td class="cn"><span class="yes">✓</span></td></tr>
+      </tbody>
+    </table></div>
+    <div style="text-align:center;margin-top:32px">
+      <button class="cta-btn" style="background:linear-gradient(135deg,var(--navy),var(--navy3));color:var(--gold2)" onclick="openModal()">Switch to IEBC — Start Free for 30 Days</button>
+    </div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>Competitor pricing from official websites as of Q1 2026 · This page does not process real payments</span>
+  </div>
+</div>
+
+<!-- PAGE: SECURITY -->
+<div class="page" id="page-security">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Security</span>
+    <div class="page-hero-title">Bank-Level <em>Security</em></div>
+    <div class="page-hero-desc">Your financial data is protected at every layer — from the moment you sign in to every transaction synced from your bank.</div>
+  </div>
+  <div class="wrap">
+    <div class="sec-grid">
+      <div class="scard"><div class="scard-icon">🔐</div><div class="scard-title">256-bit SSL/TLS</div><div class="scard-text">All data in transit is encrypted with the same standard used by major banks and the U.S. government. Your connection is always secure.</div></div>
+      <div class="scard"><div class="scard-icon">📱</div><div class="scard-title">Two-Factor Auth</div><div class="scard-text">Login requires both your password and a one-time code sent to your phone or authenticator app. No one gets in without your device.</div></div>
+      <div class="scard"><div class="scard-icon">🛡</div><div class="scard-title">PCI DSS Compliant</div><div class="scard-text">Payment and card data meets Payment Card Industry Data Security Standards. Your card details are tokenized — never stored in plain text.</div></div>
+      <div class="scard"><div class="scard-icon">🔒</div><div class="scard-title">Encryption at Rest</div><div class="scard-text">All stored financial records, payroll data, and documents are encrypted at rest using AES-256. Even database admins cannot read your data.</div></div>
+      <div class="scard"><div class="scard-icon">📋</div><div class="scard-title">Full Audit Log</div><div class="scard-text">Every login, change, and transaction is timestamped and logged. You can always see who did what, when — and so can your accountant.</div></div>
+      <div class="scard"><div class="scard-icon">⏱</div><div class="scard-title">Auto Session Timeout</div><div class="scard-text">Inactive sessions are automatically logged out after a set period. Your account can't be left open on a shared or unattended computer.</div></div>
+      <div class="scard"><div class="scard-icon">💾</div><div class="scard-title">Automated Backups</div><div class="scard-text">Your data is backed up daily to geographically redundant servers. In the event of any outage, your financial records are always recoverable.</div></div>
+      <div class="scard"><div class="scard-icon">🏦</div><div class="scard-title">Read-Only Bank Access</div><div class="scard-text">Bank linking uses read-only credentials. We can see and import your transactions — but we can never move, transfer, or touch your money.</div></div>
+    </div>
+    <div class="sec-strip">
+      <div class="ss-badge"><div class="ss-badge-icon">🔒</div><div><div class="ss-badge-text">256-bit SSL</div><div class="ss-badge-sub">All connections encrypted</div></div></div>
+      <div class="ss-badge"><div class="ss-badge-icon">✓</div><div><div class="ss-badge-text">PCI DSS</div><div class="ss-badge-sub">Payment security standard</div></div></div>
+      <div class="ss-badge"><div class="ss-badge-icon">🛡</div><div><div class="ss-badge-text">SOC 2 Type II</div><div class="ss-badge-sub">Audited data controls</div></div></div>
+      <div class="ss-badge"><div class="ss-badge-icon">🏦</div><div><div class="ss-badge-text">Read-Only Access</div><div class="ss-badge-sub">We never touch your money</div></div></div>
+      <div class="ss-badge"><div class="ss-badge-icon">📋</div><div><div class="ss-badge-text">Full Audit Trail</div><div class="ss-badge-sub">Every action logged</div></div></div>
+      <div class="ss-badge"><div class="ss-badge-icon">💾</div><div><div class="ss-badge-text">Daily Backups</div><div class="ss-badge-sub">Geo-redundant storage</div></div></div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>Security standards current as of Q1 2026</span>
+  </div>
+</div>
+
+<!-- PAGE: AUTOMATION -->
+<div class="page" id="page-automation">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Automation Engine</span>
+    <div class="page-hero-title">Set It &amp; <em>Forget It</em></div>
+    <div class="page-hero-desc">IEBC automates the tedious work so you can focus on your business. Every automation below runs continuously in the background — no manual steps required.</div>
+  </div>
+  <div class="wrap">
+
+    <!-- Automation categories -->
+    <div class="auto-section">
+      <div class="auto-section-hd"><span class="auto-section-icon">🏦</span><div><div class="auto-section-title">Banking &amp; Transactions</div><div class="auto-section-sub">Real-time sync with all linked accounts</div></div><span class="auto-all-on">All Active</span></div>
+      <div class="auto-grid">
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🔄</div><div><div class="auto-card-name">Daily Bank Sync</div><div class="auto-card-desc">Pulls all new transactions from linked accounts every morning at 6 AM automatically.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last run: Today 6:03 AM · 47 transactions imported</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🧠</div><div><div class="auto-card-name">AI Transaction Categorization</div><div class="auto-card-desc">Automatically assigns expense categories to every imported transaction using AI rules.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last run: Today 6:04 AM · 47 transactions categorized</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🔍</div><div><div class="auto-card-name">Duplicate Detection</div><div class="auto-card-desc">Flags and merges any duplicate transactions across accounts before they hit your books.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last run: Today 6:04 AM · 2 duplicates removed</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🧾</div><div><div class="auto-card-name">Receipt-to-Transaction Match</div><div class="auto-card-desc">AI scans uploaded receipts and matches them to the correct bank transaction automatically.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last run: Today 9:22 AM · 12 receipts matched</div></div>
+      </div>
+    </div>
+
+    <div class="auto-section">
+      <div class="auto-section-hd"><span class="auto-section-icon">💵</span><div><div class="auto-section-title">Payroll &amp; HR</div><div class="auto-section-sub">Automated payroll runs, tax filings, and employee management</div></div><span class="auto-all-on">All Active</span></div>
+      <div class="auto-grid">
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📅</div><div><div class="auto-card-name">Scheduled Payroll Runs</div><div class="auto-card-desc">Payroll processes automatically on your set schedule (weekly, bi-weekly, semi-monthly, monthly).</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Next run: Friday Mar 28 · 8 employees · Est. $14,320</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🏦</div><div><div class="auto-card-name">Direct Deposit Processing</div><div class="auto-card-desc">Funds are automatically deposited to employee accounts 2 business days before payday.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Next batch: Wed Mar 26 · ACH submitted automatically</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🗂️</div><div><div class="auto-card-name">Tax Withholding Calculation</div><div class="auto-card-desc">Federal, state, and local tax withholdings calculated and adjusted automatically each run.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last run: Mar 14 · All withholdings verified ✓</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📋</div><div><div class="auto-card-name">Payroll Verification (AI)</div><div class="auto-card-desc">AI reviews each payroll run for anomalies, missed hours, or rate changes before funds are sent.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last run: Mar 14 · No anomalies detected ✓</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📄</div><div><div class="auto-card-name">W-2 &amp; 1099 Generation</div><div class="auto-card-desc">Year-end tax forms auto-generated and distributed to employees and contractors by deadline.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Next cycle: Jan 31 · Auto-file enabled</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">⏱</div><div><div class="auto-card-name">PTO Accrual &amp; Balance</div><div class="auto-card-desc">PTO accrues automatically per pay period. Balances update instantly after each payroll run.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last updated: Today · 8 employees synced</div></div>
+      </div>
+    </div>
+
+    <div class="auto-section">
+      <div class="auto-section-hd"><span class="auto-section-icon">📊</span><div><div class="auto-section-title">Reporting &amp; Alerts</div><div class="auto-section-sub">Automatic reports delivered to your inbox on schedule</div></div><span class="auto-all-on">All Active</span></div>
+      <div class="auto-grid">
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📧</div><div><div class="auto-card-name">Weekly P&amp;L Summary</div><div class="auto-card-desc">Profit &amp; loss statement emailed every Monday morning with prior week's performance snapshot.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last sent: Mon Mar 24 · Next: Mon Mar 31</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📈</div><div><div class="auto-card-name">Monthly Cash Flow Report</div><div class="auto-card-desc">Detailed cash flow analysis auto-generated on the 1st of each month and shared with your advisor.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last sent: Mar 1 · Next: Apr 1</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🚨</div><div><div class="auto-card-name">Low Balance Alerts</div><div class="auto-card-desc">Instant alert when any linked account drops below your set threshold. Configurable per account.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Threshold: $2,500 · 0 alerts triggered this month</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">💡</div><div><div class="auto-card-name">Unusual Spending Alerts</div><div class="auto-card-desc">AI flags transactions that deviate significantly from your normal spending patterns.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last alert: Mar 19 · $847 travel charge flagged</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📆</div><div><div class="auto-card-name">Quarterly Tax Estimate</div><div class="auto-card-desc">Estimated quarterly tax liability calculated automatically and sent before each due date.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Q1 estimate sent: Mar 1 · Due: Apr 15</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🔔</div><div><div class="auto-card-name">Renewal &amp; Subscription Tracker</div><div class="auto-card-desc">AI identifies recurring charges and alerts you 7 days before each renewal so you're never surprised.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">8 subscriptions tracked · Next alert: Mar 29</div></div>
+      </div>
+    </div>
+
+    <div class="auto-section">
+      <div class="auto-section-hd"><span class="auto-section-icon">📥</span><div><div class="auto-section-title">Data Capture &amp; Import</div><div class="auto-section-sub">Every document captured, parsed, and filed automatically</div></div><span class="auto-all-on">All Active</span></div>
+      <div class="auto-grid">
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📨</div><div><div class="auto-card-name">Email Receipt Capture</div><div class="auto-card-desc">Forward receipts to your IEBC inbox. AI auto-extracts amount, vendor, date, and category.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last captured: Today 11:14 AM · 3 receipts processed</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">🖼️</div><div><div class="auto-card-name">Photo Receipt Scanning</div><div class="auto-card-desc">Upload a receipt photo from any device. AI reads the text and auto-fills all transaction fields.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last scan: Today 10:42 AM · 99.2% accuracy rate</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">📑</div><div><div class="auto-card-name">Bank Statement PDF Parser</div><div class="auto-card-desc">Upload any bank statement PDF. AI extracts all transactions and imports them with categories applied.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">Last parsed: Mar 22 · 143 transactions extracted</div></div>
+        <div class="auto-card active"><div class="auto-card-top"><div class="auto-card-icon">⚙️</div><div><div class="auto-card-name">Auto-Categorization Rules</div><div class="auto-card-desc">Set keyword or vendor rules once. Every matching transaction is categorized automatically forever.</div></div><div class="auto-toggle active" onclick="toggleAuto(this)"><div class="auto-knob"></div></div></div><div class="auto-last">24 rules active · 98.7% of transactions auto-categorized</div></div>
+      </div>
+    </div>
+
+    <!-- Automation stats bar -->
+    <div class="auto-stats">
+      <div class="auto-stat"><div class="auto-stat-val">94%</div><div class="auto-stat-lbl">Tasks fully automated</div></div>
+      <div class="auto-stat"><div class="auto-stat-val">~18 hrs</div><div class="auto-stat-lbl">Saved per month</div></div>
+      <div class="auto-stat"><div class="auto-stat-val">20</div><div class="auto-stat-lbl">Active automations</div></div>
+      <div class="auto-stat"><div class="auto-stat-val">0</div><div class="auto-stat-lbl">Manual steps required</div></div>
+    </div>
+
+  </div>
+  <div class="cta-band">
+    <div class="cta-title"><em>All Automations Included</em><br>on Every Plan</div>
+    <div class="cta-sub">Every automation above runs from day one. No setup fees, no add-ons, no IT required.</div>
+    <button class="cta-btn" onclick="openModal()">Start My Free 30-Day Trial</button>
+    <div class="cta-fine">From $14/mo · All automations active immediately on signup</div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>Automation stats are illustrative · Actual results vary by business volume</span>
+  </div>
+</div>
+
+<!-- PAGE: CONSULTANTS / ADVISORS -->
+<div class="page" id="page-consultants">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Expert Advisory Team</span>
+    <div class="page-hero-title">Meet Your <em>IEBC Advisors</em></div>
+    <div class="page-hero-desc">Every plan includes your own dedicated advisor. Chat live with any of our experts right now — or start your trial and get matched with one within 1 business day.</div>
+  </div>
+  <div class="wrap">
+
+    <!-- Lead Consultant — featured row -->
+    <div class="shd"><h2>Your <em>Lead Advisor</em></h2><p>Every IEBC client is overseen by our Chief Advisor, who coordinates your team and handles escalations personally.</p></div>
+    <div class="lead-card">
+      <div class="lead-av">VC</div>
+      <div class="lead-info">
+        <div class="lead-badge">Chief Advisor · Lead Consultant</div>
+        <div class="lead-name">Victoria Chen</div>
+        <div class="lead-title">Principal &amp; Chief Financial Advisor</div>
+        <div class="lead-bio">With 18 years across Big Four accounting, venture-backed startups, and boutique advisory, Victoria oversees every IEBC client relationship. She ensures your dedicated advisor has the resources, strategy, and oversight to keep your business running at peak financial health.</div>
+        <div class="ctags" style="justify-content:flex-start;margin-bottom:0"><span class="ctag">Strategic Planning</span><span class="ctag">Multi-Entity</span><span class="ctag">M&amp;A Prep</span><span class="ctag">CFO Advisory</span><span class="ctag">Tax Strategy</span></div>
+      </div>
+      <div class="lead-actions">
+        <button class="chat-btn lead-chat" onclick="openChat('vc')">💬 Chat with Victoria</button>
+        <button class="cbtn" style="margin-top:8px;width:100%;font-size:.82rem" onclick="openModal()">Start Free Trial →</button>
+        <div class="online-dot"><span class="dot-pulse"></span>Available now</div>
+      </div>
+    </div>
+
+    <!-- Expert Advisors grid -->
+    <div class="shd" style="margin-top:52px"><h2>Expert <em>Advisors</em></h2><p>Pick the advisor who best fits your business — they'll be your dedicated point of contact from day one. Chat with any of them right now.</p></div>
+    <div class="con-grid">
+
+      <div class="ccard">
+        <div class="online-badge">🟢 Online</div>
+        <div class="cav-lg av1">MR</div>
+        <div class="cname">Marcus Reynolds</div>
+        <div class="ctitle">Senior Financial Advisor</div>
+        <div class="cbio">Specializes in freelancers, sole proprietors, and small service businesses. Expert in quarterly tax planning, 1099 management, and building clean books from scratch.</div>
+        <div class="ctags"><span class="ctag">Freelancers</span><span class="ctag">Tax Strategy</span><span class="ctag">Sole Props</span><span class="ctag">1099 Filers</span></div>
+        <button class="chat-btn" onclick="openChat('mr')" style="margin-bottom:8px">💬 Chat with Marcus</button>
+        <button class="cbtn" onclick="openModal()">Start Free with Marcus →</button>
+      </div>
+
+      <div class="ccard">
+        <div class="online-badge">🟢 Online</div>
+        <div class="cav-lg av2">TP</div>
+        <div class="cname">Tanya Patel</div>
+        <div class="ctitle">Business Operations Advisor</div>
+        <div class="cbio">Focuses on LLCs, S-corps, and businesses with employees or contractors. Experienced in full payroll setup, benefits, employee onboarding, and HR compliance.</div>
+        <div class="ctags"><span class="ctag">Small Business</span><span class="ctag">LLCs &amp; S-Corps</span><span class="ctag">Payroll Setup</span><span class="ctag">HR Compliance</span></div>
+        <button class="chat-btn" onclick="openChat('tp')" style="margin-bottom:8px">💬 Chat with Tanya</button>
+        <button class="cbtn" onclick="openModal()">Start Free with Tanya →</button>
+      </div>
+
+      <div class="ccard">
+        <div class="online-badge">🟢 Online</div>
+        <div class="cav-lg av3" style="color:var(--navy)">DK</div>
+        <div class="cname">Derek Kim</div>
+        <div class="ctitle">Growth &amp; Efficiency Advisor</div>
+        <div class="cbio">Works with agencies, studios, and tech startups. Skilled in retainer billing, project-based payroll, multi-employee time tracking, and systems that scale.</div>
+        <div class="ctags"><span class="ctag">Agencies</span><span class="ctag">Startups</span><span class="ctag">Retainer Billing</span><span class="ctag">Scaling</span></div>
+        <button class="chat-btn" onclick="openChat('dk')" style="margin-bottom:8px">💬 Chat with Derek</button>
+        <button class="cbtn" onclick="openModal()">Start Free with Derek →</button>
+      </div>
+
+    </div>
+  </div>
+  <div class="cta-band">
+    <div class="cta-title">30 Days Free.<br><em>Pick Your Plan. Pick Your Expert.</em></div>
+    <div class="cta-sub">Card held, not charged. Cancel with 7-day notice before any billing date. No contracts. No surprises.</div>
+    <button class="cta-btn" onclick="openModal()">Start My Free 30-Day Trial</button>
+    <div class="cta-fine">Month-to-month $22 · 6 months $19/mo · Annual $17/mo · 2-year $14/mo</div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>This page does not process real payments · Plaid integration required for live bank linking</span>
+  </div>
+</div>
+
+<!-- CHAT PANEL (slide-in) -->
+<div class="chat-overlay" id="chat-overlay" onclick="closeChat()"></div>
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-panel-hd" id="chat-hd">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="chat-av" id="chat-av"></div>
+      <div>
+        <div class="chat-advisor-name" id="chat-advisor-name"></div>
+        <div class="chat-advisor-title" id="chat-advisor-title"></div>
+      </div>
+    </div>
+    <button class="chat-close" onclick="closeChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-suggestions" id="chat-suggestions"></div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chat-input" type="text" placeholder="Ask anything about your finances…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" id="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<script>
+const pages = ['home','features','pricing','compare','automation','security','consultants'];
+function showPage(id) {
+  pages.forEach(p => {
+    document.getElementById('page-'+p).classList.toggle('active', p===id);
+    const nl = document.getElementById('nl-'+p);
+    const mnl = document.getElementById('mnl-'+p);
+    if(nl) nl.classList.toggle('active', p===id);
+    if(mnl) mnl.classList.toggle('active', p===id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+function openModal(){
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+let curStep=1;
+function goStep(n){
+  document.querySelectorAll('.mscreen').forEach(s=>s.classList.remove('show'));
+  document.getElementById('ms'+n).classList.add('show');
+  for(let i=1;i<=5;i++){
+    const dot=document.getElementById('sn'+i),ind=document.getElementById('step-ind-'+i);
+    dot.classList.remove('done','act','pend');ind.classList.remove('active');
+    if(i<n){dot.classList.add('done');dot.textContent='✓';}
+    else if(i===n){dot.classList.add('act');dot.textContent=i;ind.classList.add('active');}
+    else{dot.classList.add('pend');dot.textContent=i;}
+  }
+  curStep=n;document.querySelector('.mbox').scrollTop=0;
+}
+const planData={
+  mm:{name:'Month-to-Month',price:'$22',billed:'Billed monthly',save:'',cancel:'7-day cancellation notice required before your billing date to avoid the next month\'s charge.'},
+  '6m':{name:'6 Months',price:'$19',billed:'$114 billed every 6 months',save:'Save $18 vs monthly',cancel:'Renews automatically every 6 months. Cancel 7 days before renewal date to avoid next cycle.'},
+  '1y':{name:'1 Year',price:'$17',billed:'$204 billed annually',save:'Save $60 vs monthly',cancel:'Renews annually. Cancel 7 days before annual renewal date. Prorated refund available.'},
+  '2y':{name:'2 Years',price:'$14',billed:'$336 billed every 2 years',save:'Save $192 vs monthly',cancel:'Renews every 2 years. Cancel 7 days before renewal. Prorated refund for unused months.'}
+};
+function updatePricingCard(val){
+  const p=planData[val];
+  document.getElementById('tc-price-display').innerHTML=p.price+'<sub>/mo</sub>';
+  document.getElementById('tc-billed-display').textContent=p.billed;
+  const s=document.getElementById('tc-save-display');s.textContent=p.save;s.style.display=p.save?'inline-block':'none';
+  document.getElementById('tc-cancel-display').textContent='⚠ '+p.cancel;
+}
+function pickPlanFromSelect(val){
+  const p=planData[val];
+  document.getElementById('mpd-name').textContent=p.name;
+  document.getElementById('mpd-price').innerHTML=p.price+'<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span>';
+  document.getElementById('mpd-billed').textContent=p.billed;
+  const s=document.getElementById('mpd-save');s.textContent=p.save;s.style.display=p.save?'inline-block':'none';
+  document.getElementById('mpd-cancel').textContent='⚠ '+p.cancel;
+}
+const conDetails={1:"Marcus specializes in freelancers, sole proprietors, and 1099 contractors. He'll have your books clean and your quarterly taxes estimated within your first week.",2:"Tanya focuses on LLCs and S-corps with employees. She'll set up payroll, onboarding workflows, and benefits tracking so your HR is fully automated.",3:"Derek works with agencies and startups. He'll build your billing cycles, time tracking, and multi-employee payroll system from the ground up."};
+function pickCon(n){[1,2,3].forEach(i=>{document.getElementById('cc'+i).classList.toggle('sel',i===n);});document.getElementById('con-detail').textContent=conDetails[n];}
+function toggleBank(id){document.getElementById(id).classList.toggle('sel');}
+function fmtCard(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1  ').trim();}
+function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+' / '+v.substring(2,4);el.value=v;}
+// ══════════════════════════════════════════════════════════════════════
+//  IEBC SHARED BRIDGE — same object used by MasterHub & Website
+// ══════════════════════════════════════════════════════════════════════
+const IEBC_BRIDGE = {
+  STORE:'iebc_shared', ME_KEY:'iebc_me', INTAKE:'iebc_intake_queue',
+  get(){ try{ return JSON.parse(localStorage.getItem(this.STORE)||'{}'); }catch(e){ return {}; } },
+  set(data){
+    try{ const c=this.get(); localStorage.setItem(this.STORE,JSON.stringify({...c,...data,_ts:Date.now()})); }catch(e){}
+  },
+  pushIntake(rec){ try{ const q=JSON.parse(localStorage.getItem(this.INTAKE)||'[]'); q.unshift(rec); localStorage.setItem(this.INTAKE,JSON.stringify(q)); }catch(e){} },
+  pushOrder(rec){ try{ const o=JSON.parse(localStorage.getItem('iebc_orders')||'[]'); o.unshift(rec); localStorage.setItem('iebc_orders',JSON.stringify(o)); }catch(e){} },
+  pushAccountingClient(client){
+    try{
+      const list=JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]');
+      const idx=list.findIndex(c=>c.client_id===client.client_id);
+      if(idx>=0) list[idx]=client; else list.unshift(client);
+      localStorage.setItem('iebc_accounting_clients',JSON.stringify(list));
+      const s=this.get(); s.accounting_clients=list; s._ts=Date.now();
+      localStorage.setItem(this.STORE,JSON.stringify(s));
+    }catch(e){}
+  },
+};
+window.IEBC_BRIDGE=IEBC_BRIDGE;
+
+function _genClientId(){
+  try{
+    const list=JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]');
+    const n=list.length+1;
+    return 'IEBC-AC-'+new Date().getFullYear()+'-'+String(n).padStart(4,'0');
+  }catch(e){ return 'IEBC-AC-'+Date.now(); }
+}
+function _genPassword(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
+  let p=''; for(let i=0;i<10;i++) p+=c[Math.floor(Math.random()*c.length)]; return p;
+}
+function _planLabel(v){ return {mm:'Month-to-Month','6m':'6 Months','1y':'1 Year','2y':'2 Years'}[v]||v; }
+function _planMonthly(v){ return {mm:22,'6m':19,'1y':17,'2y':14}[v]||22; }
+function _planMonths(v){ return {mm:1,'6m':6,'1y':12,'2y':24}[v]||1; }
+function _addMonths(date,n){ const d=new Date(date); d.setMonth(d.getMonth()+n); return d.toISOString().split('T')[0]; }
+function _conName(){
+  const sel=[1,2,3].find(i=>document.getElementById('cc'+i)?.classList.contains('sel'));
+  return {1:'Marcus Reynolds',2:'Tanya Patel',3:'Derek Kim'}[sel]||'Victoria Chen';
+}
+function _selectedPlan(){ return document.getElementById('modal-plan-picker')?.value||'mm'; }
+
+function submitAll(){
+  const cardName=document.getElementById('cname')?.value?.trim();
+  const cardNum =document.getElementById('cnum')?.value?.trim();
+  const cardExp =document.getElementById('cexp')?.value?.trim();
+  const cardCvv =document.getElementById('ccvv')?.value?.trim();
+  if(!cardName||!cardNum||!cardExp||!cardCvv){
+    goStep(4); setTimeout(()=>alert('Please complete all payment fields before finishing.'),100); return;
+  }
+  const firstName= document.getElementById('fn')?.value?.trim()||'';
+  const lastName = document.getElementById('ln')?.value?.trim()||'';
+  const email    = document.getElementById('em')?.value?.trim()||'';
+  const bizName  = document.getElementById('biz')?.value?.trim()||'';
+  const phone    = document.getElementById('ph')?.value?.trim()||'';
+  const bizType  = document.getElementById('btype')?.value||'';
+  const empCnt   = document.getElementById('empcnt')?.value||'';
+  const billingZip= document.getElementById('czip')?.value?.trim()||'';
+  if(!email){ goStep(3); setTimeout(()=>alert('Please enter your business email in Step 3.'),100); return; }
+
+  const planVal    = _selectedPlan();
+  const clientId   = _genClientId();
+  const tempPass   = _genPassword();
+  const consultant = _conName();
+  const now        = new Date();
+  const trialEndStr= new Date(Date.now()+29*864e5).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const subStart   = _addMonths(now,1);
+  const subMonths  = _planMonths(planVal);
+  const subEnd     = _addMonths(subStart,subMonths);
+  const monthly    = _planMonthly(planVal);
+  const planName   = _planLabel(planVal);
+  const banks=[];
+  if(document.getElementById('bt-chk')?.classList.contains('sel')) banks.push('Checking');
+  if(document.getElementById('bt-sav')?.classList.contains('sel')) banks.push('Savings');
+  if(document.getElementById('bt-cc')?.classList.contains('sel'))  banks.push('Credit Card');
+  if(document.getElementById('bt-dc')?.classList.contains('sel'))  banks.push('Debit Card');
+
+  const clientRecord = {
+    client_id:clientId, first_name:firstName, last_name:lastName,
+    full_name:`${firstName} ${lastName}`.trim()||cardName,
+    email, phone, business_name:bizName||`${firstName} ${lastName}`.trim(),
+    business_type:bizType, employee_count:empCnt, billing_zip:billingZip,
+    plan:planVal, plan_name:planName, monthly_rate:monthly,
+    total_billed:monthly*subMonths, sub_months:subMonths,
+    trial_start:now.toISOString().split('T')[0],
+    trial_end:new Date(Date.now()+29*864e5).toISOString().split('T')[0],
+    sub_start:subStart, sub_end:subEnd, status:'trial', payment_status:'trial_active',
+    card_last4:cardNum.replace(/\s/g,'').slice(-4), card_name:cardName, card_exp:cardExp,
+    username:email, temp_password:tempPass, credentials_issued:now.toISOString(),
+    password_changed:false, consultant, connected_banks:banks,
+    source:'accounting_suite_purchase', created_at:now.toISOString(),
+    hub_imported:false, hub_import_ts:null,
+  };
+
+  IEBC_BRIDGE.pushAccountingClient(clientRecord);
+  IEBC_BRIDGE.pushIntake({
+    id:clientId, name:clientRecord.full_name, business:clientRecord.business_name,
+    email, phone, industry:bizType||'General',
+    service_interest:'Accounting & Payroll Suite', plan_name:planName,
+    monthly, due_today:0, consultant, source:'accounting_suite_purchase',
+    stage:'trial_active', heat:'hot', client_id:clientId,
+    submitted_at:now.toISOString(),
+    notes:`Accounting Suite: ${planName} · $${monthly}/mo · Trial through ${trialEndStr} · ID: ${clientId}`,
+  });
+  IEBC_BRIDGE.pushOrder({
+    order_id:clientId, client_name:clientRecord.business_name, client_email:email,
+    plan_id:planVal, plan_name:planName, service_type:'accounting_subscription',
+    monthly_fee:monthly, total_billed:monthly*subMonths, due_today:0,
+    status:'trial_active', payment_status:'trial',
+    contract_start:subStart, contract_end:subEnd, consultant,
+    source:'accounting_suite_purchase', created_at:now.toISOString(),
+    notes:`30-day free trial. First charge ${subStart}. Card last 4: ${cardNum.replace(/\s/g,'').slice(-4)}.`,
+  });
+
+  try{
+    localStorage.setItem('iebc_me',JSON.stringify({
+      name:clientRecord.full_name, email, role:'accounting_client',
+      org:clientRecord.business_name, client_id:clientId, source:'accounting_suite', ts:Date.now(),
+    }));
+    localStorage.setItem('iebc-acct-client-id',  clientId);
+    localStorage.setItem('iebc-acct-username',    email);
+    localStorage.setItem('iebc-acct-temp-pass',   tempPass);
+    localStorage.setItem('iebc-acct-plan',        planVal);
+    localStorage.setItem('iebc-acct-sub-end',     subEnd);
+    localStorage.setItem('iebc-acct-consultant',  consultant);
+    localStorage.setItem('iebc-acct-biz-name',    clientRecord.business_name);
+  }catch(e){}
+
+  document.getElementById('sw-client-id').textContent  = clientId;
+  document.getElementById('sw-username').textContent   = email;
+  document.getElementById('sw-password').textContent   = tempPass;
+  document.getElementById('sw-plan').textContent       = `${planName} · $${monthly}/mo`;
+  document.getElementById('sw-trial-end').textContent  = trialEndStr;
+  document.getElementById('sw-consultant').textContent = consultant;
+  document.getElementById('sw-total').textContent      = subMonths===1?`$${monthly}/mo billed monthly`:`$${monthly*subMonths} billed every ${subMonths} months`;
+
+  document.querySelectorAll('.mscreen').forEach(s=>s.classList.remove('show'));
+  document.getElementById('msteps').style.display='none';
+  document.querySelector('.mtrial').style.display='none';
+  document.getElementById('msuccess').classList.add('show');
+  // Notify parent website that purchase is complete
+  try { window.parent.postMessage({ type:'acct_suite_purchased', clientId:clientId, email:email }, '*'); } catch(e){}
+}
+
+/* ══ AUTOMATION TOGGLES ══ */
+function toggleAuto(el) {
+  el.classList.toggle('active');
+}
+
+/* ══ CHAT PANEL ══ */
+const advisors = {
+  vc: {
+    name: 'Victoria Chen',
+    title: 'Chief Financial Advisor',
+    initials: 'VC',
+    avatarBg: 'linear-gradient(135deg,var(--gold),var(--gold2))',
+    avatarColor: 'var(--navy)',
+    system: `You are Victoria Chen, Chief Financial Advisor and Principal at IEBC (Integrated Efficiency Business Consultants). You are the lead advisor overseeing all client relationships. You have 18 years of experience across Big Four accounting, venture-backed startups, and boutique advisory. You specialize in strategic planning, multi-entity structures, M&A preparation, CFO advisory, and advanced tax strategy. You speak with confidence, precision, and warmth. You give concrete, actionable financial advice. You represent IEBC's accounting and payroll suite which costs $14-$22/month and includes full payroll, bank linking, AI receipt scanning, and a dedicated consultant. Keep responses focused and practical — under 200 words unless the question truly requires depth.`,
+    suggestions: ['What\'s your CFO advisory approach?', 'Multi-entity tax strategy?', 'How do you handle M&A prep?', 'What\'s included in my plan?']
+  },
+  mr: {
+    name: 'Marcus Reynolds',
+    title: 'Senior Financial Advisor',
+    initials: 'MR',
+    avatarBg: 'linear-gradient(135deg,#0B2140,#17377A)',
+    avatarColor: '#fff',
+    system: `You are Marcus Reynolds, Senior Financial Advisor at IEBC (Integrated Efficiency Business Consultants). You specialize in freelancers, sole proprietors, and 1099 contractors. You are an expert in quarterly tax planning, estimated tax payments, self-employment deductions, 1099 management, bookkeeping from scratch, and home office deductions. You speak in a friendly, practical, no-jargon way. You give specific, actionable advice for self-employed people. You represent IEBC's accounting and payroll suite which costs $14-$22/month and includes full payroll, bank linking, AI receipt scanning, and a dedicated advisor. Keep responses under 200 words unless more depth is truly needed.`,
+    suggestions: ['How much should I set aside for taxes?', 'What can I deduct as a freelancer?', 'How do quarterly taxes work?', 'Help me organize my 1099 income']
+  },
+  tp: {
+    name: 'Tanya Patel',
+    title: 'Business Operations Advisor',
+    initials: 'TP',
+    avatarBg: 'linear-gradient(135deg,#17377A,#1e4fa8)',
+    avatarColor: '#fff',
+    system: `You are Tanya Patel, Business Operations Advisor at IEBC (Integrated Efficiency Business Consultants). You specialize in LLCs, S-corps, and businesses with employees or contractors. You are an expert in payroll setup, benefits administration, employee onboarding, HR compliance, PTO policies, W-2 and 1099 filing, and business structure optimization. You speak with clarity and expertise. You help business owners understand their compliance obligations and set up efficient HR systems. You represent IEBC's accounting and payroll suite which costs $14-$22/month and includes full payroll, bank linking, AI receipt scanning, and a dedicated advisor. Keep responses under 200 words unless more depth is truly needed.`,
+    suggestions: ['How do I set up payroll for my LLC?', 'S-corp vs LLC — which is better for me?', 'What HR compliance do I need?', 'When do I need to issue W-2s vs 1099s?']
+  },
+  dk: {
+    name: 'Derek Kim',
+    title: 'Growth & Efficiency Advisor',
+    initials: 'DK',
+    avatarBg: 'linear-gradient(135deg,var(--gold),var(--gold2))',
+    avatarColor: 'var(--navy)',
+    system: `You are Derek Kim, Growth & Efficiency Advisor at IEBC (Integrated Efficiency Business Consultants). You specialize in agencies, studios, and tech startups. You are an expert in retainer billing, project-based payroll, multi-employee time tracking, billing cycles, cash flow optimization, and building financial systems that scale. You speak in a sharp, results-oriented way. You help fast-growing companies build financial infrastructure that doesn't break as they scale. You represent IEBC's accounting and payroll suite which costs $14-$22/month and includes full payroll, bank linking, AI receipt scanning, and a dedicated advisor. Keep responses under 200 words unless more depth is truly needed.`,
+    suggestions: ['How should I structure retainer billing?', 'Best way to track time across projects?', 'How do I improve my agency cash flow?', 'When should I hire my first employee?']
+  }
+};
+
+let currentAdvisor = null;
+let chatHistory = {};
+let chatStreaming = false;
+
+function openChat(advisorKey) {
+  const a = advisors[advisorKey];
+  currentAdvisor = advisorKey;
+  if (!chatHistory[advisorKey]) chatHistory[advisorKey] = [];
+
+  // Set header
+  document.getElementById('chat-av').style.background = a.avatarBg;
+  document.getElementById('chat-av').style.color = a.avatarColor;
+  document.getElementById('chat-av').textContent = a.initials;
+  document.getElementById('chat-advisor-name').textContent = a.name;
+  document.getElementById('chat-advisor-title').textContent = a.title;
+
+  // Render messages
+  renderMessages(advisorKey);
+
+  // Suggestions
+  const sugg = document.getElementById('chat-suggestions');
+  sugg.innerHTML = '';
+  if (chatHistory[advisorKey].length === 0) {
+    a.suggestions.forEach(s => {
+      const chip = document.createElement('div');
+      chip.className = 'chat-chip';
+      chip.textContent = s;
+      chip.onclick = () => { document.getElementById('chat-input').value = s; sendChat(); };
+      sugg.appendChild(chip);
+    });
+  }
+
+  // Open panel
+  document.getElementById('chat-overlay').classList.add('open');
+  document.getElementById('chat-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Greeting if first time
+  if (chatHistory[advisorKey].length === 0) {
+    setTimeout(() => addAdvisorMessage(advisorKey, `Hi, I'm ${a.name}. How can I help your business today?`), 300);
+  }
+
+  document.getElementById('chat-input').focus();
+}
+
+function closeChat() {
+  document.getElementById('chat-overlay').classList.remove('open');
+  document.getElementById('chat-panel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderMessages(advisorKey) {
+  const a = advisors[advisorKey];
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = '';
+  chatHistory[advisorKey].forEach(msg => {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + msg.role;
+    if (msg.role === 'advisor') {
+      div.innerHTML = `<div class="chat-msg-av" style="background:${a.avatarBg};color:${a.avatarColor}">${a.initials}</div><div class="chat-bubble">${msg.content}</div>`;
+    } else {
+      div.innerHTML = `<div class="chat-bubble">${msg.content}</div>`;
+    }
+    container.appendChild(div);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
+function addAdvisorMessage(advisorKey, content) {
+  chatHistory[advisorKey].push({ role: 'advisor', content });
+  if (currentAdvisor === advisorKey) renderMessages(advisorKey);
+}
+
+function addUserMessage(advisorKey, content) {
+  chatHistory[advisorKey].push({ role: 'user', content });
+  if (currentAdvisor === advisorKey) renderMessages(advisorKey);
+}
+
+function showTyping() {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg advisor';
+  div.id = 'chat-typing-indicator';
+  const a = advisors[currentAdvisor];
+  div.innerHTML = `<div class="chat-msg-av" style="background:${a.avatarBg};color:${a.avatarColor}">${a.initials}</div><div class="chat-typing"><span></span><span></span><span></span></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('chat-typing-indicator');
+  if (t) t.remove();
+}
+
+async function sendChat() {
+  if (chatStreaming) return;
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg || !currentAdvisor) return;
+
+  input.value = '';
+  document.getElementById('chat-suggestions').innerHTML = '';
+  const advisorKey = currentAdvisor;
+  const a = advisors[advisorKey];
+
+  addUserMessage(advisorKey, msg);
+  chatStreaming = true;
+  document.getElementById('chat-send').disabled = true;
+
+  showTyping();
+
+  // Build messages array for API
+  const messages = [];
+  const history = chatHistory[advisorKey];
+  // All except the last user message (which we just added)
+  for (let i = 0; i < history.length - 1; i++) {
+    const h = history[i];
+    messages.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.content });
+  }
+  messages.push({ role: 'user', content: msg });
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: a.system,
+        messages: messages
+      })
+    });
+    const data = await response.json();
+    hideTyping();
+    const reply = data.content?.[0]?.text || 'I\'m sorry, I had trouble responding. Please try again.';
+    addAdvisorMessage(advisorKey, reply);
+  } catch (err) {
+    hideTyping();
+    addAdvisorMessage(advisorKey, 'I\'m having a connection issue right now. Please try again in a moment.');
+  }
+
+  chatStreaming = false;
+  document.getElementById('chat-send').disabled = false;
+  document.getElementById('chat-input').focus();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('con-detail').textContent=conDetails[1];});
+
+function copyCreds(){
+  const id=document.getElementById('sw-client-id').textContent;
+  const user=document.getElementById('sw-username').textContent;
+  const pass=document.getElementById('sw-password').textContent;
+  const plan=document.getElementById('sw-plan').textContent;
+  const trial=document.getElementById('sw-trial-end').textContent;
+  const con=document.getElementById('sw-consultant').textContent;
+  const text=`IEBC Accounting Suite Credentials
+Client ID: ${id}
+Username:  ${user}
+Password:  ${pass}
+Plan:      ${plan}
+Trial ends:${trial}
+Consultant:${con}
+Login at: IEBC MasterHub > Accounting Suite`;
+  navigator.clipboard.writeText(text).then(()=>alert('Credentials copied to clipboard!')).catch(()=>{
+    const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('Credentials copied!');
+  });
+}
+
+function launchHub(){
+  // Write a flag so MasterHub knows to open accounting page
+  try{ localStorage.setItem('iebc-open-page','accounting'); }catch(e){}
+  // If MasterHub is open in another tab, it will pick this up on focus
+  // Otherwise navigate — user can update this URL to their actual MasterHub path
+  const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
+  window.open(hubUrl,'_blank');
+}
+
+</script>
+</body>
+</html>
