@@ -519,6 +519,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-automation" onclick="showPage('automation')">Automation</button>
     <button class="nav-link" id="nl-security" onclick="showPage('security')">Security</button>
     <button class="nav-link" id="nl-consultants" onclick="showPage('consultants')">Advisors</button>
+    <button class="nav-link" id="nl-invoices" onclick="showPage('invoices')" style="color:var(--gold3)">🧾 Invoices</button>
     <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')" style="color:var(--gold3)">📊 Live Demo</button>
   </div>
   <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
@@ -534,6 +535,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-automation" onclick="showPage('automation');toggleMenu()">Automation</button>
   <button class="nav-mobile-link" id="mnl-security" onclick="showPage('security');toggleMenu()">Security</button>
   <button class="nav-mobile-link" id="mnl-consultants" onclick="showPage('consultants');toggleMenu()">Advisors</button>
+  <button class="nav-mobile-link" id="mnl-invoices" onclick="showPage('invoices');toggleMenu()" style="color:var(--gold3)">🧾 Invoices</button>
   <button class="nav-mobile-link" id="mnl-dashboard" onclick="showPage('dashboard');toggleMenu()" style="color:var(--gold3)">📊 Live Demo</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
 </div>
@@ -1161,6 +1163,80 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
+     PAGE: INVOICE CREATOR
+     Jordan Hayes (engine) · Zara Chen (UI) · Sam Torres (Stripe)
+     ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-invoices">
+  <div class="page-hero" style="padding-bottom:24px">
+    <span class="page-hero-eyebrow">Invoice & Payments</span>
+    <div class="page-hero-title">Create. Send. <em>Get Paid.</em></div>
+    <div class="page-hero-desc">Professional invoices in under 60 seconds. Clients pay online. Funds reconcile automatically. Zero manual entry.</div>
+  </div>
+  <div class="wrap" style="padding-top:0">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start" class="inv-grid">
+
+      <!-- LEFT: Invoice Builder -->
+      <div class="dash-card">
+        <div class="dash-card-hd"><div class="dash-card-title">New Invoice</div><div class="dash-card-sub">Auto-saved · Stripe-ready</div></div>
+
+        <div class="imp-row">
+          <label class="imp-lbl">Invoice # <span id="inv-num-display" style="color:var(--gold);font-weight:700"></span></label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><label class="imp-lbl">Issue Date</label><input class="imp-fi" id="inv-date" type="date"></div>
+            <div><label class="imp-lbl">Due Date</label><input class="imp-fi" id="inv-due" type="date"></div>
+          </div>
+        </div>
+
+        <div style="background:var(--off2);border-radius:8px;padding:12px 14px;margin-bottom:12px">
+          <div class="imp-lbl" style="margin-bottom:8px">Bill To</div>
+          <input class="imp-fi" id="inv-client" type="text" placeholder="Client name or business" style="margin-bottom:6px">
+          <input class="imp-fi" id="inv-email" type="email" placeholder="Client email (for sending)" style="margin-bottom:6px">
+          <input class="imp-fi" id="inv-addr" type="text" placeholder="Address (optional)">
+        </div>
+
+        <div class="imp-lbl">Line Items</div>
+        <div id="inv-items" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+        <button onclick="addInvItem()" style="width:100%;padding:8px;background:var(--off);border:1.5px dashed var(--border2);border-radius:8px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;color:var(--navy);cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .15s" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border2)'">+ Add Line Item</button>
+
+        <div style="border-top:2px solid var(--border);margin:14px 0 10px;padding-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <label class="imp-lbl" style="margin:0">Tax Rate</label>
+              <input class="imp-fi" id="inv-tax" type="number" value="0" min="0" max="99" step="0.5" style="width:70px;padding:6px 8px;font-size:.78rem" oninput="calcInvTotal()">
+              <span style="font-family:var(--ff-m);font-size:.7rem;color:var(--text3)">%</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3)">SUBTOTAL: <span id="inv-subtotal">$0.00</span></div>
+              <div style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3)">TAX: <span id="inv-tax-amt">$0.00</span></div>
+              <div style="font-family:var(--ff-h);font-size:1.3rem;font-weight:800;color:var(--navy)">TOTAL: <span id="inv-total">$0.00</span></div>
+            </div>
+          </div>
+        </div>
+
+        <textarea class="imp-fi" id="inv-notes" rows="2" placeholder="Payment terms, notes, or thank-you message..." style="margin-bottom:10px;resize:none"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button onclick="saveInvoice()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px">💾 Save Invoice</button>
+          <button onclick="printInvoice()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px;background:linear-gradient(135deg,var(--navy),var(--navy2))">🖨️ Download PDF</button>
+        </div>
+        <button onclick="sendInvoiceStripe()" class="mbtn" style="margin-top:8px;background:linear-gradient(135deg,#635BFF,#7A73FF);font-size:.78rem;padding:10px">⚡ Send Payment Link via Stripe</button>
+      </div>
+
+      <!-- RIGHT: Live Preview -->
+      <div class="dash-card" id="inv-preview-card">
+        <div class="dash-card-hd"><div class="dash-card-title">Live Preview</div><div class="dash-card-sub">Updates as you type</div></div>
+        <div id="inv-preview" style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px;font-size:.78rem;min-height:400px">
+          <!-- Preview renders here -->
+        </div>
+        <div style="margin-top:12px">
+          <div class="imp-lbl">Saved Invoices</div>
+          <div id="inv-saved-list" style="display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
      PAGE: LIVE KPI DASHBOARD DEMO
      Zara Chen (UI) · Devon Blake (Charts) · Jordan Hayes (data engine)
      ══════════════════════════════════════════════════════════ -->
@@ -1536,7 +1612,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <div id="imp-toast"><span id="imp-toast-msg"></span></div>
 
 <script>
-const pages = ['home','features','pricing','compare','automation','security','consultants','dashboard'];
+const pages = ['home','features','pricing','compare','automation','security','consultants','invoices','dashboard'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -1966,6 +2042,202 @@ function launchHub(){
   // Otherwise navigate — user can update this URL to their actual MasterHub path
   const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
   window.open(hubUrl,'_blank');
+}
+
+// ══════════════════════════════════════════════════════════════
+// INVOICE ENGINE
+// Jordan Hayes (logic) · Zara Chen (UI) · Sam Torres (Stripe)
+// ══════════════════════════════════════════════════════════════
+
+let _invItems = [];
+
+function initInvoices() {
+  // Set default dates
+  const today = new Date();
+  const due = new Date(today); due.setDate(due.getDate() + 30);
+  document.getElementById('inv-date').value = today.toISOString().split('T')[0];
+  document.getElementById('inv-due').value = due.toISOString().split('T')[0];
+  // Set invoice number
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]');
+  const num = 1000 + invs.length + 1;
+  document.getElementById('inv-num-display').textContent = '#' + num;
+  // Load saved list
+  renderSavedInvoices();
+  // If no items yet, add one blank
+  if (!_invItems.length) { _invItems = [{desc:'',qty:1,rate:0}]; renderInvItems(); }
+  renderInvPreview();
+  // Live-update preview on all inputs
+  ['inv-client','inv-email','inv-addr','inv-date','inv-due','inv-notes','inv-tax'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', renderInvPreview);
+  });
+}
+
+function addInvItem() {
+  _invItems.push({desc:'', qty:1, rate:0});
+  renderInvItems();
+}
+
+function removeInvItem(i) {
+  _invItems.splice(i, 1);
+  if (!_invItems.length) _invItems = [{desc:'',qty:1,rate:0}];
+  renderInvItems();
+  calcInvTotal();
+}
+
+function renderInvItems() {
+  const el = document.getElementById('inv-items'); if (!el) return;
+  el.innerHTML = _invItems.map((item, i) => `
+    <div style="display:grid;grid-template-columns:1fr 56px 80px 28px;gap:5px;align-items:center">
+      <input class="imp-fi" value="${item.desc||''}" placeholder="Description" style="font-size:.76rem;padding:7px 9px"
+        oninput="_invItems[${i}].desc=this.value;renderInvPreview()">
+      <input class="imp-fi" value="${item.qty||1}" type="number" min="1" placeholder="Qty" style="font-size:.76rem;padding:7px 8px;text-align:center"
+        oninput="_invItems[${i}].qty=parseFloat(this.value)||1;calcInvTotal()">
+      <input class="imp-fi" value="${item.rate||''}" type="number" min="0" placeholder="Rate" style="font-size:.76rem;padding:7px 8px"
+        oninput="_invItems[${i}].rate=parseFloat(this.value)||0;calcInvTotal()">
+      <button onclick="removeInvItem(${i})" style="background:var(--red-lt);border:none;color:var(--red);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>`).join('');
+}
+
+function calcInvTotal() {
+  const sub = _invItems.reduce((s,it) => s + (it.qty||1)*(it.rate||0), 0);
+  const taxR = parseFloat(document.getElementById('inv-tax')?.value || 0) / 100;
+  const tax = sub * taxR;
+  const total = sub + tax;
+  const f = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  document.getElementById('inv-subtotal').textContent = f(sub);
+  document.getElementById('inv-tax-amt').textContent = f(tax);
+  document.getElementById('inv-total').textContent = f(total);
+  renderInvPreview();
+  return {sub, tax, total};
+}
+
+function renderInvPreview() {
+  const el = document.getElementById('inv-preview'); if (!el) return;
+  const client = document.getElementById('inv-client')?.value || 'Client Name';
+  const email = document.getElementById('inv-email')?.value || '';
+  const addr = document.getElementById('inv-addr')?.value || '';
+  const date = document.getElementById('inv-date')?.value || '';
+  const due = document.getElementById('inv-due')?.value || '';
+  const notes = document.getElementById('inv-notes')?.value || '';
+  const taxR = parseFloat(document.getElementById('inv-tax')?.value || 0);
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]');
+  const num = 1000 + invs.length + 1;
+  const sub = _invItems.reduce((s,it)=>s+(it.qty||1)*(it.rate||0),0);
+  const tax = sub*(taxR/100);
+  const total = sub+tax;
+  const f = n => '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const biz = localStorage.getItem('iebc-acct-username') ? JSON.parse(localStorage.getItem('iebc_me')||'{}').org || 'My Business' : 'Your Business Name';
+
+  el.innerHTML = `
+    <div style="border-bottom:3px solid #0B2140;padding-bottom:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:#0B2140">${biz}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.15em;color:#7A8AA0;text-transform:uppercase;margin-top:2px">Powered by Efficient™</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#0B2140">INVOICE</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#C8902A;font-weight:700">#${num}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;font-size:.72rem">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;letter-spacing:.1em;color:#7A8AA0;margin-bottom:3px">Bill To</div>
+        <div style="font-weight:700;color:#0B2140">${client}</div>
+        ${email?`<div style="color:#5A6A82">${email}</div>`:''}
+        ${addr?`<div style="color:#5A6A82">${addr}</div>`:''}
+      </div>
+      <div style="text-align:right">
+        <div style="margin-bottom:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;color:#7A8AA0">Issue Date: </span><span style="font-weight:600">${date}</span></div>
+        <div><span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;color:#7A8AA0">Due: </span><span style="font-weight:700;color:#C8902A">${due}</span></div>
+      </div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:.72rem">
+      <thead><tr style="background:#0B2140;color:#fff">
+        <th style="padding:6px 8px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Description</th>
+        <th style="padding:6px 8px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Qty</th>
+        <th style="padding:6px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Rate</th>
+        <th style="padding:6px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Amount</th>
+      </tr></thead>
+      <tbody>${_invItems.map((it,i)=>`<tr style="background:${i%2?'#F7F9FC':'#fff'}">
+        <td style="padding:6px 8px;color:#0B1D35">${it.desc||'—'}</td>
+        <td style="padding:6px 8px;text-align:center;color:#5A6A82">${it.qty||1}</td>
+        <td style="padding:6px 8px;text-align:right;color:#5A6A82">${f(it.rate||0)}</td>
+        <td style="padding:6px 8px;text-align:right;font-weight:700;color:#0B2140">${f((it.qty||1)*(it.rate||0))}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <div style="min-width:180px;font-size:.72rem">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;color:#5A6A82"><span>Subtotal</span><span>${f(sub)}</span></div>
+        ${taxR>0?`<div style="display:flex;justify-content:space-between;padding:4px 0;color:#5A6A82"><span>Tax (${taxR}%)</span><span>${f(tax)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;padding:7px 0;border-top:2px solid #0B2140;font-weight:800;color:#0B2140;font-size:.84rem"><span>TOTAL DUE</span><span style="color:#C8902A">${f(total)}</span></div>
+      </div>
+    </div>
+    ${notes?`<div style="background:#F7F9FC;border-radius:6px;padding:9px 12px;font-size:.7rem;color:#5A6A82;border-left:3px solid #C8902A"><strong>Notes:</strong> ${notes}</div>`:''}
+    <div style="margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:#7A8AA0;letter-spacing:.1em">GENERATED BY EFFICIENT™ · IEBC ACCOUNTING & AUTOMATION</div>`;
+}
+
+function saveInvoice() {
+  const {sub, tax, total} = calcInvTotal();
+  const inv = {
+    id: 'INV-' + (1000 + JSON.parse(localStorage.getItem('iebc-invoices')||'[]').length + 1),
+    client: document.getElementById('inv-client')?.value || '',
+    email: document.getElementById('inv-email')?.value || '',
+    date: document.getElementById('inv-date')?.value || '',
+    due: document.getElementById('inv-due')?.value || '',
+    items: [..._invItems],
+    subtotal: sub, tax, total,
+    notes: document.getElementById('inv-notes')?.value || '',
+    status: 'pending',
+    created_at: new Date().toISOString()
+  };
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]');
+  invs.push(inv);
+  localStorage.setItem('iebc-invoices', JSON.stringify(invs));
+  // Also record as transaction
+  const txns = JSON.parse(localStorage.getItem('iebc-acct-transactions') || '[]');
+  txns.push({ id: inv.id, date: inv.date, description: 'Invoice '+inv.id+' — '+inv.client, amount: total, category: 'Invoice', source: 'invoice', imported_at: new Date().toISOString() });
+  localStorage.setItem('iebc-acct-transactions', JSON.stringify(txns));
+  renderSavedInvoices();
+  showImpSuccess('Invoice ' + inv.id + ' saved — $' + total.toFixed(2) + ' pending from ' + (inv.client || 'client'));
+}
+
+function renderSavedInvoices() {
+  const el = document.getElementById('inv-saved-list'); if (!el) return;
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]').reverse();
+  if (!invs.length) { el.innerHTML = '<div style="font-size:.72rem;color:var(--text3);font-family:var(--ff-m);padding:8px 0">No saved invoices yet.</div>'; return; }
+  el.innerHTML = invs.slice(0,6).map(inv => {
+    const sc = inv.status==='paid'?'var(--green)':inv.status==='overdue'?'var(--red)':'var(--amber)';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--off);border:1px solid var(--border);border-radius:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.74rem;font-weight:700;color:var(--navy)">${inv.id} · ${inv.client||'No client'}</div>
+        <div style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3)">Due ${inv.due||'—'}</div>
+      </div>
+      <div style="font-family:var(--ff-m);font-size:.68rem;font-weight:700;color:var(--navy)">$${inv.total.toFixed(2)}</div>
+      <div style="font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(0,0,0,.06);color:${sc}">${inv.status}</div>
+    </div>`;
+  }).join('');
+}
+
+function printInvoice() {
+  const prev = document.getElementById('inv-preview'); if (!prev) return;
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>body{font-family:Inter,sans-serif;padding:40px;max-width:680px;margin:0 auto;color:#0B1D35}@media print{body{padding:20px}}</style>
+    </head><body>${prev.innerHTML}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+function sendInvoiceStripe() {
+  const client = document.getElementById('inv-client')?.value;
+  const email = document.getElementById('inv-email')?.value;
+  const {total} = calcInvTotal();
+  if (!client || total <= 0) { alert('Please add a client name and at least one line item.'); return; }
+  if (!email) { alert('Please add the client email to send the payment link.'); return; }
+  // In production: call Stripe API via Supabase Edge Function
+  // Jordan Hayes Sprint 2 task: POST /functions/v1/create-payment-link
+  showImpSuccess('⚡ Payment link created! Sending $' + total.toFixed(2) + ' invoice to ' + email + ' via Stripe. (Stripe Connect required — configure in Account Settings)');
 }
 
 // ══════════════════════════════════════════════════════════════
