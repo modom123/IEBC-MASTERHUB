@@ -410,6 +410,32 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 }
 
 /* ══════════════════════════════════════════════════════════
+   KPI DASHBOARD
+   Zara Chen · Devon Blake · Jordan Hayes
+   ══════════════════════════════════════════════════════════ */
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.kpi-card:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(200,144,42,.12);transform:translateY(-2px)}
+.kpi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:10px}
+.kpi-val{font-family:var(--ff-h);font-size:1.6rem;font-weight:800;color:var(--navy);line-height:1;margin-bottom:4px}
+.kpi-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:5px}
+.kpi-delta{font-family:var(--ff-m);font-size:.65rem;font-weight:700}
+.kpi-up{color:var(--green)}.kpi-dn{color:var(--red)}
+.dash-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.dash-card-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.dash-card-title{font-weight:700;color:var(--navy);font-size:.88rem}
+.dash-card-sub{font-family:var(--ff-m);font-size:.58rem;color:var(--text3);letter-spacing:.06em}
+.txn-row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;background:var(--off);border:1px solid var(--border)}
+.txn-cat{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.txn-desc{font-size:.76rem;font-weight:600;color:var(--navy);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txn-date{font-family:var(--ff-m);font-size:.58rem;color:var(--text3)}
+.txn-amt{font-family:var(--ff-m);font-size:.76rem;font-weight:700;flex-shrink:0}
+.txn-amt-pos{color:var(--green)}.txn-amt-neg{color:var(--red)}
+.auto-chip{font-family:var(--ff-m);font-size:.6rem;font-weight:600;padding:7px 11px;border-radius:8px;letter-spacing:.03em}
+.auto-green{background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.18)}
+.auto-blue{background:var(--blue-lt);color:var(--navy);border:1px solid rgba(29,78,216,.15)}
+@media(max-width:680px){.chart-grid-2,.chart-grid-3{grid-template-columns:1fr!important}}
+
+/* ══════════════════════════════════════════════════════════
    IMPORT WIZARD MODALS
    Assigned: Zara Chen (Frontend) · Devon Blake (UI) · Jordan Hayes (Backend)
    Sam Torres (API) · Casey Monroe (Security) · Amara Cole (Database)
@@ -493,6 +519,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-automation" onclick="showPage('automation')">Automation</button>
     <button class="nav-link" id="nl-security" onclick="showPage('security')">Security</button>
     <button class="nav-link" id="nl-consultants" onclick="showPage('consultants')">Advisors</button>
+    <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')" style="color:var(--gold3)">📊 Live Demo</button>
   </div>
   <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
@@ -507,6 +534,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-automation" onclick="showPage('automation');toggleMenu()">Automation</button>
   <button class="nav-mobile-link" id="mnl-security" onclick="showPage('security');toggleMenu()">Security</button>
   <button class="nav-mobile-link" id="mnl-consultants" onclick="showPage('consultants');toggleMenu()">Advisors</button>
+  <button class="nav-mobile-link" id="mnl-dashboard" onclick="showPage('dashboard');toggleMenu()" style="color:var(--gold3)">📊 Live Demo</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
 </div>
 
@@ -1132,6 +1160,133 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════
+     PAGE: LIVE KPI DASHBOARD DEMO
+     Zara Chen (UI) · Devon Blake (Charts) · Jordan Hayes (data engine)
+     ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="page-hero" style="padding-bottom:24px">
+    <span class="page-hero-eyebrow">Live Dashboard Preview</span>
+    <div class="page-hero-title">Your Business.<br><em>Fully Visible. Always.</em></div>
+    <div class="page-hero-desc">This is exactly what you'll see inside Efficient every day — real-time KPIs, live charts, automated reports. Click the numbers to see them update.</div>
+  </div>
+
+  <div class="wrap" style="padding-top:0">
+
+    <!-- ── KPI CARDS ── -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:28px">
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--green-lt);color:var(--green)">💰</div>
+        <div class="kpi-val" id="kpi-revenue">$0</div>
+        <div class="kpi-lbl">Monthly Revenue</div>
+        <div class="kpi-delta kpi-up" id="kpi-revenue-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--red-lt);color:var(--red)">📤</div>
+        <div class="kpi-val" id="kpi-expenses">$0</div>
+        <div class="kpi-lbl">Total Expenses</div>
+        <div class="kpi-delta kpi-dn" id="kpi-expenses-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--blue-lt);color:var(--navy)">📈</div>
+        <div class="kpi-val" id="kpi-profit">$0</div>
+        <div class="kpi-lbl">Net Profit</div>
+        <div class="kpi-delta kpi-up" id="kpi-profit-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--amber-lt);color:var(--amber)">🏦</div>
+        <div class="kpi-val" id="kpi-cash">$0</div>
+        <div class="kpi-lbl">Cash on Hand</div>
+        <div class="kpi-delta kpi-up" id="kpi-cash-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--green-lt);color:var(--green)">🧾</div>
+        <div class="kpi-val" id="kpi-invoices">0</div>
+        <div class="kpi-lbl">Open Invoices</div>
+        <div class="kpi-delta" id="kpi-invoices-d" style="color:var(--text3)">$0 outstanding</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--purple-lt);color:var(--purple)">👥</div>
+        <div class="kpi-val" id="kpi-payroll">$0</div>
+        <div class="kpi-lbl">Payroll This Month</div>
+        <div class="kpi-delta kpi-up" id="kpi-payroll-d">0 employees</div>
+      </div>
+    </div>
+
+    <!-- ── CHARTS ROW ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px" class="chart-grid-2">
+
+      <!-- Revenue vs Expenses Bar Chart -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Revenue vs Expenses</div>
+          <div class="dash-card-sub">Last 6 months</div>
+        </div>
+        <canvas id="chart-rev-exp" height="180"></canvas>
+      </div>
+
+      <!-- Cash Flow Line Chart -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Cash Flow Trend</div>
+          <div class="dash-card-sub">Running balance · 6 months</div>
+        </div>
+        <canvas id="chart-cashflow" height="180"></canvas>
+      </div>
+
+    </div>
+
+    <!-- ── SECOND ROW ── -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px" class="chart-grid-3">
+
+      <!-- Recent Transactions -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Recent Transactions</div>
+          <div class="dash-card-sub" id="txn-count">Auto-categorized by AI</div>
+          <button onclick="openCSVWizard()" style="font-family:var(--ff-m);font-size:.56rem;font-weight:700;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--off);cursor:pointer;color:var(--navy);margin-left:auto">+ Import</button>
+        </div>
+        <div id="txn-list" style="display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto"></div>
+      </div>
+
+      <!-- Expense Breakdown Donut -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Expense Breakdown</div>
+          <div class="dash-card-sub">By category</div>
+        </div>
+        <canvas id="chart-donut" height="180" style="max-width:180px;margin:0 auto;display:block"></canvas>
+        <div id="donut-legend" style="margin-top:10px;display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+
+    </div>
+
+    <!-- ── AUTOMATIONS RUNNING ── -->
+    <div class="dash-card" style="margin-bottom:28px">
+      <div class="dash-card-hd">
+        <div class="dash-card-title">⚙️ Automations Running <span style="background:var(--green-lt);color:var(--green);font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px">LIVE</span></div>
+        <div class="dash-card-sub">20 automations active — zero manual work required</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+        <div class="auto-chip auto-green">✓ Bank sync ran 4 min ago</div>
+        <div class="auto-chip auto-green">✓ 3 receipts OCR'd today</div>
+        <div class="auto-chip auto-green">✓ Payroll queued for Friday</div>
+        <div class="auto-chip auto-green">✓ Tax liability updated</div>
+        <div class="auto-chip auto-blue">⏳ Monthly P&amp;L generating…</div>
+        <div class="auto-chip auto-green">✓ Invoice #1047 sent</div>
+        <div class="auto-chip auto-green">✓ Expense report emailed</div>
+        <div class="auto-chip auto-blue">⏳ Duplicate check running…</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 40px">
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:14px">This is your dashboard, live, every single day — inside Efficient.</p>
+      <button class="hero-cta" onclick="openModal()">Start My Free 30-Day Trial →</button>
+    </div>
+
+  </div>
+</div>
+
 <!-- CHAT PANEL (slide-in) -->
 <div class="chat-overlay" id="chat-overlay" onclick="closeChat()"></div>
 <div class="chat-panel" id="chat-panel">
@@ -1381,7 +1536,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <div id="imp-toast"><span id="imp-toast-msg"></span></div>
 
 <script>
-const pages = ['home','features','pricing','compare','automation','security','consultants'];
+const pages = ['home','features','pricing','compare','automation','security','consultants','dashboard'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -1391,6 +1546,7 @@ function showPage(id) {
     if(mnl) mnl.classList.toggle('active', p===id);
   });
   window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='dashboard') initDash();
 }
 function toggleMenu() {
   document.getElementById('mobile-menu').classList.toggle('open');
@@ -1810,6 +1966,231 @@ function launchHub(){
   // Otherwise navigate — user can update this URL to their actual MasterHub path
   const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
   window.open(hubUrl,'_blank');
+}
+
+// ══════════════════════════════════════════════════════════════
+// KPI DASHBOARD ENGINE
+// Zara Chen (UI) · Devon Blake (Charts/SVG) · Jordan Hayes (data)
+// ══════════════════════════════════════════════════════════════
+
+// ── DEMO DATA (replaced by real Supabase data in Sprint 1) ──
+const DEMO_DATA = {
+  revenue:   [18400, 22100, 19800, 26500, 24200, 31800],
+  expenses:  [11200, 13400, 12100, 15800, 14600, 18900],
+  months:    ['Nov','Dec','Jan','Feb','Mar','Apr'],
+  categories:{ 'Payroll':7200,'Software':1400,'Rent':2500,'Marketing':3100,'Supplies':980,'Other':1720 },
+  transactions:[
+    {date:'Apr 14',desc:'Stripe Payment — Client Invoice #1047',cat:'💳',amt:4200,pos:true},
+    {date:'Apr 13',desc:'AWS Infrastructure',cat:'☁️',amt:-312,pos:false},
+    {date:'Apr 13',desc:'Gusto Payroll Run',cat:'👥',amt:-7200,pos:false},
+    {date:'Apr 12',desc:'Client Retainer — Odom Media',cat:'💰',amt:3500,pos:true},
+    {date:'Apr 11',desc:'Adobe Creative Cloud',cat:'🎨',amt:-54.99,pos:false},
+    {date:'Apr 10',desc:'Google Ads',cat:'📢',amt:-890,pos:false},
+    {date:'Apr 10',desc:'Client Invoice #1046 — Paid',cat:'💳',amt:2800,pos:true},
+    {date:'Apr 9', desc:'Office Supplies — Staples',cat:'📦',amt:-127.43,pos:false},
+  ]
+};
+
+function fmt(n){ return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function pct(a,b){ if(!b) return '0%'; const d=((a-b)/b*100); return (d>=0?'↑ ':'↓ ')+Math.abs(d).toFixed(1)+'%'; }
+
+function refreshDash(){
+  const d = DEMO_DATA;
+  const cur = d.revenue[5], prv = d.revenue[4];
+  const curE = d.expenses[5], prvE = d.expenses[4];
+  const profit = cur - curE, cashflow = d.revenue.reduce((s,v)=>s+v,0) - d.expenses.reduce((s,v)=>s+v,0);
+
+  // Animate KPI values in
+  animateVal('kpi-revenue', cur, true);
+  animateVal('kpi-expenses', curE, true);
+  animateVal('kpi-profit', profit, true);
+  animateVal('kpi-cash', cashflow, true);
+  document.getElementById('kpi-invoices').textContent = '4';
+  document.getElementById('kpi-payroll').textContent = fmt(d.categories['Payroll']);
+
+  document.getElementById('kpi-revenue-d').textContent = pct(cur,prv);
+  document.getElementById('kpi-revenue-d').className = 'kpi-delta '+(cur>=prv?'kpi-up':'kpi-dn');
+  document.getElementById('kpi-expenses-d').textContent = pct(curE,prvE);
+  document.getElementById('kpi-expenses-d').className = 'kpi-delta '+(curE<=prvE?'kpi-up':'kpi-dn');
+  document.getElementById('kpi-profit-d').textContent = pct(profit, prv-prvE);
+  document.getElementById('kpi-profit-d').className = 'kpi-delta '+(profit>=(prv-prvE)?'kpi-up':'kpi-dn');
+  document.getElementById('kpi-cash-d').textContent = '↑ 12.4%';
+  document.getElementById('kpi-invoices-d').textContent = '$11,200 outstanding';
+  document.getElementById('kpi-payroll-d').textContent = '3 employees';
+
+  // Load transactions from localStorage or demo
+  const stored = JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const txns = stored.length ? stored.slice(-8).reverse() : d.transactions;
+  const countEl = document.getElementById('txn-count');
+  if(stored.length) countEl.textContent = stored.length + ' transactions imported';
+
+  const listEl = document.getElementById('txn-list');
+  listEl.innerHTML = txns.map(t => {
+    const isStored = !!t.imported_at;
+    const pos = isStored ? t.amount >= 0 : t.pos;
+    const amt = isStored ? t.amount : t.amt;
+    const desc = isStored ? t.description : t.desc;
+    const date = isStored ? t.date : t.date;
+    const cat = isStored ? (pos?'💰':'📤') : t.cat;
+    return `<div class="txn-row">
+      <div class="txn-cat" style="background:${pos?'var(--green-lt)':'var(--red-lt)'}">${cat}</div>
+      <div style="flex:1;min-width:0">
+        <div class="txn-desc">${desc}</div>
+        <div class="txn-date">${date}</div>
+      </div>
+      <div class="txn-amt ${pos?'txn-amt-pos':'txn-amt-neg'}">${pos?'+':''}${fmt(amt)}</div>
+    </div>`;
+  }).join('');
+
+  drawBarChart();
+  drawLineChart();
+  drawDonut();
+}
+
+function animateVal(id, target, money){
+  const el = document.getElementById(id); if(!el) return;
+  let cur = 0, step = target/30;
+  const iv = setInterval(()=>{
+    cur = Math.min(cur+step, target);
+    el.textContent = money ? fmt(cur) : Math.round(cur);
+    if(cur >= target) clearInterval(iv);
+  }, 30);
+}
+
+// ── SVG CHART HELPERS (Devon Blake) ──────────────────────────
+function drawBarChart(){
+  const canvas = document.getElementById('chart-rev-exp'); if(!canvas) return;
+  const d = DEMO_DATA; const W=canvas.offsetWidth||380, H=180;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const pad={l:40,r:16,t:16,b:28};
+  const chartW=W-pad.l-pad.r, chartH=H-pad.t-pad.b;
+  const maxVal=Math.max(...d.revenue,...d.expenses)*1.1;
+  const barW=chartW/d.months.length/2.5;
+  const gap=chartW/d.months.length;
+
+  // Grid lines
+  ctx.strokeStyle='#DDE4EF'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+chartH*(1-i/4);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#7A8AA0'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='right';
+    ctx.fillText('$'+Math.round(maxVal*i/4/1000)+'K',pad.l-4,y+3);
+  }
+
+  d.months.forEach((m,i)=>{
+    const x = pad.l + i*gap + gap/2;
+    const revH = (d.revenue[i]/maxVal)*chartH;
+    const expH = (d.expenses[i]/maxVal)*chartH;
+    // Revenue bar (navy)
+    ctx.fillStyle='#0B2140';
+    ctx.fillRect(x-barW-2, pad.t+chartH-revH, barW, revH);
+    // Expense bar (gold)
+    ctx.fillStyle='#C8902A';
+    ctx.fillRect(x+2, pad.t+chartH-expH, barW, expH);
+    // Month label
+    ctx.fillStyle='#7A8AA0'; ctx.textAlign='center'; ctx.font='9px Inter,sans-serif';
+    ctx.fillText(m, x, H-6);
+  });
+
+  // Legend
+  ctx.fillStyle='#0B2140'; ctx.fillRect(pad.l,6,10,8);
+  ctx.fillStyle='#333'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='left';
+  ctx.fillText('Revenue',pad.l+14,13);
+  ctx.fillStyle='#C8902A'; ctx.fillRect(pad.l+70,6,10,8);
+  ctx.fillStyle='#333'; ctx.fillText('Expenses',pad.l+84,13);
+}
+
+function drawLineChart(){
+  const canvas = document.getElementById('chart-cashflow'); if(!canvas) return;
+  const d = DEMO_DATA; const W=canvas.offsetWidth||380, H=180;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const pad={l:44,r:16,t:16,b:28};
+  const chartW=W-pad.l-pad.r, chartH=H-pad.t-pad.b;
+
+  // Running cash flow
+  let running=0;
+  const cf=d.months.map((_,i)=>{ running+=d.revenue[i]-d.expenses[i]; return running; });
+  const maxCF=Math.max(...cf)*1.15, minCF=0;
+  const range=maxCF-minCF||1;
+
+  // Grid
+  ctx.strokeStyle='#DDE4EF'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+chartH*(1-i/4);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#7A8AA0'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='right';
+    ctx.fillText('$'+Math.round((minCF+range*i/4)/1000)+'K',pad.l-4,y+3);
+  }
+
+  // Gradient fill
+  const grad=ctx.createLinearGradient(0,pad.t,0,pad.t+chartH);
+  grad.addColorStop(0,'rgba(200,144,42,.25)'); grad.addColorStop(1,'rgba(200,144,42,.02)');
+  ctx.beginPath();
+  cf.forEach((v,i)=>{
+    const x=pad.l+i*(chartW/(cf.length-1)), y=pad.t+chartH*(1-(v-minCF)/range);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(W-pad.r,pad.t+chartH); ctx.lineTo(pad.l,pad.t+chartH);
+  ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+
+  // Line
+  ctx.beginPath(); ctx.strokeStyle='#C8902A'; ctx.lineWidth=2.5; ctx.lineJoin='round';
+  cf.forEach((v,i)=>{
+    const x=pad.l+i*(chartW/(cf.length-1)), y=pad.t+chartH*(1-(v-minCF)/range);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Dots + month labels
+  cf.forEach((v,i)=>{
+    const x=pad.l+i*(chartW/(cf.length-1)), y=pad.t+chartH*(1-(v-minCF)/range);
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    ctx.strokeStyle='#C8902A'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#7A8AA0'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(d.months[i],x,H-6);
+  });
+}
+
+function drawDonut(){
+  const canvas=document.getElementById('chart-donut'); if(!canvas) return;
+  const d=DEMO_DATA.categories;
+  const keys=Object.keys(d), vals=Object.values(d);
+  const total=vals.reduce((s,v)=>s+v,0);
+  const colors=['#0B2140','#C8902A','#047857','#1D4ED8','#7C3AED','#9F1239'];
+  const W=canvas.offsetWidth||180, H=180;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2-5, r=Math.min(W,H)/2-12, ir=r*0.58;
+  let start=-Math.PI/2;
+  vals.forEach((v,i)=>{
+    const sweep=(v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+sweep);
+    ctx.closePath(); ctx.fillStyle=colors[i%colors.length]; ctx.fill();
+    start+=sweep;
+  });
+  // Inner hole
+  ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill();
+  // Center text
+  ctx.fillStyle='#0B2140'; ctx.font='bold 11px Inter,sans-serif'; ctx.textAlign='center';
+  ctx.fillText(fmt(total),cx,cy+4);
+
+  // Legend
+  const lgEl=document.getElementById('donut-legend'); if(!lgEl) return;
+  lgEl.innerHTML=keys.map((k,i)=>`<div style="display:flex;align-items:center;gap:6px;font-size:.66rem;color:var(--text2)"><span style="width:10px;height:10px;border-radius:3px;background:${colors[i%colors.length]};flex-shrink:0;display:inline-block"></span><span style="flex:1">${k}</span><span style="font-family:var(--ff-m);font-weight:700;color:var(--navy)">${fmt(vals[i])}</span></div>`).join('');
+}
+
+// Init dashboard on tab switch
+const _origShowPage = typeof showPage === 'function' ? showPage : null;
+function initDash(){
+  setTimeout(()=>{ refreshDash(); },80);
 }
 
 // ══════════════════════════════════════════════════════════════
