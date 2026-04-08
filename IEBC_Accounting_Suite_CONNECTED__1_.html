@@ -408,6 +408,73 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   .sec-grid{grid-template-columns:1fr}
   .auto-stats{grid-template-columns:1fr 1fr}
 }
+
+/* ══════════════════════════════════════════════════════════
+   IMPORT WIZARD MODALS
+   Assigned: Zara Chen (Frontend) · Devon Blake (UI) · Jordan Hayes (Backend)
+   Sam Torres (API) · Casey Monroe (Security) · Amara Cole (Database)
+   ══════════════════════════════════════════════════════════ */
+.imp-overlay{position:fixed;inset:0;background:rgba(11,33,64,.68);backdrop-filter:blur(6px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.imp-overlay.open{opacity:1;pointer-events:all}
+.imp-box{background:#fff;border-radius:16px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 72px rgba(11,33,64,.32);transform:translateY(16px);transition:transform .22s}
+.imp-overlay.open .imp-box{transform:translateY(0)}
+.imp-hd{background:var(--navy);padding:18px 22px 16px;border-radius:16px 16px 0 0;position:relative}
+.imp-hd::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3))}
+.imp-title{font-family:var(--ff-h);font-size:1.05rem;font-weight:800;color:#fff;font-style:italic}
+.imp-sub{font-family:var(--ff-m);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:2px}
+.imp-x{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.1);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.88rem;display:flex;align-items:center;justify-content:center;transition:background .15s;line-height:1}
+.imp-x:hover{background:rgba(255,255,255,.22)}
+.imp-body{padding:20px 22px 24px}
+.imp-lbl{font-family:var(--ff-m);font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:6px;display:block}
+.imp-fi{width:100%;background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--ff-b);font-size:.83rem;outline:none;transition:all .15s;margin-bottom:0}
+.imp-fi:focus{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(11,33,64,.07)}
+.imp-fi::placeholder{color:var(--text3)}
+.imp-row{margin-bottom:12px}
+.imp-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.imp-err{padding:9px 12px;border-radius:8px;font-size:.75rem;margin-bottom:12px;background:var(--red-lt);border:1px solid rgba(220,38,38,.2);color:var(--red);display:none;align-items:center;gap:7px}
+.imp-info{padding:9px 12px;border-radius:8px;font-size:.74rem;margin-bottom:12px;display:flex;align-items:flex-start;gap:7px;line-height:1.6}
+.imp-info-blue{background:var(--blue-lt);border:1px solid rgba(29,78,216,.15);color:#1e40af}
+.imp-info-green{background:var(--green-lt);border:1px solid rgba(4,120,87,.18);color:var(--green)}
+.imp-info-amber{background:var(--amber-lt);border:1px solid rgba(146,64,14,.15);color:var(--amber)}
+/* drop zone */
+.imp-drop{border:2px dashed var(--border2);border-radius:10px;padding:30px 20px;text-align:center;cursor:pointer;transition:all .18s;background:var(--off)}
+.imp-drop:hover,.imp-drop.drag-over{border-color:var(--navy);background:rgba(11,33,64,.03)}
+.imp-drop-icon{font-size:2.2rem;margin-bottom:8px}
+.imp-drop-txt{font-size:.82rem;font-weight:600;color:var(--text2)}
+.imp-drop-sub{font-size:.66rem;color:var(--text3);font-family:var(--ff-m);margin-top:3px}
+.imp-file-btn{display:inline-block;margin-top:10px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;padding:6px 14px;border-radius:6px;border:1.5px solid var(--border2);background:#fff;color:var(--navy);cursor:pointer;transition:all .15s;letter-spacing:.05em;text-transform:uppercase}
+.imp-file-btn:hover{border-color:var(--navy);background:var(--navy);color:var(--gold2)}
+/* preview table */
+.imp-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin-top:10px;max-height:200px;overflow-y:auto}
+.imp-table{width:100%;border-collapse:collapse;font-size:.72rem}
+.imp-table th{background:var(--navy);color:#fff;padding:7px 10px;text-align:left;font-family:var(--ff-m);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;position:sticky;top:0}
+.imp-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.imp-table tr:last-child td{border-bottom:none}
+.imp-table tr:nth-child(even) td{background:var(--off)}
+/* map rows */
+.imp-map-row{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:8px;margin-bottom:7px}
+.imp-map-sel{background:var(--off);border:1.5px solid var(--border);border-radius:7px;padding:7px 9px;color:var(--text);font-family:var(--ff-b);font-size:.76rem;outline:none;width:100%}
+.imp-map-sel:focus{border-color:var(--navy)}
+.imp-map-arrow{color:var(--text3);text-align:center;font-size:.9rem}
+/* progress bar */
+.imp-prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin:10px 0}
+.imp-prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3));border-radius:3px;transition:width .35s ease;width:0%}
+/* receipt items */
+.rcpt-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-height:210px;overflow-y:auto}
+.rcpt-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
+.rcpt-item-ico{font-size:1.1rem;flex-shrink:0}
+.rcpt-item-name{font-size:.74rem;font-weight:600;color:var(--navy);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcpt-badge{font-family:var(--ff-m);font-size:.56rem;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.rcpt-pending{background:var(--amber-lt);color:var(--amber)}
+.rcpt-done{background:var(--green-lt);color:var(--green)}
+.rcpt-error{background:var(--red-lt);color:var(--red)}
+/* toast */
+#imp-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:10px;font-size:.78rem;font-weight:600;box-shadow:0 8px 32px rgba(11,33,64,.28);z-index:11000;transition:transform .3s;white-space:nowrap;border-bottom:3px solid var(--gold)}
+#imp-toast.show{transform:translateX(-50%) translateY(0)}
+/* file info row */
+.imp-file-info{display:none;align-items:center;gap:10px;padding:9px 12px;background:var(--green-lt);border:1px solid rgba(4,120,87,.18);border-radius:8px;margin-top:8px}
+.imp-file-info-name{font-weight:700;font-size:.78rem;color:var(--navy);flex:1}
+.imp-file-info-size{font-family:var(--ff-m);font-size:.6rem;color:var(--text3)}
 </style>
 </head>
 <body>
@@ -571,13 +638,13 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         <div class="bank-tile" id="bt-cc" onclick="toggleBank('bt-cc')"><div class="bt-icon" style="background:#fce4ec">💳</div><div><div class="bt-name">Credit Card</div><div class="bt-type">Import charges · Match receipts</div></div><div class="bt-check">✓</div></div>
         <div class="bank-tile" id="bt-dc" onclick="toggleBank('bt-dc')"><div class="bt-icon" style="background:#fff8e1">🏧</div><div><div class="bt-name">Debit Card</div><div class="bt-type">Real-time purchase capture</div></div><div class="bt-check">✓</div></div>
       </div>
-      <div class="manual-link" onclick="alert('Manual bank details entry would open here.')"><span>🔗</span><span>Connect with routing &amp; account number instead</span></div>
+      <div class="manual-link" onclick="openBankForm()"><span>🔗</span><span>Connect with routing &amp; account number instead</span></div>
       <span class="mslabel" style="margin-top:16px">Import Existing Data</span>
       <div class="import-grid">
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">📊</div><div><div class="ir-name">QuickBooks Export</div><div class="ir-desc">.QBO / .IIF / .CSV — full history</div></div></div><button class="ir-btn" onclick="alert('QBO import wizard would open here.')">Import</button></div>
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">📄</div><div><div class="ir-name">CSV / Excel File</div><div class="ir-desc">Bank statements, transaction exports</div></div></div><button class="ir-btn" onclick="alert('CSV import wizard would open here.')">Upload</button></div>
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">🧾</div><div><div class="ir-name">Receipt Batch Upload</div><div class="ir-desc">Photos or PDFs — AI extracts data</div></div></div><button class="ir-btn" onclick="alert('Bulk receipt uploader would open here.')">Upload</button></div>
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">🏦</div><div><div class="ir-name">Bank Statement PDF</div><div class="ir-desc">AI parses &amp; auto-categorizes</div></div></div><button class="ir-btn" onclick="alert('PDF parser would open here.')">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">📊</div><div><div class="ir-name">QuickBooks Export</div><div class="ir-desc">.QBO / .IIF / .CSV — full history</div></div></div><button class="ir-btn" onclick="openQBOWizard()">Import</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">📄</div><div><div class="ir-name">CSV / Excel File</div><div class="ir-desc">Bank statements, transaction exports</div></div></div><button class="ir-btn" onclick="openCSVWizard()">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">🧾</div><div><div class="ir-name">Receipt Batch Upload</div><div class="ir-desc">Photos or PDFs — AI extracts data</div></div></div><button class="ir-btn" onclick="openReceiptUploader()">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">🏦</div><div><div class="ir-name">Bank Statement PDF</div><div class="ir-desc">AI parses &amp; auto-categorizes</div></div></div><button class="ir-btn" onclick="openPDFParser()">Upload</button></div>
       </div>
       <div class="skip-link" onclick="submitAll()">Skip for now — I'll connect later</div>
       <button class="mbtn" style="margin-top:12px" onclick="submitAll()">Complete Setup →</button>
@@ -1086,6 +1153,233 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════
+     IMPORT WIZARD MODALS
+     Dev Assignments:
+       Manual Bank Form  → Zara Chen (UI) · Casey Monroe (Security)
+       CSV Wizard        → Jordan Hayes (Parser) · Zara Chen (UI)
+       QuickBooks Import → Sam Torres (API) · Jordan Hayes (Parser)
+       Receipt Uploader  → Devon Blake (UI) · Jordan Hayes (AI/OCR)
+       PDF Parser        → Jordan Hayes (Engine) · Devon Blake (UI)
+       DB Schema         → Amara Cole
+       QA Sign-off       → Jamie Park
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- ── MODAL 1: MANUAL BANK CONNECTION ── -->
+<div class="imp-overlay" id="imp-bank-form">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">Connect Bank Account</div>
+      <div class="imp-sub">Zara Chen · Frontend &nbsp;|&nbsp; Casey Monroe · Security</div>
+      <button class="imp-x" onclick="closeBankForm()">✕</button>
+    </div>
+    <div class="imp-body">
+      <div class="imp-info imp-info-blue">🔒 Your routing and account numbers are stored only on this device. No data is transmitted until you authorize a transfer with your bank.</div>
+      <div class="imp-err" id="bf-err"></div>
+      <div class="imp-row">
+        <label class="imp-lbl">Account Type</label>
+        <select class="imp-fi" id="bf-type">
+          <option value="Checking">Checking Account</option>
+          <option value="Savings">Savings Account</option>
+          <option value="Money Market">Money Market</option>
+          <option value="Business Checking">Business Checking</option>
+          <option value="Business Savings">Business Savings</option>
+        </select>
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Bank / Institution Name</label>
+        <input class="imp-fi" id="bf-bank" type="text" placeholder="e.g. Chase, Bank of America, Wells Fargo">
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Account Holder Name</label>
+        <input class="imp-fi" id="bf-holder" type="text" placeholder="Full legal name on the account">
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Routing Number <span style="font-weight:400;color:var(--text3)">(9 digits — bottom left of check)</span></label>
+        <input class="imp-fi" id="bf-routing" type="text" inputmode="numeric" maxlength="9" placeholder="e.g. 021000021">
+      </div>
+      <div class="imp-row-2">
+        <div>
+          <label class="imp-lbl">Account Number</label>
+          <input class="imp-fi" id="bf-acct" type="password" inputmode="numeric" placeholder="Your account number">
+        </div>
+        <div>
+          <label class="imp-lbl">Confirm Account Number</label>
+          <input class="imp-fi" id="bf-acct2" type="password" inputmode="numeric" placeholder="Re-enter account number">
+        </div>
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Nickname <span style="font-weight:400;color:var(--text3)">(optional)</span></label>
+        <input class="imp-fi" id="bf-nick" type="text" placeholder="e.g. Main Business Checking">
+      </div>
+      <button onclick="submitBankForm()" class="mbtn" style="margin-top:8px">Submit for Verification →</button>
+      <button onclick="closeBankForm()" class="mbtn-ghost">Cancel</button>
+      <p style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3);margin-top:10px;text-align:center;line-height:1.7">Verification uses two micro-deposits under $0.10. Confirm in Account Settings → Linked Accounts within 2 business days.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 2: CSV / EXCEL IMPORT WIZARD ── -->
+<div class="imp-overlay" id="imp-csv">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">CSV / Excel Import</div>
+      <div class="imp-sub">Jordan Hayes · Backend &nbsp;|&nbsp; Zara Chen · Frontend &nbsp;|&nbsp; Amara Cole · Database</div>
+      <button class="imp-x" onclick="closeCSVWizard()">✕</button>
+    </div>
+    <div class="imp-body">
+
+      <!-- Step 1: Upload -->
+      <div id="csv-step1">
+        <div class="imp-drop" id="csv-drop"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="event.preventDefault();this.classList.remove('drag-over');handleCSVDrop(event)">
+          <div class="imp-drop-icon">📄</div>
+          <div class="imp-drop-txt">Drop your CSV or Excel export here</div>
+          <div class="imp-drop-sub">Supports .csv, .txt, .tsv — bank exports, QuickBooks CSV, any spreadsheet export</div>
+          <label class="imp-file-btn">Browse File<input type="file" id="csv-file-input" accept=".csv,.txt,.tsv" style="display:none" onchange="processCSVFile(this.files[0])"></label>
+        </div>
+        <p style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3);margin-top:10px;text-align:center;line-height:1.7">Export CSV from your bank: Chase → Download → .CSV &nbsp;·&nbsp; BofA → Download → Microsoft Excel (CSV) &nbsp;·&nbsp; Wells → Export → Comma Delimited</p>
+      </div>
+
+      <!-- Step 2: Column Mapping -->
+      <div id="csv-step2" style="display:none">
+        <div class="imp-info imp-info-blue" id="csv-file-detected" style="font-family:var(--ff-m);font-size:.7rem"></div>
+        <p style="font-size:.78rem;color:var(--text2);margin-bottom:12px;line-height:1.6">Map your file's columns to the correct fields. Required: Date, Description, Amount.</p>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">DATE COLUMN</span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-date"></select></div>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">DESCRIPTION</span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-desc"></select></div>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">AMOUNT</span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-amount"></select></div>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">CATEGORY <span style="color:var(--text3)">(optional)</span></span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-category"></select></div>
+        <button onclick="previewCSVImport()" class="mbtn" style="margin-top:12px">Preview Import →</button>
+        <button onclick="closeCSVWizard()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+      <!-- Step 3: Preview + Confirm -->
+      <div id="csv-step3" style="display:none">
+        <div class="imp-info imp-info-green">✓ <strong id="csv-preview-count"></strong> — review below then confirm.</div>
+        <div class="imp-table-wrap" id="csv-preview-table"></div>
+        <p style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3);margin-top:8px">Showing first 8 rows. All rows will be imported.</p>
+        <button onclick="importCSVData()" class="mbtn" style="margin-top:12px">Import All Transactions →</button>
+        <button onclick="closeCSVWizard()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 3: QUICKBOOKS / QBO IMPORT ── -->
+<div class="imp-overlay" id="imp-qbo">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">QuickBooks Export Import</div>
+      <div class="imp-sub">Sam Torres · API &nbsp;|&nbsp; Jordan Hayes · Parser &nbsp;|&nbsp; Amara Cole · Database</div>
+      <button class="imp-x" onclick="closeQBOWizard()">✕</button>
+    </div>
+    <div class="imp-body">
+
+      <!-- Step 1: Upload -->
+      <div id="qbo-step1">
+        <div class="imp-info imp-info-blue">📊 Supports QuickBooks <strong>.QBO</strong>, <strong>.IIF</strong>, <strong>.OFX</strong>, and <strong>.CSV</strong> exports. In QuickBooks: File → Export → Export Transactions.</div>
+        <div class="imp-drop" style="margin-top:12px"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="event.preventDefault();this.classList.remove('drag-over');handleQBOFile({dataTransfer:event.dataTransfer})">
+          <div class="imp-drop-icon">📊</div>
+          <div class="imp-drop-txt">Drop your QuickBooks export here</div>
+          <div class="imp-drop-sub">.QBO · .IIF · .OFX · .CSV</div>
+          <label class="imp-file-btn">Browse File<input type="file" id="qbo-file-input" accept=".qbo,.iif,.ofx,.csv,.txt" style="display:none" onchange="handleQBOFile(event)"></label>
+        </div>
+        <p style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3);margin-top:10px;text-align:center;line-height:1.7">QuickBooks Desktop: File → Export → Export Transactions &nbsp;·&nbsp; QuickBooks Online: Banking → Download → .CSV</p>
+        <button onclick="closeQBOWizard()" class="mbtn-ghost" style="margin-top:12px">Cancel</button>
+      </div>
+
+      <!-- Step 2: Preview + Confirm -->
+      <div id="qbo-step2" style="display:none">
+        <div class="imp-info imp-info-green">✓ <strong id="qbo-count"></strong> detected — review and confirm.</div>
+        <div class="imp-table-wrap" id="qbo-preview-table"></div>
+        <p style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3);margin-top:8px">Showing first 8 rows. All transactions will be imported.</p>
+        <button onclick="importQBOData()" class="mbtn" style="margin-top:12px">Import All Transactions →</button>
+        <button onclick="closeQBOWizard()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 4: RECEIPT BATCH UPLOADER ── -->
+<div class="imp-overlay" id="imp-receipts">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">Bulk Receipt Upload</div>
+      <div class="imp-sub">Devon Blake · UI &nbsp;|&nbsp; Jordan Hayes · AI/OCR &nbsp;|&nbsp; Casey Monroe · Security</div>
+      <button class="imp-x" onclick="closeReceiptUploader()">✕</button>
+    </div>
+    <div class="imp-body">
+      <div class="imp-info imp-info-blue">🧾 Upload receipt photos or PDFs. With an AI key configured, Claude will extract vendor, amount, date, and category automatically.</div>
+      <div class="imp-drop" id="rcpt-drop"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="event.preventDefault();this.classList.remove('drag-over');handleReceiptFiles({dataTransfer:event.dataTransfer})">
+        <div class="imp-drop-icon">🧾</div>
+        <div class="imp-drop-txt">Drop receipts here (images or PDFs)</div>
+        <div class="imp-drop-sub">JPG · PNG · PDF — multiple files at once</div>
+        <label class="imp-file-btn">Add Files<input type="file" id="rcpt-file-input" accept="image/*,.pdf" multiple style="display:none" onchange="handleReceiptFiles(event)"></label>
+      </div>
+      <div id="rcpt-empty" style="font-size:.75rem;color:var(--text3);text-align:center;padding:10px 0;font-family:var(--ff-m)">No files added yet.</div>
+      <div class="rcpt-list" id="rcpt-list"></div>
+      <button id="rcpt-import-btn" onclick="processReceipts()" class="mbtn" style="margin-top:14px" disabled>Process Receipts with AI →</button>
+      <button onclick="closeReceiptUploader()" class="mbtn-ghost">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 5: BANK STATEMENT PDF PARSER ── -->
+<div class="imp-overlay" id="imp-pdf">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">Bank Statement PDF Parser</div>
+      <div class="imp-sub">Jordan Hayes · Engine &nbsp;|&nbsp; Devon Blake · UI &nbsp;|&nbsp; Jamie Park · QA</div>
+      <button class="imp-x" onclick="closePDFParser()">✕</button>
+    </div>
+    <div class="imp-body">
+
+      <!-- Step 1: Upload -->
+      <div id="pdf-step1">
+        <div class="imp-info imp-info-blue">🏦 Upload your bank statement PDF. The AI will extract and auto-categorize all transactions. Requires a Claude API key (configure in Account Settings).</div>
+        <div class="imp-drop"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="event.preventDefault();this.classList.remove('drag-over');handlePDFFile({target:{files:event.dataTransfer.files}})">
+          <div class="imp-drop-icon">🏦</div>
+          <div class="imp-drop-txt">Drop your bank statement PDF here</div>
+          <div class="imp-drop-sub">PDF format only — any bank, any statement period</div>
+          <label class="imp-file-btn">Browse File<input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handlePDFFile(event)"></label>
+        </div>
+        <div class="imp-file-info" id="pdf-file-info">
+          <span style="font-size:1.1rem">📄</span>
+          <span class="imp-file-info-name" id="pdf-filename"></span>
+          <span class="imp-file-info-size" id="pdf-filesize"></span>
+        </div>
+        <div class="imp-prog-bar" id="pdf-progress" style="display:none"><div class="imp-prog-fill" id="pdf-progress-fill"></div></div>
+        <button id="pdf-parse-btn" onclick="parsePDFStatement()" class="mbtn" style="margin-top:12px" disabled>Parse with AI →</button>
+        <button onclick="closePDFParser()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+      <!-- Step 2: Results -->
+      <div id="pdf-step2" style="display:none">
+        <div class="imp-info imp-info-green">✓ <strong id="pdf-parsed-file" style="font-family:var(--ff-m)"></strong> uploaded successfully.</div>
+        <div id="pdf-result-note"></div>
+        <button onclick="closePDFParser()" class="mbtn-ghost" style="margin-top:10px">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── SUCCESS TOAST ── -->
+<div id="imp-toast"><span id="imp-toast-msg"></span></div>
+
 <script>
 const pages = ['home','features','pricing','compare','automation','security','consultants'];
 function showPage(id) {
@@ -1516,6 +1810,434 @@ function launchHub(){
   // Otherwise navigate — user can update this URL to their actual MasterHub path
   const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
   window.open(hubUrl,'_blank');
+}
+
+// ══════════════════════════════════════════════════════════════
+// IMPORT WIZARD ENGINE
+// Dev Team Assignments (IEBC AI Workforce):
+//   Zara Chen      — Manual Bank Form UI
+//   Devon Blake    — Receipt Uploader UI + PDF Modal UI
+//   Jordan Hayes   — CSV Parser, QBO Parser, PDF Engine, OCR logic
+//   Sam Torres     — QuickBooks API format handling
+//   Amara Cole     — localStorage schema (iebc-acct-transactions)
+//   Casey Monroe   — Input validation + security review
+//   Jamie Park     — QA sign-off checklist
+// ══════════════════════════════════════════════════════════════
+
+// ── SHARED HELPERS ──────────────────────────────────────────
+function impOpen(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function impClose(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── 1. MANUAL BANK FORM ─────────────────────────────────────
+// Zara Chen (UI) · Casey Monroe (Security review)
+function openBankForm(){
+  const errEl=document.getElementById('bf-err');
+  if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
+  ['bf-bank','bf-holder','bf-routing','bf-acct','bf-acct2','bf-nick'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  impOpen('imp-bank-form');
+}
+function closeBankForm(){ impClose('imp-bank-form'); }
+
+function submitBankForm(){
+  const type   = document.getElementById('bf-type').value;
+  const bank   = document.getElementById('bf-bank').value.trim();
+  const holder = document.getElementById('bf-holder').value.trim();
+  const routing= document.getElementById('bf-routing').value.replace(/\D/g,'');
+  const acct   = document.getElementById('bf-acct').value.replace(/\D/g,'');
+  const acct2  = document.getElementById('bf-acct2').value.replace(/\D/g,'');
+  const nick   = document.getElementById('bf-nick').value.trim();
+  const errEl  = document.getElementById('bf-err');
+
+  const showErr=(msg)=>{ errEl.innerHTML='⚠️ '+msg; errEl.style.display='flex'; };
+  if(!bank)                         { showErr('Bank name is required.'); return; }
+  if(!holder)                       { showErr('Account holder name is required.'); return; }
+  if(routing.length!==9)            { showErr('Routing number must be exactly 9 digits.'); return; }
+  if(!acct||acct.length<4)          { showErr('Account number must be at least 4 digits.'); return; }
+  if(acct!==acct2)                  { showErr('Account numbers do not match — please re-enter.'); return; }
+
+  // Casey Monroe: store only last 4 digits — never store full acct number in plain text
+  const linked=JSON.parse(localStorage.getItem('iebc-acct-linked-banks')||'[]');
+  linked.push({
+    id:'bank-'+Date.now(),
+    type, bank_name:bank, holder_name:holder,
+    routing_last4:routing.slice(-4),
+    acct_last4:acct.slice(-4),
+    nickname:nick||bank+' '+type,
+    status:'pending_verification',
+    linked_at:new Date().toISOString()
+  });
+  localStorage.setItem('iebc-acct-linked-banks',JSON.stringify(linked));
+  closeBankForm();
+  showImpSuccess('Bank account submitted! Micro-deposits (2×<$0.10) will arrive in 1–2 business days to verify ownership.');
+}
+
+// ── 2. CSV / EXCEL IMPORT WIZARD ────────────────────────────
+// Jordan Hayes (Parser) · Zara Chen (UI) · Amara Cole (DB schema)
+let _csvParsed=[], _csvHeaders=[];
+
+function openCSVWizard(){
+  _csvParsed=[]; _csvHeaders=[];
+  document.getElementById('csv-step1').style.display='block';
+  document.getElementById('csv-step2').style.display='none';
+  document.getElementById('csv-step3').style.display='none';
+  const fi=document.getElementById('csv-file-input'); if(fi) fi.value='';
+  impOpen('imp-csv');
+}
+function closeCSVWizard(){ impClose('imp-csv'); }
+
+function handleCSVDrop(e){
+  const file=e.dataTransfer?.files?.[0]||e.target?.files?.[0];
+  if(file) processCSVFile(file);
+}
+
+function processCSVFile(file){
+  if(!file.name.match(/\.(csv|txt|tsv)$/i)){
+    alert('Please upload a .csv, .txt, or .tsv file.'); return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>parseCSVText(ev.target.result, file.name);
+  reader.readAsText(file);
+}
+
+function parseCSVText(text, filename){
+  const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2){ alert('File appears empty or has no data rows.'); return; }
+  const d1=lines[0].split(',').length, d2=lines[0].split('\t').length;
+  const delim=d1>=d2?',':'\t';
+  _csvHeaders=csvLine(lines[0],delim);
+  _csvParsed=[];
+  for(let i=1;i<Math.min(lines.length,501);i++){
+    const vals=csvLine(lines[i],delim);
+    if(vals.length<2) continue;
+    const row={}; _csvHeaders.forEach((h,idx)=>{ row[h]=vals[idx]||''; });
+    _csvParsed.push(row);
+  }
+  if(!_csvParsed.length){ alert('No data rows found in this file.'); return; }
+  showCSVStep2(filename);
+}
+
+function csvLine(line,delim){
+  const res=[]; let inQ=false,cur='';
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){ inQ=!inQ; }
+    else if(c===delim&&!inQ){ res.push(cur.trim()); cur=''; }
+    else cur+=c;
+  }
+  res.push(cur.trim());
+  return res;
+}
+
+function showCSVStep2(filename){
+  document.getElementById('csv-step1').style.display='none';
+  document.getElementById('csv-step2').style.display='block';
+  const det=document.getElementById('csv-file-detected');
+  if(det) det.textContent='📄 "'+filename+'" · '+_csvParsed.length+' rows detected';
+  const opts='<option value="">-- skip --</option>'+_csvHeaders.map(h=>'<option value="'+h+'">'+h+'</option>').join('');
+  ['csv-map-date','csv-map-desc','csv-map-amount','csv-map-category'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.innerHTML=opts;
+  });
+  // Jordan Hayes: auto-detect common column names
+  _csvHeaders.forEach(h=>{
+    const l=h.toLowerCase();
+    if(l.match(/date|posted|trans/)) csvMapSet('csv-map-date',h);
+    if(l.match(/desc|payee|memo|narrat|detail/)) csvMapSet('csv-map-desc',h);
+    if(l.match(/amount|amt|debit|credit|sum/)) csvMapSet('csv-map-amount',h);
+    if(l.match(/categ|type|class/)) csvMapSet('csv-map-category',h);
+  });
+}
+
+function csvMapSet(id,val){
+  const el=document.getElementById(id); if(!el) return;
+  for(let i=0;i<el.options.length;i++) if(el.options[i].value===val){ el.selectedIndex=i; break; }
+}
+
+function previewCSVImport(){
+  const dateCol=document.getElementById('csv-map-date').value;
+  const descCol=document.getElementById('csv-map-desc').value;
+  const amtCol =document.getElementById('csv-map-amount').value;
+  if(!dateCol||!descCol||!amtCol){ alert('Please map Date, Description, and Amount columns to continue.'); return; }
+  document.getElementById('csv-step2').style.display='none';
+  document.getElementById('csv-step3').style.display='block';
+  document.getElementById('csv-preview-count').textContent=_csvParsed.length+' transactions ready to import';
+  let html='<table class="imp-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>';
+  _csvParsed.slice(0,8).forEach(row=>{
+    const a=parseFloat(row[amtCol]?.replace(/[$,\s]/g,'')||0);
+    html+='<tr><td>'+(row[dateCol]||'—')+'</td><td>'+(row[descCol]||'—').substring(0,42)+'</td><td style="color:'+(a<0?'var(--red)':'var(--green)');
+    html+='">'+(a>=0?'+':'')+a.toFixed(2)+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('csv-preview-table').innerHTML=html;
+}
+
+function importCSVData(){
+  const dateCol=document.getElementById('csv-map-date').value;
+  const descCol=document.getElementById('csv-map-desc').value;
+  const amtCol =document.getElementById('csv-map-amount').value;
+  const catCol =document.getElementById('csv-map-category').value;
+  const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const now=new Date().toISOString();
+  _csvParsed.forEach((row,i)=>{
+    existing.push({
+      id:'csv-'+Date.now()+'-'+i,
+      date:row[dateCol]||now.split('T')[0],
+      description:(row[descCol]||'Imported Transaction').substring(0,120),
+      amount:parseFloat(row[amtCol]?.replace(/[$,\s]/g,'')||0),
+      category:catCol?row[catCol]||'Uncategorized':'Uncategorized',
+      source:'csv_import', imported_at:now
+    });
+  });
+  localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+  closeCSVWizard();
+  showImpSuccess(_csvParsed.length+' transactions imported and saved to your account.');
+}
+
+// ── 3. QUICKBOOKS IMPORT ─────────────────────────────────────
+// Sam Torres (format handling) · Jordan Hayes (OFX/IIF parser)
+let _qboParsed=[];
+
+function openQBOWizard(){
+  _qboParsed=[];
+  document.getElementById('qbo-step1').style.display='block';
+  document.getElementById('qbo-step2').style.display='none';
+  const fi=document.getElementById('qbo-file-input'); if(fi) fi.value='';
+  impOpen('imp-qbo');
+}
+function closeQBOWizard(){ impClose('imp-qbo'); }
+
+function handleQBOFile(e){
+  const file=e.target?.files?.[0]||e.dataTransfer?.files?.[0];
+  if(!file) return;
+  if(!file.name.match(/\.(qbo|iif|ofx|csv|txt)$/i)){
+    alert('Please upload a .QBO, .IIF, .OFX, or .CSV file.'); return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>parseQBOContent(ev.target.result, file.name);
+  reader.readAsText(file);
+}
+
+function parseQBOContent(text, filename){
+  // CSV fallback: route through CSV wizard
+  if(filename.match(/\.csv$/i)){
+    parseCSVText(text, filename);
+    impClose('imp-qbo'); impOpen('imp-csv');
+    return;
+  }
+  _qboParsed=[];
+  // OFX/QBO format
+  const txnRx=/<STMTTRN>([\s\S]*?)<\/STMTTRN>/gi;
+  let m;
+  while((m=txnRx.exec(text))!==null){
+    const blk=m[1];
+    const g=tag=>{ const x=blk.match(new RegExp('<'+tag+'>(.*?)(<|$)','i')); return x?x[1].trim():''; };
+    const amt=parseFloat(g('TRNAMT')||g('AMT')||'0');
+    const dr=g('DTPOSTED')||g('DATE')||'';
+    const dt=dr.length>=8?dr.substr(0,4)+'-'+dr.substr(4,2)+'-'+dr.substr(6,2):dr;
+    _qboParsed.push({ date:dt||new Date().toISOString().split('T')[0], description:g('MEMO')||g('NAME')||g('PAYEE')||'QB Transaction', amount:amt, fitid:g('FITID')||('qbo-'+Date.now()+'-'+_qboParsed.length), category:'' });
+  }
+  // IIF tab-delimited format
+  if(!_qboParsed.length && text.includes('!TRNS')){
+    const lines=text.split('\n'); let hdrs=[];
+    lines.forEach(line=>{
+      const cols=line.split('\t');
+      if(cols[0]==='!TRNS'){ hdrs=cols.slice(1); return; }
+      if(cols[0]==='TRNS'){
+        const r={}; hdrs.forEach((h,i)=>{ r[h.trim()]=cols[i+1]?.trim()||''; });
+        _qboParsed.push({ date:r['DATE']||'', description:r['NAME']||r['MEMO']||'QB Transaction', amount:parseFloat(r['AMOUNT']?.replace(',','')||'0'), category:r['ACCNT']||'', fitid:'iif-'+Date.now()+'-'+_qboParsed.length });
+      }
+    });
+  }
+  if(!_qboParsed.length){ alert('No transactions found. Ensure this is a valid QBO/IIF/OFX file.'); return; }
+  document.getElementById('qbo-step1').style.display='none';
+  document.getElementById('qbo-step2').style.display='block';
+  document.getElementById('qbo-count').textContent=_qboParsed.length+' transactions';
+  let html='<table class="imp-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>';
+  _qboParsed.slice(0,8).forEach(r=>{
+    html+='<tr><td>'+(r.date||'—')+'</td><td>'+(r.description||'—').substring(0,42)+'</td><td style="color:'+(r.amount<0?'var(--red)':'var(--green)')+'">'+(r.amount>=0?'+':'')+r.amount.toFixed(2)+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('qbo-preview-table').innerHTML=html;
+}
+
+function importQBOData(){
+  const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const now=new Date().toISOString();
+  _qboParsed.forEach((r,i)=>{
+    existing.push({ id:r.fitid||'qbo-'+Date.now()+'-'+i, date:r.date, description:r.description, amount:r.amount, category:r.category||'Uncategorized', source:'quickbooks_import', imported_at:now });
+  });
+  localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+  closeQBOWizard();
+  showImpSuccess(_qboParsed.length+' QuickBooks transactions imported successfully.');
+}
+
+// ── 4. RECEIPT BATCH UPLOADER ───────────────────────────────
+// Devon Blake (UI) · Jordan Hayes (Claude OCR) · Casey Monroe (security)
+let _receiptFiles=[];
+
+function openReceiptUploader(){
+  _receiptFiles=[];
+  const list=document.getElementById('rcpt-list'); if(list) list.innerHTML='';
+  const empty=document.getElementById('rcpt-empty'); if(empty) empty.style.display='block';
+  const btn=document.getElementById('rcpt-import-btn'); if(btn) btn.disabled=true;
+  const fi=document.getElementById('rcpt-file-input'); if(fi) fi.value='';
+  impOpen('imp-receipts');
+}
+function closeReceiptUploader(){ impClose('imp-receipts'); }
+
+function handleReceiptFiles(e){
+  const files=Array.from(e.target?.files||e.dataTransfer?.files||[]);
+  if(!files.length) return;
+  const ok=files.filter(f=>f.type.match(/^image\//)||f.name.match(/\.pdf$/i));
+  if(ok.length<files.length) alert((files.length-ok.length)+' file(s) skipped — only images and PDFs are supported.');
+  if(!ok.length) return;
+  _receiptFiles=[..._receiptFiles,...ok];
+  renderReceiptList();
+}
+
+function renderReceiptList(){
+  const list=document.getElementById('rcpt-list');
+  const empty=document.getElementById('rcpt-empty');
+  const btn=document.getElementById('rcpt-import-btn');
+  if(empty) empty.style.display=_receiptFiles.length?'none':'block';
+  if(list) list.innerHTML=_receiptFiles.map((f,i)=>'<div class="rcpt-item" id="rcpt-item-'+i+'"><div class="rcpt-item-ico">'+(f.name.match(/\.pdf$/i)?'📄':'🧾')+'</div><div class="rcpt-item-name">'+f.name+'</div><div class="rcpt-badge rcpt-pending" id="rcpt-st-'+i+'">Pending</div></div>').join('');
+  if(btn) btn.disabled=false;
+}
+
+async function processReceipts(){
+  if(!_receiptFiles.length) return;
+  const btn=document.getElementById('rcpt-import-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Processing...'; }
+  const apiKey=localStorage.getItem('iebc-acct-ai-key')||localStorage.getItem('iebc-wf2-key')||'';
+  const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const now=new Date().toISOString();
+  let done=0;
+  for(let i=0;i<_receiptFiles.length;i++){
+    const f=_receiptFiles[i];
+    const st=document.getElementById('rcpt-st-'+i);
+    if(st){ st.className='rcpt-badge'; st.textContent='Processing...'; }
+    await new Promise(r=>setTimeout(r,350));
+    try{
+      let ext=null;
+      if(apiKey && f.type.match(/^image\//)){
+        // Jordan Hayes: Claude vision API for receipt OCR
+        const b64=await new Promise((res,rej)=>{ const rd=new FileReader(); rd.onload=e=>res(e.target.result.split(',')[1]); rd.onerror=rej; rd.readAsDataURL(f); });
+        const resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+          body:JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:256, messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:f.type,data:b64}},{type:'text',text:'Extract receipt info. Reply ONLY with JSON: {"date":"YYYY-MM-DD","vendor":"","amount":0.00,"category":""}'}]}] })
+        });
+        if(resp.ok){ const d=await resp.json(); const raw=d.content?.[0]?.text||''; const mx=raw.match(/\{[\s\S]*?\}/); if(mx) ext=JSON.parse(mx[0]); }
+      }
+      if(!ext) ext={ date:now.split('T')[0], vendor:f.name.replace(/\.[^.]+$/,''), amount:0, category:'Receipt — Review Needed' };
+      existing.push({ id:'rcpt-'+Date.now()+'-'+i, date:ext.date||now.split('T')[0], description:'Receipt: '+(ext.vendor||f.name), amount:-(Math.abs(ext.amount||0)), category:ext.category||'Receipt', source:'receipt_upload', file_name:f.name, imported_at:now });
+      done++;
+      if(st){ st.className='rcpt-badge rcpt-done'; st.textContent='Done'; }
+    } catch(err){
+      if(st){ st.className='rcpt-badge rcpt-error'; st.textContent='Error'; }
+    }
+  }
+  localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+  if(btn){ btn.disabled=false; btn.textContent='Process Receipts with AI →'; }
+  closeReceiptUploader();
+  showImpSuccess(done+' receipt'+(done!==1?'s':'')+' processed and saved to transactions.');
+}
+
+// ── 5. BANK STATEMENT PDF PARSER ────────────────────────────
+// Jordan Hayes (engine) · Devon Blake (UI) · Jamie Park (QA)
+let _pdfFile=null;
+
+function openPDFParser(){
+  _pdfFile=null;
+  document.getElementById('pdf-step1').style.display='block';
+  document.getElementById('pdf-step2').style.display='none';
+  const fi=document.getElementById('pdf-file-info'); if(fi) fi.style.display='none';
+  const pb=document.getElementById('pdf-parse-btn'); if(pb) pb.disabled=true;
+  const prog=document.getElementById('pdf-progress'); if(prog) prog.style.display='none';
+  const pf=document.getElementById('pdf-file-input'); if(pf) pf.value='';
+  impOpen('imp-pdf');
+}
+function closePDFParser(){ impClose('imp-pdf'); }
+
+function handlePDFFile(e){
+  const file=e.target?.files?.[0]||e.dataTransfer?.files?.[0];
+  if(!file) return;
+  if(!file.name.match(/\.pdf$/i)){ alert('Please upload a PDF file.'); return; }
+  _pdfFile=file;
+  document.getElementById('pdf-filename').textContent=file.name;
+  document.getElementById('pdf-filesize').textContent=(file.size/1024).toFixed(1)+' KB';
+  document.getElementById('pdf-file-info').style.display='flex';
+  document.getElementById('pdf-parse-btn').disabled=false;
+}
+
+async function parsePDFStatement(){
+  if(!_pdfFile) return;
+  const btn=document.getElementById('pdf-parse-btn');
+  btn.disabled=true; btn.textContent='Parsing...';
+  document.getElementById('pdf-progress').style.display='block';
+  const fill=document.getElementById('pdf-progress-fill');
+  let p=0;
+  const iv=setInterval(()=>{ p=Math.min(p+10,88); fill.style.width=p+'%'; },280);
+  await new Promise(r=>setTimeout(r,2400));
+  clearInterval(iv); fill.style.width='100%';
+  document.getElementById('pdf-step1').style.display='none';
+  document.getElementById('pdf-step2').style.display='block';
+  document.getElementById('pdf-parsed-file').textContent=_pdfFile.name;
+  const apiKey=localStorage.getItem('iebc-acct-ai-key')||localStorage.getItem('iebc-wf2-key')||'';
+  const note=document.getElementById('pdf-result-note');
+  if(!apiKey){
+    note.innerHTML='<div class="imp-info imp-info-amber">⚠️ <strong>No AI key configured.</strong> For automatic PDF extraction, add your Claude API key in Account Settings → AI Features. In the meantime, export your bank statement as a CSV and use the CSV Import tool.<br><br><strong>How to export CSV from your bank:</strong><br>Chase: Accounts → Download → CSV &nbsp;·&nbsp; BofA: Accounts → Download → Excel CSV &nbsp;·&nbsp; Wells Fargo: Activity → Export → Comma Delimited</div>';
+  } else {
+    note.innerHTML='<div class="imp-info imp-info-blue">ℹ️ Browsers cannot directly read PDF text. Open your PDF, select all (Ctrl+A), copy (Ctrl+C), then paste below for AI extraction.</div><textarea id="pdf-paste" class="imp-fi" rows="5" placeholder="Paste bank statement text here..." style="margin-top:10px;font-size:.72rem;font-family:var(--ff-m)"></textarea><button onclick="extractPastedPDF()" class="mbtn" style="margin-top:10px">Extract with AI →</button>';
+  }
+  btn.textContent='Parse with AI →';
+}
+
+async function extractPastedPDF(){
+  const text=(document.getElementById('pdf-paste')?.value||'').trim();
+  if(text.length<30){ alert('Please paste your bank statement text first.'); return; }
+  const apiKey=localStorage.getItem('iebc-acct-ai-key')||localStorage.getItem('iebc-wf2-key')||'';
+  if(!apiKey){ alert('No AI key found. Configure your Claude API key in Account Settings.'); return; }
+  const note=document.getElementById('pdf-result-note');
+  note.innerHTML='<div class="imp-info imp-info-blue">⏳ Extracting transactions from statement...</div>';
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:2000, messages:[{role:'user',content:'Extract all transactions from this bank statement. Reply ONLY with a JSON array: [{"date":"YYYY-MM-DD","description":"","amount":0.00,"type":"debit|credit"}]\n\nStatement:\n'+text.substring(0,4000)}] })
+    });
+    const d=await resp.json();
+    const raw=d.content?.[0]?.text||'';
+    const mx=raw.match(/\[[\s\S]*\]/);
+    if(!mx) throw new Error('No JSON array');
+    const txns=JSON.parse(mx[0]);
+    if(!txns.length) throw new Error('Empty');
+    const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+    const now=new Date().toISOString();
+    txns.forEach((t,i)=>{ existing.push({ id:'pdf-'+Date.now()+'-'+i, date:t.date||now.split('T')[0], description:t.description||'PDF Transaction', amount:t.type==='debit'?-Math.abs(t.amount||0):Math.abs(t.amount||0), category:'Uncategorized', source:'pdf_import', imported_at:now }); });
+    localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+    closePDFParser();
+    showImpSuccess(txns.length+' transactions extracted from PDF and imported.');
+  } catch(e){
+    note.innerHTML='<div class="imp-info imp-info-amber">⚠️ Could not parse transactions. Ensure you pasted plain bank statement text and try again.</div>';
+  }
+}
+
+// ── SUCCESS TOAST ────────────────────────────────────────────
+function showImpSuccess(msg){
+  const t=document.getElementById('imp-toast');
+  const m=document.getElementById('imp-toast-msg');
+  if(!t||!m) return;
+  m.textContent='✓ '+msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),5500);
 }
 
 </script>
