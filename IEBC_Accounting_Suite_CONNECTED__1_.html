@@ -501,6 +501,33 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .imp-file-info{display:none;align-items:center;gap:10px;padding:9px 12px;background:var(--green-lt);border:1px solid rgba(4,120,87,.18);border-radius:8px;margin-top:8px}
 .imp-file-info-name{font-weight:700;font-size:.78rem;color:var(--navy);flex:1}
 .imp-file-info-size{font-family:var(--ff-m);font-size:.6rem;color:var(--text3)}
+/* ══ PAYROLL ENGINE ══ */
+.pr-emp-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.pr-emp-card:hover{border-color:var(--navy)}
+.pr-emp-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy3));display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.72rem;font-weight:800;color:var(--gold3);flex-shrink:0}
+.pr-emp-info{flex:1;min-width:0}
+.pr-emp-name{font-weight:700;font-size:.84rem;color:var(--navy)}
+.pr-emp-role{font-family:var(--ff-m);font-size:.58rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+.pr-emp-pay{text-align:right;flex-shrink:0}
+.pr-emp-gross{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy)}
+.pr-emp-net{font-family:var(--ff-m);font-size:.58rem;color:var(--green);margin-top:2px}
+.pr-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-family:var(--ff-m);font-size:.54rem;font-weight:700;letter-spacing:.04em}
+.pr-badge-green{background:var(--green-lt);color:var(--green)}
+.pr-badge-amber{background:var(--amber-lt);color:var(--amber)}
+.pr-badge-blue{background:var(--blue-lt);color:var(--blue)}
+.pr-badge-red{background:var(--red-lt);color:var(--red)}
+.pr-section-hd{font-family:var(--ff-m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid var(--border)}
+.pr-deduct-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.78rem;border-bottom:1px solid var(--border)}
+.pr-deduct-row:last-child{border:none}
+.pr-deduct-label{color:var(--text2)}
+.pr-deduct-val{font-family:var(--ff-m);font-size:.72rem;font-weight:700;color:var(--text)}
+.pr-deduct-val.neg{color:var(--red)}
+.pr-deduct-val.total{color:var(--navy);font-size:.82rem}
+.pr-run-summary{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:12px;padding:20px;color:#fff}
+.pr-run-stat{text-align:center}
+.pr-run-stat-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--gold3)}
+.pr-run-stat-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
+.pr-history-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
 </style>
 </head>
 <body>
@@ -519,6 +546,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-automation" onclick="showPage('automation')">Automation</button>
     <button class="nav-link" id="nl-security" onclick="showPage('security')">Security</button>
     <button class="nav-link" id="nl-consultants" onclick="showPage('consultants')">Advisors</button>
+    <button class="nav-link" id="nl-payroll" onclick="showPage('payroll')" style="color:var(--gold3)">💵 Payroll</button>
     <button class="nav-link" id="nl-invoices" onclick="showPage('invoices')" style="color:var(--gold3)">🧾 Invoices</button>
     <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')" style="color:var(--gold3)">📊 Live Demo</button>
   </div>
@@ -535,6 +563,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-automation" onclick="showPage('automation');toggleMenu()">Automation</button>
   <button class="nav-mobile-link" id="mnl-security" onclick="showPage('security');toggleMenu()">Security</button>
   <button class="nav-mobile-link" id="mnl-consultants" onclick="showPage('consultants');toggleMenu()">Advisors</button>
+  <button class="nav-mobile-link" id="mnl-payroll" onclick="showPage('payroll');toggleMenu()" style="color:var(--gold3)">💵 Payroll</button>
   <button class="nav-mobile-link" id="mnl-invoices" onclick="showPage('invoices');toggleMenu()" style="color:var(--gold3)">🧾 Invoices</button>
   <button class="nav-mobile-link" id="mnl-dashboard" onclick="showPage('dashboard');toggleMenu()" style="color:var(--gold3)">📊 Live Demo</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
@@ -1163,6 +1192,172 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
+     PAGE: PAYROLL CALCULATOR & MANAGER
+     Kai Okafor (engine) · Devon Blake (UI) · Jordan Hayes (tax logic)
+     Sprint 2 · Hours 25–35 of 100-hour build
+     ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-payroll">
+  <div class="page-hero" style="padding-bottom:24px">
+    <span class="page-hero-eyebrow">Payroll & HR</span>
+    <div class="page-hero-title">Run Payroll in <em>Under 2 Minutes.</em></div>
+    <div class="page-hero-desc">Add employees, set pay rates, choose your schedule — Efficient calculates taxes, deductions, and net pay automatically. Every run. Zero errors.</div>
+  </div>
+
+  <div class="wrap" style="padding-top:0">
+
+    <!-- ── TOP SUMMARY STRIP ── -->
+    <div id="pr-summary-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Employees</div>
+        <div id="pr-stat-emp" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--navy)">0</div>
+      </div>
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Gross This Period</div>
+        <div id="pr-stat-gross" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--navy)">$0</div>
+      </div>
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Net Payout</div>
+        <div id="pr-stat-net" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--green)">$0</div>
+      </div>
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Employer Taxes</div>
+        <div id="pr-stat-employer" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--amber)">$0</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start" class="inv-grid">
+
+      <!-- LEFT COLUMN: Employee Management + Pay Period -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Pay Period Config -->
+        <div class="dash-card">
+          <div class="dash-card-hd"><div class="dash-card-title">Pay Period</div><div class="dash-card-sub">Applies to all employees</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div>
+              <label class="imp-lbl">Schedule</label>
+              <select class="imp-fi" id="pr-schedule" onchange="refreshPayrollSummary()">
+                <option value="weekly">Weekly (52×/yr)</option>
+                <option value="biweekly" selected>Bi-Weekly (26×/yr)</option>
+                <option value="semimonthly">Semi-Monthly (24×/yr)</option>
+                <option value="monthly">Monthly (12×/yr)</option>
+              </select>
+            </div>
+            <div>
+              <label class="imp-lbl">Pay Date</label>
+              <input class="imp-fi" id="pr-paydate" type="date">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label class="imp-lbl">Period Start</label>
+              <input class="imp-fi" id="pr-period-start" type="date">
+            </div>
+            <div>
+              <label class="imp-lbl">Period End</label>
+              <input class="imp-fi" id="pr-period-end" type="date">
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Employee Form -->
+        <div class="dash-card">
+          <div class="dash-card-hd"><div class="dash-card-title">Add Employee</div><div class="dash-card-sub">Saved locally · Supabase sync Sprint 2</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div><label class="imp-lbl">First Name</label><input class="imp-fi" id="pr-fname" type="text" placeholder="First"></div>
+            <div><label class="imp-lbl">Last Name</label><input class="imp-fi" id="pr-lname" type="text" placeholder="Last"></div>
+          </div>
+          <div style="margin-bottom:8px"><label class="imp-lbl">Job Title</label><input class="imp-fi" id="pr-title" type="text" placeholder="e.g. Office Manager"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label class="imp-lbl">Pay Type</label>
+              <select class="imp-fi" id="pr-paytype" onchange="toggleHours()">
+                <option value="salary">Salary</option>
+                <option value="hourly">Hourly</option>
+              </select>
+            </div>
+            <div>
+              <label class="imp-lbl" id="pr-rate-lbl">Annual Salary ($)</label>
+              <input class="imp-fi" id="pr-rate" type="number" min="0" step="1000" placeholder="65000">
+            </div>
+          </div>
+          <div id="pr-hours-row" style="display:none;margin-bottom:8px">
+            <label class="imp-lbl">Hours This Period</label>
+            <input class="imp-fi" id="pr-hours" type="number" min="0" max="200" step="0.5" placeholder="80" value="80">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label class="imp-lbl">Filing Status</label>
+              <select class="imp-fi" id="pr-filing">
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="hoh">Head of HH</option>
+              </select>
+            </div>
+            <div>
+              <label class="imp-lbl">W-4 Allowances</label>
+              <input class="imp-fi" id="pr-allowances" type="number" min="0" max="20" value="1">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div><label class="imp-lbl">Health ($)</label><input class="imp-fi" id="pr-health" type="number" min="0" step="10" value="0" placeholder="150"></div>
+            <div><label class="imp-lbl">Dental ($)</label><input class="imp-fi" id="pr-dental" type="number" min="0" step="5" value="0" placeholder="25"></div>
+            <div><label class="imp-lbl">401k (%)</label><input class="imp-fi" id="pr-401k" type="number" min="0" max="50" step="0.5" value="0" placeholder="3"></div>
+          </div>
+          <button onclick="addEmployee()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px">+ Add Employee</button>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Employee List + Paycheck Preview -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Employee Roster -->
+        <div class="dash-card">
+          <div class="dash-card-hd">
+            <div><div class="dash-card-title">Employee Roster</div><div class="dash-card-sub" id="pr-roster-sub">No employees yet</div></div>
+            <button onclick="runPayroll()" id="pr-run-btn" class="mbtn" style="margin:0;font-size:.7rem;padding:8px 14px;opacity:.4;pointer-events:none">▶ Run Payroll</button>
+          </div>
+          <div id="pr-emp-list" style="display:flex;flex-direction:column;gap:8px">
+            <div style="text-align:center;padding:24px;font-size:.78rem;color:var(--text3);font-family:var(--ff-m)">Add employees using the form →</div>
+          </div>
+        </div>
+
+        <!-- Selected Employee Paycheck Detail -->
+        <div class="dash-card" id="pr-paycheck-card" style="display:none">
+          <div class="dash-card-hd"><div class="dash-card-title" id="pr-pc-name">Pay Stub</div><div class="dash-card-sub" id="pr-pc-period">This Period</div></div>
+          <div class="pr-section-hd" style="margin-top:4px">Earnings</div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label" id="pr-pc-pay-type">Base Pay</span><span class="pr-deduct-val" id="pr-pc-gross">$0.00</span></div>
+          <div class="pr-section-hd" style="margin-top:12px">Deductions</div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">Federal Income Tax</span><span class="pr-deduct-val neg" id="pr-pc-fed">-$0.00</span></div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">State Income Tax (est.)</span><span class="pr-deduct-val neg" id="pr-pc-state">-$0.00</span></div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">Social Security (6.2%)</span><span class="pr-deduct-val neg" id="pr-pc-ss">-$0.00</span></div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">Medicare (1.45%)</span><span class="pr-deduct-val neg" id="pr-pc-medicare">-$0.00</span></div>
+          <div id="pr-pc-health-row" class="pr-deduct-row" style="display:none"><span class="pr-deduct-label">Health Insurance</span><span class="pr-deduct-val neg" id="pr-pc-health">-$0.00</span></div>
+          <div id="pr-pc-dental-row" class="pr-deduct-row" style="display:none"><span class="pr-deduct-label">Dental Insurance</span><span class="pr-deduct-val neg" id="pr-pc-dental">-$0.00</span></div>
+          <div id="pr-pc-401k-row" class="pr-deduct-row" style="display:none"><span class="pr-deduct-label">401(k) Contribution</span><span class="pr-deduct-val neg" id="pr-pc-401k">-$0.00</span></div>
+          <div class="pr-deduct-row" style="border-top:2px solid var(--navy);margin-top:6px;padding-top:10px">
+            <span class="pr-deduct-label" style="font-weight:800;color:var(--navy)">NET PAY</span>
+            <span class="pr-deduct-val total" id="pr-pc-net">$0.00</span>
+          </div>
+          <div style="margin-top:10px;padding:8px 12px;background:var(--off);border-radius:8px;font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">
+            Employer FICA match: <span id="pr-pc-employer-fica" style="font-weight:700;color:var(--amber)">$0.00</span> (SS 6.2% + Medicare 1.45%)
+          </div>
+        </div>
+
+        <!-- Payroll History -->
+        <div class="dash-card">
+          <div class="dash-card-hd"><div class="dash-card-title">Payroll History</div><div class="dash-card-sub">Last 6 runs</div></div>
+          <div id="pr-history-list" style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:.72rem;color:var(--text3);font-family:var(--ff-m);padding:6px 0">No payroll runs yet. Add employees and run payroll above.</div>
+          </div>
+          <button onclick="exportPayrollCSV()" style="margin-top:12px;width:100%;padding:8px;background:var(--off);border:1.5px solid var(--border);border-radius:8px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;color:var(--navy);cursor:pointer;text-transform:uppercase;letter-spacing:.08em" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">⬇ Export Payroll CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
      PAGE: INVOICE CREATOR
      Jordan Hayes (engine) · Zara Chen (UI) · Sam Torres (Stripe)
      ══════════════════════════════════════════════════════════ -->
@@ -1612,7 +1807,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <div id="imp-toast"><span id="imp-toast-msg"></span></div>
 
 <script>
-const pages = ['home','features','pricing','compare','automation','security','consultants','invoices','dashboard'];
+const pages = ['home','features','pricing','compare','automation','security','consultants','payroll','invoices','dashboard'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -1623,6 +1818,8 @@ function showPage(id) {
   });
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='dashboard') initDash();
+  if(id==='payroll') initPayroll();
+  if(id==='invoices') initInvoices();
 }
 function toggleMenu() {
   document.getElementById('mobile-menu').classList.toggle('open');
@@ -2881,6 +3078,269 @@ async function extractPastedPDF(){
   } catch(e){
     note.innerHTML='<div class="imp-info imp-info-amber">⚠️ Could not parse transactions. Ensure you pasted plain bank statement text and try again.</div>';
   }
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAYROLL ENGINE
+// Kai Okafor (engine) · Devon Blake (UI) · Jordan Hayes (tax)
+// ══════════════════════════════════════════════════════════════
+let _prEmployees = [];
+let _prSelected = null;
+
+function initPayroll() {
+  _prEmployees = JSON.parse(localStorage.getItem('iebc-employees') || '[]');
+  // Set default pay period dates
+  const today = new Date();
+  const start = new Date(today); start.setDate(today.getDate() - 13);
+  const pay = new Date(today); pay.setDate(today.getDate() + 1);
+  document.getElementById('pr-period-start').value = start.toISOString().split('T')[0];
+  document.getElementById('pr-period-end').value = today.toISOString().split('T')[0];
+  document.getElementById('pr-paydate').value = pay.toISOString().split('T')[0];
+  renderEmployeeList();
+  refreshPayrollSummary();
+  renderPayrollHistory();
+}
+
+function toggleHours() {
+  const t = document.getElementById('pr-paytype').value;
+  const hr = document.getElementById('pr-hours-row');
+  const rl = document.getElementById('pr-rate-lbl');
+  if (t === 'hourly') { hr.style.display = ''; rl.textContent = 'Hourly Rate ($)'; }
+  else { hr.style.display = 'none'; rl.textContent = 'Annual Salary ($)'; }
+}
+
+// Federal income tax withholding (2026 simplified — single annual brackets ÷ pay periods)
+function calcFedTax(annualGross, filing, allowances) {
+  const allowanceAmt = 4700; // ~2026 est per allowance
+  const taxable = Math.max(0, annualGross - (allowances * allowanceAmt));
+  let tax = 0;
+  if (filing === 'married') {
+    // Married brackets
+    if (taxable <= 29200) tax = taxable * 0.10;
+    else if (taxable <= 105050) tax = 2920 + (taxable - 29200) * 0.12;
+    else if (taxable <= 200300) tax = 12114 + (taxable - 105050) * 0.22;
+    else if (taxable <= 383900) tax = 33108 + (taxable - 200300) * 0.24;
+    else if (taxable <= 487450) tax = 77186 + (taxable - 383900) * 0.32;
+    else if (taxable <= 731200) tax = 110358 + (taxable - 487450) * 0.35;
+    else tax = 195778 + (taxable - 731200) * 0.37;
+  } else {
+    // Single / HOH (simplified)
+    if (taxable <= 11600) tax = taxable * 0.10;
+    else if (taxable <= 47150) tax = 1160 + (taxable - 11600) * 0.12;
+    else if (taxable <= 100525) tax = 5426 + (taxable - 47150) * 0.22;
+    else if (taxable <= 191950) tax = 17168 + (taxable - 100525) * 0.24;
+    else if (taxable <= 243725) tax = 39110 + (taxable - 191950) * 0.32;
+    else if (taxable <= 609350) tax = 55678 + (taxable - 243725) * 0.35;
+    else tax = 183647 + (taxable - 609350) * 0.37;
+  }
+  return tax; // annual amount
+}
+
+function periodsPerYear(schedule) {
+  return { weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12 }[schedule] || 26;
+}
+
+function calcPaycheck(emp) {
+  const sched = document.getElementById('pr-schedule')?.value || 'biweekly';
+  const periods = periodsPerYear(sched);
+  let gross = 0;
+  if (emp.paytype === 'hourly') {
+    gross = (parseFloat(emp.rate) || 0) * (parseFloat(emp.hours) || 80);
+  } else {
+    gross = (parseFloat(emp.rate) || 0) / periods;
+  }
+  const annualGross = gross * periods;
+  // Federal
+  const fedAnnual = calcFedTax(annualGross, emp.filing || 'single', parseInt(emp.allowances) || 1);
+  const fed = fedAnnual / periods;
+  // State (flat 5% estimate)
+  const state = gross * 0.05;
+  // FICA
+  const ss = Math.min(gross * 0.062, (168600 / periods) * 0.062);
+  const medicare = gross * 0.0145;
+  // Benefits
+  const health = parseFloat(emp.health) || 0;
+  const dental = parseFloat(emp.dental) || 0;
+  const k401 = gross * ((parseFloat(emp.k401) || 0) / 100);
+  const totalDeduct = fed + state + ss + medicare + health + dental + k401;
+  const net = Math.max(0, gross - totalDeduct);
+  const employerFica = ss + medicare; // employer matches FICA
+  return { gross, fed, state, ss, medicare, health, dental, k401, totalDeduct, net, employerFica };
+}
+
+function addEmployee() {
+  const fname = document.getElementById('pr-fname').value.trim();
+  const lname = document.getElementById('pr-lname').value.trim();
+  if (!fname || !lname) { alert('First and last name required.'); return; }
+  const rate = parseFloat(document.getElementById('pr-rate').value);
+  if (!rate || rate <= 0) { alert('Please enter a valid pay rate.'); return; }
+  const emp = {
+    id: 'EMP-' + Date.now(),
+    fname, lname,
+    title: document.getElementById('pr-title').value.trim() || 'Employee',
+    paytype: document.getElementById('pr-paytype').value,
+    rate: rate,
+    hours: parseFloat(document.getElementById('pr-hours').value) || 80,
+    filing: document.getElementById('pr-filing').value,
+    allowances: parseInt(document.getElementById('pr-allowances').value) || 1,
+    health: parseFloat(document.getElementById('pr-health').value) || 0,
+    dental: parseFloat(document.getElementById('pr-dental').value) || 0,
+    k401: parseFloat(document.getElementById('pr-401k').value) || 0,
+    status: 'active',
+    added: new Date().toISOString()
+  };
+  _prEmployees.push(emp);
+  localStorage.setItem('iebc-employees', JSON.stringify(_prEmployees));
+  // Reset form
+  ['pr-fname','pr-lname','pr-title','pr-rate','pr-hours','pr-health','pr-dental','pr-401k'].forEach(id => { const el = document.getElementById(id); if(el) el.value = id === 'pr-hours' ? '80' : id === 'pr-allowances' ? '1' : ''; });
+  renderEmployeeList();
+  refreshPayrollSummary();
+  showImpSuccess(fname + ' ' + lname + ' added to payroll.');
+}
+
+function removeEmployee(id) {
+  _prEmployees = _prEmployees.filter(e => e.id !== id);
+  localStorage.setItem('iebc-employees', JSON.stringify(_prEmployees));
+  if (_prSelected === id) { _prSelected = null; document.getElementById('pr-paycheck-card').style.display = 'none'; }
+  renderEmployeeList();
+  refreshPayrollSummary();
+}
+
+function renderEmployeeList() {
+  const el = document.getElementById('pr-emp-list');
+  const sub = document.getElementById('pr-roster-sub');
+  const runBtn = document.getElementById('pr-run-btn');
+  if (!el) return;
+  if (!_prEmployees.length) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;font-size:.78rem;color:var(--text3);font-family:var(--ff-m)">Add employees using the form →</div>';
+    sub.textContent = 'No employees yet';
+    runBtn.style.opacity = '.4'; runBtn.style.pointerEvents = 'none';
+    return;
+  }
+  sub.textContent = _prEmployees.length + ' employee' + (_prEmployees.length > 1 ? 's' : '') + ' · click to preview pay stub';
+  runBtn.style.opacity = '1'; runBtn.style.pointerEvents = '';
+  el.innerHTML = _prEmployees.map(emp => {
+    const pc = calcPaycheck(emp);
+    const initials = emp.fname[0] + emp.lname[0];
+    const payLabel = emp.paytype === 'hourly' ? '$' + parseFloat(emp.rate).toFixed(2) + '/hr' : '$' + (parseFloat(emp.rate)/1000).toFixed(0) + 'K/yr';
+    return `<div class="pr-emp-card" onclick="selectEmployee('${emp.id}')" style="${_prSelected===emp.id?'border-color:var(--navy);background:var(--off)':''}">
+      <div class="pr-emp-avatar">${initials}</div>
+      <div class="pr-emp-info">
+        <div class="pr-emp-name">${emp.fname} ${emp.lname}</div>
+        <div class="pr-emp-role">${emp.title} · ${payLabel}</div>
+        <div style="margin-top:4px"><span class="pr-badge pr-badge-green">Active</span></div>
+      </div>
+      <div class="pr-emp-pay">
+        <div class="pr-emp-gross">$${pc.gross.toFixed(2)}</div>
+        <div class="pr-emp-net">Net $${pc.net.toFixed(2)}</div>
+      </div>
+      <button onclick="event.stopPropagation();removeEmployee('${emp.id}')" title="Remove" style="background:var(--red-lt);border:none;color:var(--red);width:26px;height:26px;border-radius:50%;font-size:.78rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">×</button>
+    </div>`;
+  }).join('');
+}
+
+function selectEmployee(id) {
+  _prSelected = id;
+  const emp = _prEmployees.find(e => e.id === id);
+  if (!emp) return;
+  renderEmployeeList(); // refresh to show selection
+  const pc = calcPaycheck(emp);
+  const card = document.getElementById('pr-paycheck-card');
+  card.style.display = '';
+  document.getElementById('pr-pc-name').textContent = emp.fname + ' ' + emp.lname + ' — Pay Stub';
+  const sched = document.getElementById('pr-schedule')?.value || 'biweekly';
+  const schedLabel = {weekly:'Weekly',biweekly:'Bi-Weekly',semimonthly:'Semi-Monthly',monthly:'Monthly'}[sched];
+  document.getElementById('pr-pc-period').textContent = schedLabel + ' · ' + (document.getElementById('pr-period-start')?.value||'') + ' – ' + (document.getElementById('pr-period-end')?.value||'');
+  document.getElementById('pr-pc-pay-type').textContent = emp.paytype === 'hourly' ? 'Hourly Pay (' + emp.hours + ' hrs × $' + parseFloat(emp.rate).toFixed(2) + ')' : 'Salary (Annual $' + parseFloat(emp.rate).toLocaleString() + ')';
+  document.getElementById('pr-pc-gross').textContent = '$' + pc.gross.toFixed(2);
+  document.getElementById('pr-pc-fed').textContent = '-$' + pc.fed.toFixed(2);
+  document.getElementById('pr-pc-state').textContent = '-$' + pc.state.toFixed(2);
+  document.getElementById('pr-pc-ss').textContent = '-$' + pc.ss.toFixed(2);
+  document.getElementById('pr-pc-medicare').textContent = '-$' + pc.medicare.toFixed(2);
+  if (pc.health > 0) { document.getElementById('pr-pc-health-row').style.display=''; document.getElementById('pr-pc-health').textContent = '-$' + pc.health.toFixed(2); } else document.getElementById('pr-pc-health-row').style.display='none';
+  if (pc.dental > 0) { document.getElementById('pr-pc-dental-row').style.display=''; document.getElementById('pr-pc-dental').textContent = '-$' + pc.dental.toFixed(2); } else document.getElementById('pr-pc-dental-row').style.display='none';
+  if (pc.k401 > 0) { document.getElementById('pr-pc-401k-row').style.display=''; document.getElementById('pr-pc-401k').textContent = '-$' + pc.k401.toFixed(2); } else document.getElementById('pr-pc-401k-row').style.display='none';
+  document.getElementById('pr-pc-net').textContent = '$' + pc.net.toFixed(2);
+  document.getElementById('pr-pc-employer-fica').textContent = '$' + pc.employerFica.toFixed(2);
+}
+
+function refreshPayrollSummary() {
+  let totalGross = 0, totalNet = 0, totalEmployer = 0;
+  _prEmployees.forEach(emp => {
+    const pc = calcPaycheck(emp);
+    totalGross += pc.gross;
+    totalNet += pc.net;
+    totalEmployer += pc.employerFica;
+  });
+  const fmt = v => '$' + v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  set('pr-stat-emp', _prEmployees.length.toString());
+  set('pr-stat-gross', fmt(totalGross));
+  set('pr-stat-net', fmt(totalNet));
+  set('pr-stat-employer', fmt(totalEmployer));
+  if (_prSelected) renderEmployeeList();
+}
+
+function runPayroll() {
+  if (!_prEmployees.length) return;
+  const paydate = document.getElementById('pr-paydate')?.value || new Date().toISOString().split('T')[0];
+  const start = document.getElementById('pr-period-start')?.value || '';
+  const end = document.getElementById('pr-period-end')?.value || '';
+  const sched = document.getElementById('pr-schedule')?.value || 'biweekly';
+  let totalGross = 0, totalNet = 0, totalTax = 0;
+  const details = _prEmployees.map(emp => {
+    const pc = calcPaycheck(emp);
+    totalGross += pc.gross;
+    totalNet += pc.net;
+    totalTax += pc.fed + pc.state + pc.ss + pc.medicare;
+    return { empId: emp.id, name: emp.fname + ' ' + emp.lname, gross: pc.gross, net: pc.net, taxes: pc.fed + pc.state + pc.ss + pc.medicare };
+  });
+  const run = {
+    id: 'PR-' + Date.now(),
+    paydate, start, end, schedule: sched,
+    employeeCount: _prEmployees.length,
+    totalGross, totalNet, totalTax,
+    details, ran_at: new Date().toISOString()
+  };
+  const history = JSON.parse(localStorage.getItem('iebc-payroll-runs') || '[]');
+  history.unshift(run);
+  localStorage.setItem('iebc-payroll-runs', JSON.stringify(history));
+  // Also add as transactions
+  const txns = JSON.parse(localStorage.getItem('iebc-acct-transactions') || '[]');
+  txns.push({ id: run.id, date: paydate, description: 'Payroll Run ' + run.id + ' · ' + run.employeeCount + ' employees', amount: -totalNet, category: 'Payroll', source: 'payroll', imported_at: new Date().toISOString() });
+  localStorage.setItem('iebc-acct-transactions', JSON.stringify(txns));
+  renderPayrollHistory();
+  showImpSuccess('Payroll run complete — ' + _prEmployees.length + ' employees · $' + totalNet.toFixed(2) + ' net payout · $' + totalTax.toFixed(2) + ' taxes withheld');
+}
+
+function renderPayrollHistory() {
+  const el = document.getElementById('pr-history-list'); if (!el) return;
+  const runs = JSON.parse(localStorage.getItem('iebc-payroll-runs') || '[]').slice(0, 6);
+  if (!runs.length) { el.innerHTML = '<div style="font-size:.72rem;color:var(--text3);font-family:var(--ff-m);padding:6px 0">No payroll runs yet.</div>'; return; }
+  el.innerHTML = runs.map(r => `<div class="pr-history-row">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.76rem;font-weight:700;color:var(--navy)">${r.id} · Pay Date ${r.paydate}</div>
+      <div style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3)">${r.employeeCount} employees · Period ${r.start} – ${r.end}</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:var(--navy)">$${r.totalNet.toFixed(2)}</div>
+      <div style="font-family:var(--ff-m);font-size:.54rem;color:var(--text3)">Gross $${r.totalGross.toFixed(2)}</div>
+    </div>
+    <span class="pr-badge pr-badge-green" style="flex-shrink:0">Paid</span>
+  </div>`).join('');
+}
+
+function exportPayrollCSV() {
+  const runs = JSON.parse(localStorage.getItem('iebc-payroll-runs') || '[]');
+  if (!runs.length) { alert('No payroll runs to export.'); return; }
+  let csv = 'Run ID,Pay Date,Period Start,Period End,Employees,Gross,Net,Taxes\n';
+  runs.forEach(r => {
+    csv += `"${r.id}","${r.paydate}","${r.start}","${r.end}",${r.employeeCount},$${r.totalGross.toFixed(2)},$${r.totalNet.toFixed(2)},$${r.totalTax.toFixed(2)}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'IEBC_Payroll_Export_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click(); URL.revokeObjectURL(a.href);
 }
 
 // ── SUCCESS TOAST ────────────────────────────────────────────
