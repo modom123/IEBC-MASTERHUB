@@ -500,6 +500,125 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .faq-item.open .faq-a-inner{padding:14px 20px 18px}
 .faq-cat-hd{font-family:var(--ff-m);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:28px 0 10px;font-weight:700;max-width:760px;margin-left:auto;margin-right:auto}
 .faq-cat-hd:first-child{margin-top:0}
+/* ══════════════════════════════════════════════════════════
+   KPI DASHBOARD
+   Zara Chen · Devon Blake · Jordan Hayes
+   ══════════════════════════════════════════════════════════ */
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.kpi-card:hover{border-color:var(--gold);box-shadow:0 4px 20px rgba(200,144,42,.12);transform:translateY(-2px)}
+.kpi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:10px}
+.kpi-val{font-family:var(--ff-h);font-size:1.6rem;font-weight:800;color:var(--navy);line-height:1;margin-bottom:4px}
+.kpi-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-weight:600;margin-bottom:5px}
+.kpi-delta{font-family:var(--ff-m);font-size:.65rem;font-weight:700}
+.kpi-up{color:var(--green)}.kpi-dn{color:var(--red)}
+.dash-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.dash-card-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.dash-card-title{font-weight:700;color:var(--navy);font-size:.88rem}
+.dash-card-sub{font-family:var(--ff-m);font-size:.58rem;color:var(--text3);letter-spacing:.06em}
+.txn-row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;background:var(--off);border:1px solid var(--border)}
+.txn-cat{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.txn-desc{font-size:.76rem;font-weight:600;color:var(--navy);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txn-date{font-family:var(--ff-m);font-size:.58rem;color:var(--text3)}
+.txn-amt{font-family:var(--ff-m);font-size:.76rem;font-weight:700;flex-shrink:0}
+.txn-amt-pos{color:var(--green)}.txn-amt-neg{color:var(--red)}
+.auto-chip{font-family:var(--ff-m);font-size:.6rem;font-weight:600;padding:7px 11px;border-radius:8px;letter-spacing:.03em}
+.auto-green{background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.18)}
+.auto-blue{background:var(--blue-lt);color:var(--navy);border:1px solid rgba(29,78,216,.15)}
+@media(max-width:680px){.chart-grid-2,.chart-grid-3{grid-template-columns:1fr!important}}
+
+/* ══════════════════════════════════════════════════════════
+   IMPORT WIZARD MODALS
+   Assigned: Zara Chen (Frontend) · Devon Blake (UI) · Jordan Hayes (Backend)
+   Sam Torres (API) · Casey Monroe (Security) · Amara Cole (Database)
+   ══════════════════════════════════════════════════════════ */
+.imp-overlay{position:fixed;inset:0;background:rgba(11,33,64,.68);backdrop-filter:blur(6px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.imp-overlay.open{opacity:1;pointer-events:all}
+.imp-box{background:#fff;border-radius:16px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 72px rgba(11,33,64,.32);transform:translateY(16px);transition:transform .22s}
+.imp-overlay.open .imp-box{transform:translateY(0)}
+.imp-hd{background:var(--navy);padding:18px 22px 16px;border-radius:16px 16px 0 0;position:relative}
+.imp-hd::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3))}
+.imp-title{font-family:var(--ff-h);font-size:1.05rem;font-weight:800;color:#fff;font-style:italic}
+.imp-sub{font-family:var(--ff-m);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:2px}
+.imp-x{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.1);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.88rem;display:flex;align-items:center;justify-content:center;transition:background .15s;line-height:1}
+.imp-x:hover{background:rgba(255,255,255,.22)}
+.imp-body{padding:20px 22px 24px}
+.imp-lbl{font-family:var(--ff-m);font-size:.52rem;letter-spacing:.13em;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:6px;display:block}
+.imp-fi{width:100%;background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--ff-b);font-size:.83rem;outline:none;transition:all .15s;margin-bottom:0}
+.imp-fi:focus{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(11,33,64,.07)}
+.imp-fi::placeholder{color:var(--text3)}
+.imp-row{margin-bottom:12px}
+.imp-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.imp-err{padding:9px 12px;border-radius:8px;font-size:.75rem;margin-bottom:12px;background:var(--red-lt);border:1px solid rgba(220,38,38,.2);color:var(--red);display:none;align-items:center;gap:7px}
+.imp-info{padding:9px 12px;border-radius:8px;font-size:.74rem;margin-bottom:12px;display:flex;align-items:flex-start;gap:7px;line-height:1.6}
+.imp-info-blue{background:var(--blue-lt);border:1px solid rgba(29,78,216,.15);color:#1e40af}
+.imp-info-green{background:var(--green-lt);border:1px solid rgba(4,120,87,.18);color:var(--green)}
+.imp-info-amber{background:var(--amber-lt);border:1px solid rgba(146,64,14,.15);color:var(--amber)}
+/* drop zone */
+.imp-drop{border:2px dashed var(--border2);border-radius:10px;padding:30px 20px;text-align:center;cursor:pointer;transition:all .18s;background:var(--off)}
+.imp-drop:hover,.imp-drop.drag-over{border-color:var(--navy);background:rgba(11,33,64,.03)}
+.imp-drop-icon{font-size:2.2rem;margin-bottom:8px}
+.imp-drop-txt{font-size:.82rem;font-weight:600;color:var(--text2)}
+.imp-drop-sub{font-size:.66rem;color:var(--text3);font-family:var(--ff-m);margin-top:3px}
+.imp-file-btn{display:inline-block;margin-top:10px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;padding:6px 14px;border-radius:6px;border:1.5px solid var(--border2);background:#fff;color:var(--navy);cursor:pointer;transition:all .15s;letter-spacing:.05em;text-transform:uppercase}
+.imp-file-btn:hover{border-color:var(--navy);background:var(--navy);color:var(--gold2)}
+/* preview table */
+.imp-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin-top:10px;max-height:200px;overflow-y:auto}
+.imp-table{width:100%;border-collapse:collapse;font-size:.72rem}
+.imp-table th{background:var(--navy);color:#fff;padding:7px 10px;text-align:left;font-family:var(--ff-m);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;position:sticky;top:0}
+.imp-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.imp-table tr:last-child td{border-bottom:none}
+.imp-table tr:nth-child(even) td{background:var(--off)}
+/* map rows */
+.imp-map-row{display:grid;grid-template-columns:1fr 24px 1fr;align-items:center;gap:8px;margin-bottom:7px}
+.imp-map-sel{background:var(--off);border:1.5px solid var(--border);border-radius:7px;padding:7px 9px;color:var(--text);font-family:var(--ff-b);font-size:.76rem;outline:none;width:100%}
+.imp-map-sel:focus{border-color:var(--navy)}
+.imp-map-arrow{color:var(--text3);text-align:center;font-size:.9rem}
+/* progress bar */
+.imp-prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin:10px 0}
+.imp-prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3));border-radius:3px;transition:width .35s ease;width:0%}
+/* receipt items */
+.rcpt-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-height:210px;overflow-y:auto}
+.rcpt-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
+.rcpt-item-ico{font-size:1.1rem;flex-shrink:0}
+.rcpt-item-name{font-size:.74rem;font-weight:600;color:var(--navy);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rcpt-badge{font-family:var(--ff-m);font-size:.56rem;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.rcpt-pending{background:var(--amber-lt);color:var(--amber)}
+.rcpt-done{background:var(--green-lt);color:var(--green)}
+.rcpt-error{background:var(--red-lt);color:var(--red)}
+/* toast */
+#imp-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:10px;font-size:.78rem;font-weight:600;box-shadow:0 8px 32px rgba(11,33,64,.28);z-index:11000;transition:transform .3s;white-space:nowrap;border-bottom:3px solid var(--gold)}
+#imp-toast.show{transform:translateX(-50%) translateY(0)}
+/* file info row */
+.imp-file-info{display:none;align-items:center;gap:10px;padding:9px 12px;background:var(--green-lt);border:1px solid rgba(4,120,87,.18);border-radius:8px;margin-top:8px}
+.imp-file-info-name{font-weight:700;font-size:.78rem;color:var(--navy);flex:1}
+.imp-file-info-size{font-family:var(--ff-m);font-size:.6rem;color:var(--text3)}
+/* ══ PAYROLL ENGINE ══ */
+.pr-emp-card{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.pr-emp-card:hover{border-color:var(--navy)}
+.pr-emp-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy3));display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.72rem;font-weight:800;color:var(--gold3);flex-shrink:0}
+.pr-emp-info{flex:1;min-width:0}
+.pr-emp-name{font-weight:700;font-size:.84rem;color:var(--navy)}
+.pr-emp-role{font-family:var(--ff-m);font-size:.58rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+.pr-emp-pay{text-align:right;flex-shrink:0}
+.pr-emp-gross{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy)}
+.pr-emp-net{font-family:var(--ff-m);font-size:.58rem;color:var(--green);margin-top:2px}
+.pr-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-family:var(--ff-m);font-size:.54rem;font-weight:700;letter-spacing:.04em}
+.pr-badge-green{background:var(--green-lt);color:var(--green)}
+.pr-badge-amber{background:var(--amber-lt);color:var(--amber)}
+.pr-badge-blue{background:var(--blue-lt);color:var(--blue)}
+.pr-badge-red{background:var(--red-lt);color:var(--red)}
+.pr-section-hd{font-family:var(--ff-m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid var(--border)}
+.pr-deduct-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:.78rem;border-bottom:1px solid var(--border)}
+.pr-deduct-row:last-child{border:none}
+.pr-deduct-label{color:var(--text2)}
+.pr-deduct-val{font-family:var(--ff-m);font-size:.72rem;font-weight:700;color:var(--text)}
+.pr-deduct-val.neg{color:var(--red)}
+.pr-deduct-val.total{color:var(--navy);font-size:.82rem}
+.pr-run-summary{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:12px;padding:20px;color:#fff}
+.pr-run-stat{text-align:center}
+.pr-run-stat-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--gold3)}
+.pr-run-stat-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
+.pr-history-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
 </style>
 </head>
 <body>
@@ -521,6 +640,9 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-demo" onclick="showPage('demo')">Demo</button>
     <button class="nav-link" id="nl-testimonials" onclick="showPage('testimonials')">Reviews</button>
     <button class="nav-link" id="nl-faq" onclick="showPage('faq')">FAQ</button>
+    <button class="nav-link" id="nl-payroll" onclick="showPage('payroll')" style="color:var(--gold3)">💵 Payroll</button>
+    <button class="nav-link" id="nl-invoices" onclick="showPage('invoices')" style="color:var(--gold3)">🧾 Invoices</button>
+    <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')" style="color:var(--gold3)">📊 Live Demo</button>
   </div>
   <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
@@ -538,6 +660,9 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-demo" onclick="showPage('demo');toggleMenu()">Demo</button>
   <button class="nav-mobile-link" id="mnl-testimonials" onclick="showPage('testimonials');toggleMenu()">Reviews</button>
   <button class="nav-mobile-link" id="mnl-faq" onclick="showPage('faq');toggleMenu()">FAQ</button>
+  <button class="nav-mobile-link" id="mnl-payroll" onclick="showPage('payroll');toggleMenu()" style="color:var(--gold3)">💵 Payroll</button>
+  <button class="nav-mobile-link" id="mnl-invoices" onclick="showPage('invoices');toggleMenu()" style="color:var(--gold3)">🧾 Invoices</button>
+  <button class="nav-mobile-link" id="mnl-dashboard" onclick="showPage('dashboard');toggleMenu()" style="color:var(--gold3)">📊 Live Demo</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
 </div>
 
@@ -669,13 +794,13 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         <div class="bank-tile" id="bt-cc" onclick="toggleBank('bt-cc')"><div class="bt-icon" style="background:#fce4ec">💳</div><div><div class="bt-name">Credit Card</div><div class="bt-type">Import charges · Match receipts</div></div><div class="bt-check">✓</div></div>
         <div class="bank-tile" id="bt-dc" onclick="toggleBank('bt-dc')"><div class="bt-icon" style="background:#fff8e1">🏧</div><div><div class="bt-name">Debit Card</div><div class="bt-type">Real-time purchase capture</div></div><div class="bt-check">✓</div></div>
       </div>
-      <div class="manual-link" onclick="alert('Manual bank details entry would open here.')"><span>🔗</span><span>Connect with routing &amp; account number instead</span></div>
+      <div class="manual-link" onclick="openBankForm()"><span>🔗</span><span>Connect with routing &amp; account number instead</span></div>
       <span class="mslabel" style="margin-top:16px">Import Existing Data</span>
       <div class="import-grid">
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">📊</div><div><div class="ir-name">QuickBooks Export</div><div class="ir-desc">.QBO / .IIF / .CSV — full history</div></div></div><button class="ir-btn" onclick="alert('QBO import wizard would open here.')">Import</button></div>
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">📄</div><div><div class="ir-name">CSV / Excel File</div><div class="ir-desc">Bank statements, transaction exports</div></div></div><button class="ir-btn" onclick="alert('CSV import wizard would open here.')">Upload</button></div>
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">🧾</div><div><div class="ir-name">Receipt Batch Upload</div><div class="ir-desc">Photos or PDFs — AI extracts data</div></div></div><button class="ir-btn" onclick="alert('Bulk receipt uploader would open here.')">Upload</button></div>
-        <div class="import-row"><div class="ir-left"><div class="ir-icon">🏦</div><div><div class="ir-name">Bank Statement PDF</div><div class="ir-desc">AI parses &amp; auto-categorizes</div></div></div><button class="ir-btn" onclick="alert('PDF parser would open here.')">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">📊</div><div><div class="ir-name">QuickBooks Export</div><div class="ir-desc">.QBO / .IIF / .CSV — full history</div></div></div><button class="ir-btn" onclick="openQBOWizard()">Import</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">📄</div><div><div class="ir-name">CSV / Excel File</div><div class="ir-desc">Bank statements, transaction exports</div></div></div><button class="ir-btn" onclick="openCSVWizard()">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">🧾</div><div><div class="ir-name">Receipt Batch Upload</div><div class="ir-desc">Photos or PDFs — AI extracts data</div></div></div><button class="ir-btn" onclick="openReceiptUploader()">Upload</button></div>
+        <div class="import-row"><div class="ir-left"><div class="ir-icon">🏦</div><div><div class="ir-name">Bank Statement PDF</div><div class="ir-desc">AI parses &amp; auto-categorizes</div></div></div><button class="ir-btn" onclick="openPDFParser()">Upload</button></div>
       </div>
       <div class="skip-link" onclick="submitAll()">Skip for now — I'll connect later</div>
       <button class="mbtn" style="margin-top:12px" onclick="submitAll()">Complete Setup →</button>
@@ -1594,6 +1719,370 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <div class="footer">
     <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
     <span>This page does not process real payments</span>
+<!-- ══════════════════════════════════════════════════════════
+     PAGE: PAYROLL CALCULATOR & MANAGER
+     Kai Okafor (engine) · Devon Blake (UI) · Jordan Hayes (tax logic)
+     Sprint 2 · Hours 25–35 of 100-hour build
+     ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-payroll">
+  <div class="page-hero" style="padding-bottom:24px">
+    <span class="page-hero-eyebrow">Payroll & HR</span>
+    <div class="page-hero-title">Run Payroll in <em>Under 2 Minutes.</em></div>
+    <div class="page-hero-desc">Add employees, set pay rates, choose your schedule — Efficient calculates taxes, deductions, and net pay automatically. Every run. Zero errors.</div>
+  </div>
+
+  <div class="wrap" style="padding-top:0">
+
+    <!-- ── TOP SUMMARY STRIP ── -->
+    <div id="pr-summary-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Employees</div>
+        <div id="pr-stat-emp" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--navy)">0</div>
+      </div>
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Gross This Period</div>
+        <div id="pr-stat-gross" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--navy)">$0</div>
+      </div>
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Net Payout</div>
+        <div id="pr-stat-net" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--green)">$0</div>
+      </div>
+      <div class="dash-card" style="padding:14px 16px;text-align:center">
+        <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Employer Taxes</div>
+        <div id="pr-stat-employer" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--amber)">$0</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start" class="inv-grid">
+
+      <!-- LEFT COLUMN: Employee Management + Pay Period -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Pay Period Config -->
+        <div class="dash-card">
+          <div class="dash-card-hd"><div class="dash-card-title">Pay Period</div><div class="dash-card-sub">Applies to all employees</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+            <div>
+              <label class="imp-lbl">Schedule</label>
+              <select class="imp-fi" id="pr-schedule" onchange="refreshPayrollSummary()">
+                <option value="weekly">Weekly (52×/yr)</option>
+                <option value="biweekly" selected>Bi-Weekly (26×/yr)</option>
+                <option value="semimonthly">Semi-Monthly (24×/yr)</option>
+                <option value="monthly">Monthly (12×/yr)</option>
+              </select>
+            </div>
+            <div>
+              <label class="imp-lbl">Pay Date</label>
+              <input class="imp-fi" id="pr-paydate" type="date">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div>
+              <label class="imp-lbl">Period Start</label>
+              <input class="imp-fi" id="pr-period-start" type="date">
+            </div>
+            <div>
+              <label class="imp-lbl">Period End</label>
+              <input class="imp-fi" id="pr-period-end" type="date">
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Employee Form -->
+        <div class="dash-card">
+          <div class="dash-card-hd"><div class="dash-card-title">Add Employee</div><div class="dash-card-sub">Saved locally · Supabase sync Sprint 2</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div><label class="imp-lbl">First Name</label><input class="imp-fi" id="pr-fname" type="text" placeholder="First"></div>
+            <div><label class="imp-lbl">Last Name</label><input class="imp-fi" id="pr-lname" type="text" placeholder="Last"></div>
+          </div>
+          <div style="margin-bottom:8px"><label class="imp-lbl">Job Title</label><input class="imp-fi" id="pr-title" type="text" placeholder="e.g. Office Manager"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label class="imp-lbl">Pay Type</label>
+              <select class="imp-fi" id="pr-paytype" onchange="toggleHours()">
+                <option value="salary">Salary</option>
+                <option value="hourly">Hourly</option>
+              </select>
+            </div>
+            <div>
+              <label class="imp-lbl" id="pr-rate-lbl">Annual Salary ($)</label>
+              <input class="imp-fi" id="pr-rate" type="number" min="0" step="1000" placeholder="65000">
+            </div>
+          </div>
+          <div id="pr-hours-row" style="display:none;margin-bottom:8px">
+            <label class="imp-lbl">Hours This Period</label>
+            <input class="imp-fi" id="pr-hours" type="number" min="0" max="200" step="0.5" placeholder="80" value="80">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div>
+              <label class="imp-lbl">Filing Status</label>
+              <select class="imp-fi" id="pr-filing">
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="hoh">Head of HH</option>
+              </select>
+            </div>
+            <div>
+              <label class="imp-lbl">W-4 Allowances</label>
+              <input class="imp-fi" id="pr-allowances" type="number" min="0" max="20" value="1">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div><label class="imp-lbl">Health ($)</label><input class="imp-fi" id="pr-health" type="number" min="0" step="10" value="0" placeholder="150"></div>
+            <div><label class="imp-lbl">Dental ($)</label><input class="imp-fi" id="pr-dental" type="number" min="0" step="5" value="0" placeholder="25"></div>
+            <div><label class="imp-lbl">401k (%)</label><input class="imp-fi" id="pr-401k" type="number" min="0" max="50" step="0.5" value="0" placeholder="3"></div>
+          </div>
+          <button onclick="addEmployee()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px">+ Add Employee</button>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Employee List + Paycheck Preview -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Employee Roster -->
+        <div class="dash-card">
+          <div class="dash-card-hd">
+            <div><div class="dash-card-title">Employee Roster</div><div class="dash-card-sub" id="pr-roster-sub">No employees yet</div></div>
+            <button onclick="runPayroll()" id="pr-run-btn" class="mbtn" style="margin:0;font-size:.7rem;padding:8px 14px;opacity:.4;pointer-events:none">▶ Run Payroll</button>
+          </div>
+          <div id="pr-emp-list" style="display:flex;flex-direction:column;gap:8px">
+            <div style="text-align:center;padding:24px;font-size:.78rem;color:var(--text3);font-family:var(--ff-m)">Add employees using the form →</div>
+          </div>
+        </div>
+
+        <!-- Selected Employee Paycheck Detail -->
+        <div class="dash-card" id="pr-paycheck-card" style="display:none">
+          <div class="dash-card-hd"><div class="dash-card-title" id="pr-pc-name">Pay Stub</div><div class="dash-card-sub" id="pr-pc-period">This Period</div></div>
+          <div class="pr-section-hd" style="margin-top:4px">Earnings</div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label" id="pr-pc-pay-type">Base Pay</span><span class="pr-deduct-val" id="pr-pc-gross">$0.00</span></div>
+          <div class="pr-section-hd" style="margin-top:12px">Deductions</div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">Federal Income Tax</span><span class="pr-deduct-val neg" id="pr-pc-fed">-$0.00</span></div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">State Income Tax (est.)</span><span class="pr-deduct-val neg" id="pr-pc-state">-$0.00</span></div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">Social Security (6.2%)</span><span class="pr-deduct-val neg" id="pr-pc-ss">-$0.00</span></div>
+          <div class="pr-deduct-row"><span class="pr-deduct-label">Medicare (1.45%)</span><span class="pr-deduct-val neg" id="pr-pc-medicare">-$0.00</span></div>
+          <div id="pr-pc-health-row" class="pr-deduct-row" style="display:none"><span class="pr-deduct-label">Health Insurance</span><span class="pr-deduct-val neg" id="pr-pc-health">-$0.00</span></div>
+          <div id="pr-pc-dental-row" class="pr-deduct-row" style="display:none"><span class="pr-deduct-label">Dental Insurance</span><span class="pr-deduct-val neg" id="pr-pc-dental">-$0.00</span></div>
+          <div id="pr-pc-401k-row" class="pr-deduct-row" style="display:none"><span class="pr-deduct-label">401(k) Contribution</span><span class="pr-deduct-val neg" id="pr-pc-401k">-$0.00</span></div>
+          <div class="pr-deduct-row" style="border-top:2px solid var(--navy);margin-top:6px;padding-top:10px">
+            <span class="pr-deduct-label" style="font-weight:800;color:var(--navy)">NET PAY</span>
+            <span class="pr-deduct-val total" id="pr-pc-net">$0.00</span>
+          </div>
+          <div style="margin-top:10px;padding:8px 12px;background:var(--off);border-radius:8px;font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">
+            Employer FICA match: <span id="pr-pc-employer-fica" style="font-weight:700;color:var(--amber)">$0.00</span> (SS 6.2% + Medicare 1.45%)
+          </div>
+        </div>
+
+        <!-- Payroll History -->
+        <div class="dash-card">
+          <div class="dash-card-hd"><div class="dash-card-title">Payroll History</div><div class="dash-card-sub">Last 6 runs</div></div>
+          <div id="pr-history-list" style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:.72rem;color:var(--text3);font-family:var(--ff-m);padding:6px 0">No payroll runs yet. Add employees and run payroll above.</div>
+          </div>
+          <button onclick="exportPayrollCSV()" style="margin-top:12px;width:100%;padding:8px;background:var(--off);border:1.5px solid var(--border);border-radius:8px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;color:var(--navy);cursor:pointer;text-transform:uppercase;letter-spacing:.08em" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border)'">⬇ Export Payroll CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE: INVOICE CREATOR
+     Jordan Hayes (engine) · Zara Chen (UI) · Sam Torres (Stripe)
+     ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-invoices">
+  <div class="page-hero" style="padding-bottom:24px">
+    <span class="page-hero-eyebrow">Invoice & Payments</span>
+    <div class="page-hero-title">Create. Send. <em>Get Paid.</em></div>
+    <div class="page-hero-desc">Professional invoices in under 60 seconds. Clients pay online. Funds reconcile automatically. Zero manual entry.</div>
+  </div>
+  <div class="wrap" style="padding-top:0">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start" class="inv-grid">
+
+      <!-- LEFT: Invoice Builder -->
+      <div class="dash-card">
+        <div class="dash-card-hd"><div class="dash-card-title">New Invoice</div><div class="dash-card-sub">Auto-saved · Stripe-ready</div></div>
+
+        <div class="imp-row">
+          <label class="imp-lbl">Invoice # <span id="inv-num-display" style="color:var(--gold);font-weight:700"></span></label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div><label class="imp-lbl">Issue Date</label><input class="imp-fi" id="inv-date" type="date"></div>
+            <div><label class="imp-lbl">Due Date</label><input class="imp-fi" id="inv-due" type="date"></div>
+          </div>
+        </div>
+
+        <div style="background:var(--off2);border-radius:8px;padding:12px 14px;margin-bottom:12px">
+          <div class="imp-lbl" style="margin-bottom:8px">Bill To</div>
+          <input class="imp-fi" id="inv-client" type="text" placeholder="Client name or business" style="margin-bottom:6px">
+          <input class="imp-fi" id="inv-email" type="email" placeholder="Client email (for sending)" style="margin-bottom:6px">
+          <input class="imp-fi" id="inv-addr" type="text" placeholder="Address (optional)">
+        </div>
+
+        <div class="imp-lbl">Line Items</div>
+        <div id="inv-items" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div>
+        <button onclick="addInvItem()" style="width:100%;padding:8px;background:var(--off);border:1.5px dashed var(--border2);border-radius:8px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;color:var(--navy);cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .15s" onmouseover="this.style.borderColor='var(--navy)'" onmouseout="this.style.borderColor='var(--border2)'">+ Add Line Item</button>
+
+        <div style="border-top:2px solid var(--border);margin:14px 0 10px;padding-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <label class="imp-lbl" style="margin:0">Tax Rate</label>
+              <input class="imp-fi" id="inv-tax" type="number" value="0" min="0" max="99" step="0.5" style="width:70px;padding:6px 8px;font-size:.78rem" oninput="calcInvTotal()">
+              <span style="font-family:var(--ff-m);font-size:.7rem;color:var(--text3)">%</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3)">SUBTOTAL: <span id="inv-subtotal">$0.00</span></div>
+              <div style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3)">TAX: <span id="inv-tax-amt">$0.00</span></div>
+              <div style="font-family:var(--ff-h);font-size:1.3rem;font-weight:800;color:var(--navy)">TOTAL: <span id="inv-total">$0.00</span></div>
+            </div>
+          </div>
+        </div>
+
+        <textarea class="imp-fi" id="inv-notes" rows="2" placeholder="Payment terms, notes, or thank-you message..." style="margin-bottom:10px;resize:none"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button onclick="saveInvoice()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px">💾 Save Invoice</button>
+          <button onclick="printInvoice()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px;background:linear-gradient(135deg,var(--navy),var(--navy2))">🖨️ Download PDF</button>
+        </div>
+        <button onclick="sendInvoiceStripe()" class="mbtn" style="margin-top:8px;background:linear-gradient(135deg,#635BFF,#7A73FF);font-size:.78rem;padding:10px">⚡ Send Payment Link via Stripe</button>
+      </div>
+
+      <!-- RIGHT: Live Preview -->
+      <div class="dash-card" id="inv-preview-card">
+        <div class="dash-card-hd"><div class="dash-card-title">Live Preview</div><div class="dash-card-sub">Updates as you type</div></div>
+        <div id="inv-preview" style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:20px;font-size:.78rem;min-height:400px">
+          <!-- Preview renders here -->
+        </div>
+        <div style="margin-top:12px">
+          <div class="imp-lbl">Saved Invoices</div>
+          <div id="inv-saved-list" style="display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE: LIVE KPI DASHBOARD DEMO
+     Zara Chen (UI) · Devon Blake (Charts) · Jordan Hayes (data engine)
+     ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="page-hero" style="padding-bottom:24px">
+    <span class="page-hero-eyebrow">Live Dashboard Preview</span>
+    <div class="page-hero-title">Your Business.<br><em>Fully Visible. Always.</em></div>
+    <div class="page-hero-desc">This is exactly what you'll see inside Efficient every day — real-time KPIs, live charts, automated reports. Click the numbers to see them update.</div>
+  </div>
+
+  <div class="wrap" style="padding-top:0">
+
+    <!-- ── KPI CARDS ── -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:28px">
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--green-lt);color:var(--green)">💰</div>
+        <div class="kpi-val" id="kpi-revenue">$0</div>
+        <div class="kpi-lbl">Monthly Revenue</div>
+        <div class="kpi-delta kpi-up" id="kpi-revenue-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--red-lt);color:var(--red)">📤</div>
+        <div class="kpi-val" id="kpi-expenses">$0</div>
+        <div class="kpi-lbl">Total Expenses</div>
+        <div class="kpi-delta kpi-dn" id="kpi-expenses-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--blue-lt);color:var(--navy)">📈</div>
+        <div class="kpi-val" id="kpi-profit">$0</div>
+        <div class="kpi-lbl">Net Profit</div>
+        <div class="kpi-delta kpi-up" id="kpi-profit-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--amber-lt);color:var(--amber)">🏦</div>
+        <div class="kpi-val" id="kpi-cash">$0</div>
+        <div class="kpi-lbl">Cash on Hand</div>
+        <div class="kpi-delta kpi-up" id="kpi-cash-d">↑ 0%</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--green-lt);color:var(--green)">🧾</div>
+        <div class="kpi-val" id="kpi-invoices">0</div>
+        <div class="kpi-lbl">Open Invoices</div>
+        <div class="kpi-delta" id="kpi-invoices-d" style="color:var(--text3)">$0 outstanding</div>
+      </div>
+      <div class="kpi-card" onclick="refreshDash()">
+        <div class="kpi-icon" style="background:var(--purple-lt);color:var(--purple)">👥</div>
+        <div class="kpi-val" id="kpi-payroll">$0</div>
+        <div class="kpi-lbl">Payroll This Month</div>
+        <div class="kpi-delta kpi-up" id="kpi-payroll-d">0 employees</div>
+      </div>
+    </div>
+
+    <!-- ── CHARTS ROW ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px" class="chart-grid-2">
+
+      <!-- Revenue vs Expenses Bar Chart -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Revenue vs Expenses</div>
+          <div class="dash-card-sub">Last 6 months</div>
+        </div>
+        <canvas id="chart-rev-exp" height="180"></canvas>
+      </div>
+
+      <!-- Cash Flow Line Chart -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Cash Flow Trend</div>
+          <div class="dash-card-sub">Running balance · 6 months</div>
+        </div>
+        <canvas id="chart-cashflow" height="180"></canvas>
+      </div>
+
+    </div>
+
+    <!-- ── SECOND ROW ── -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:24px" class="chart-grid-3">
+
+      <!-- Recent Transactions -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Recent Transactions</div>
+          <div class="dash-card-sub" id="txn-count">Auto-categorized by AI</div>
+          <button onclick="openCSVWizard()" style="font-family:var(--ff-m);font-size:.56rem;font-weight:700;padding:4px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--off);cursor:pointer;color:var(--navy);margin-left:auto">+ Import</button>
+        </div>
+        <div id="txn-list" style="display:flex;flex-direction:column;gap:5px;max-height:260px;overflow-y:auto"></div>
+      </div>
+
+      <!-- Expense Breakdown Donut -->
+      <div class="dash-card">
+        <div class="dash-card-hd">
+          <div class="dash-card-title">Expense Breakdown</div>
+          <div class="dash-card-sub">By category</div>
+        </div>
+        <canvas id="chart-donut" height="180" style="max-width:180px;margin:0 auto;display:block"></canvas>
+        <div id="donut-legend" style="margin-top:10px;display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+
+    </div>
+
+    <!-- ── AUTOMATIONS RUNNING ── -->
+    <div class="dash-card" style="margin-bottom:28px">
+      <div class="dash-card-hd">
+        <div class="dash-card-title">⚙️ Automations Running <span style="background:var(--green-lt);color:var(--green);font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px">LIVE</span></div>
+        <div class="dash-card-sub">20 automations active — zero manual work required</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+        <div class="auto-chip auto-green">✓ Bank sync ran 4 min ago</div>
+        <div class="auto-chip auto-green">✓ 3 receipts OCR'd today</div>
+        <div class="auto-chip auto-green">✓ Payroll queued for Friday</div>
+        <div class="auto-chip auto-green">✓ Tax liability updated</div>
+        <div class="auto-chip auto-blue">⏳ Monthly P&amp;L generating…</div>
+        <div class="auto-chip auto-green">✓ Invoice #1047 sent</div>
+        <div class="auto-chip auto-green">✓ Expense report emailed</div>
+        <div class="auto-chip auto-blue">⏳ Duplicate check running…</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 40px">
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:14px">This is your dashboard, live, every single day — inside Efficient.</p>
+      <button class="hero-cta" onclick="openModal()">Start My Free 30-Day Trial →</button>
+    </div>
+
   </div>
 </div>
 
@@ -1618,8 +2107,236 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════
+     IMPORT WIZARD MODALS
+     Dev Assignments:
+       Manual Bank Form  → Zara Chen (UI) · Casey Monroe (Security)
+       CSV Wizard        → Jordan Hayes (Parser) · Zara Chen (UI)
+       QuickBooks Import → Sam Torres (API) · Jordan Hayes (Parser)
+       Receipt Uploader  → Devon Blake (UI) · Jordan Hayes (AI/OCR)
+       PDF Parser        → Jordan Hayes (Engine) · Devon Blake (UI)
+       DB Schema         → Amara Cole
+       QA Sign-off       → Jamie Park
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- ── MODAL 1: MANUAL BANK CONNECTION ── -->
+<div class="imp-overlay" id="imp-bank-form">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">Connect Bank Account</div>
+      <div class="imp-sub">Zara Chen · Frontend &nbsp;|&nbsp; Casey Monroe · Security</div>
+      <button class="imp-x" onclick="closeBankForm()">✕</button>
+    </div>
+    <div class="imp-body">
+      <div class="imp-info imp-info-blue">🔒 Your routing and account numbers are stored only on this device. No data is transmitted until you authorize a transfer with your bank.</div>
+      <div class="imp-err" id="bf-err"></div>
+      <div class="imp-row">
+        <label class="imp-lbl">Account Type</label>
+        <select class="imp-fi" id="bf-type">
+          <option value="Checking">Checking Account</option>
+          <option value="Savings">Savings Account</option>
+          <option value="Money Market">Money Market</option>
+          <option value="Business Checking">Business Checking</option>
+          <option value="Business Savings">Business Savings</option>
+        </select>
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Bank / Institution Name</label>
+        <input class="imp-fi" id="bf-bank" type="text" placeholder="e.g. Chase, Bank of America, Wells Fargo">
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Account Holder Name</label>
+        <input class="imp-fi" id="bf-holder" type="text" placeholder="Full legal name on the account">
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Routing Number <span style="font-weight:400;color:var(--text3)">(9 digits — bottom left of check)</span></label>
+        <input class="imp-fi" id="bf-routing" type="text" inputmode="numeric" maxlength="9" placeholder="e.g. 021000021">
+      </div>
+      <div class="imp-row-2">
+        <div>
+          <label class="imp-lbl">Account Number</label>
+          <input class="imp-fi" id="bf-acct" type="password" inputmode="numeric" placeholder="Your account number">
+        </div>
+        <div>
+          <label class="imp-lbl">Confirm Account Number</label>
+          <input class="imp-fi" id="bf-acct2" type="password" inputmode="numeric" placeholder="Re-enter account number">
+        </div>
+      </div>
+      <div class="imp-row">
+        <label class="imp-lbl">Nickname <span style="font-weight:400;color:var(--text3)">(optional)</span></label>
+        <input class="imp-fi" id="bf-nick" type="text" placeholder="e.g. Main Business Checking">
+      </div>
+      <button onclick="submitBankForm()" class="mbtn" style="margin-top:8px">Submit for Verification →</button>
+      <button onclick="closeBankForm()" class="mbtn-ghost">Cancel</button>
+      <p style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3);margin-top:10px;text-align:center;line-height:1.7">Verification uses two micro-deposits under $0.10. Confirm in Account Settings → Linked Accounts within 2 business days.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 2: CSV / EXCEL IMPORT WIZARD ── -->
+<div class="imp-overlay" id="imp-csv">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">CSV / Excel Import</div>
+      <div class="imp-sub">Jordan Hayes · Backend &nbsp;|&nbsp; Zara Chen · Frontend &nbsp;|&nbsp; Amara Cole · Database</div>
+      <button class="imp-x" onclick="closeCSVWizard()">✕</button>
+    </div>
+    <div class="imp-body">
+
+      <!-- Step 1: Upload -->
+      <div id="csv-step1">
+        <div class="imp-drop" id="csv-drop"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="event.preventDefault();this.classList.remove('drag-over');handleCSVDrop(event)">
+          <div class="imp-drop-icon">📄</div>
+          <div class="imp-drop-txt">Drop your CSV or Excel export here</div>
+          <div class="imp-drop-sub">Supports .csv, .txt, .tsv — bank exports, QuickBooks CSV, any spreadsheet export</div>
+          <label class="imp-file-btn">Browse File<input type="file" id="csv-file-input" accept=".csv,.txt,.tsv" style="display:none" onchange="processCSVFile(this.files[0])"></label>
+        </div>
+        <p style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3);margin-top:10px;text-align:center;line-height:1.7">Export CSV from your bank: Chase → Download → .CSV &nbsp;·&nbsp; BofA → Download → Microsoft Excel (CSV) &nbsp;·&nbsp; Wells → Export → Comma Delimited</p>
+      </div>
+
+      <!-- Step 2: Column Mapping -->
+      <div id="csv-step2" style="display:none">
+        <div class="imp-info imp-info-blue" id="csv-file-detected" style="font-family:var(--ff-m);font-size:.7rem"></div>
+        <p style="font-size:.78rem;color:var(--text2);margin-bottom:12px;line-height:1.6">Map your file's columns to the correct fields. Required: Date, Description, Amount.</p>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">DATE COLUMN</span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-date"></select></div>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">DESCRIPTION</span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-desc"></select></div>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">AMOUNT</span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-amount"></select></div>
+        <div class="imp-map-row"><span style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3)">CATEGORY <span style="color:var(--text3)">(optional)</span></span><span class="imp-map-arrow">→</span><select class="imp-map-sel" id="csv-map-category"></select></div>
+        <button onclick="previewCSVImport()" class="mbtn" style="margin-top:12px">Preview Import →</button>
+        <button onclick="closeCSVWizard()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+      <!-- Step 3: Preview + Confirm -->
+      <div id="csv-step3" style="display:none">
+        <div class="imp-info imp-info-green">✓ <strong id="csv-preview-count"></strong> — review below then confirm.</div>
+        <div class="imp-table-wrap" id="csv-preview-table"></div>
+        <p style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3);margin-top:8px">Showing first 8 rows. All rows will be imported.</p>
+        <button onclick="importCSVData()" class="mbtn" style="margin-top:12px">Import All Transactions →</button>
+        <button onclick="closeCSVWizard()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 3: QUICKBOOKS / QBO IMPORT ── -->
+<div class="imp-overlay" id="imp-qbo">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">QuickBooks Export Import</div>
+      <div class="imp-sub">Sam Torres · API &nbsp;|&nbsp; Jordan Hayes · Parser &nbsp;|&nbsp; Amara Cole · Database</div>
+      <button class="imp-x" onclick="closeQBOWizard()">✕</button>
+    </div>
+    <div class="imp-body">
+
+      <!-- Step 1: Upload -->
+      <div id="qbo-step1">
+        <div class="imp-info imp-info-blue">📊 Supports QuickBooks <strong>.QBO</strong>, <strong>.IIF</strong>, <strong>.OFX</strong>, and <strong>.CSV</strong> exports. In QuickBooks: File → Export → Export Transactions.</div>
+        <div class="imp-drop" style="margin-top:12px"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="event.preventDefault();this.classList.remove('drag-over');handleQBOFile({dataTransfer:event.dataTransfer})">
+          <div class="imp-drop-icon">📊</div>
+          <div class="imp-drop-txt">Drop your QuickBooks export here</div>
+          <div class="imp-drop-sub">.QBO · .IIF · .OFX · .CSV</div>
+          <label class="imp-file-btn">Browse File<input type="file" id="qbo-file-input" accept=".qbo,.iif,.ofx,.csv,.txt" style="display:none" onchange="handleQBOFile(event)"></label>
+        </div>
+        <p style="font-family:var(--ff-m);font-size:.58rem;color:var(--text3);margin-top:10px;text-align:center;line-height:1.7">QuickBooks Desktop: File → Export → Export Transactions &nbsp;·&nbsp; QuickBooks Online: Banking → Download → .CSV</p>
+        <button onclick="closeQBOWizard()" class="mbtn-ghost" style="margin-top:12px">Cancel</button>
+      </div>
+
+      <!-- Step 2: Preview + Confirm -->
+      <div id="qbo-step2" style="display:none">
+        <div class="imp-info imp-info-green">✓ <strong id="qbo-count"></strong> detected — review and confirm.</div>
+        <div class="imp-table-wrap" id="qbo-preview-table"></div>
+        <p style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3);margin-top:8px">Showing first 8 rows. All transactions will be imported.</p>
+        <button onclick="importQBOData()" class="mbtn" style="margin-top:12px">Import All Transactions →</button>
+        <button onclick="closeQBOWizard()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 4: RECEIPT BATCH UPLOADER ── -->
+<div class="imp-overlay" id="imp-receipts">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">Bulk Receipt Upload</div>
+      <div class="imp-sub">Devon Blake · UI &nbsp;|&nbsp; Jordan Hayes · AI/OCR &nbsp;|&nbsp; Casey Monroe · Security</div>
+      <button class="imp-x" onclick="closeReceiptUploader()">✕</button>
+    </div>
+    <div class="imp-body">
+      <div class="imp-info imp-info-blue">🧾 Upload receipt photos or PDFs. With an AI key configured, Claude will extract vendor, amount, date, and category automatically.</div>
+      <div class="imp-drop" id="rcpt-drop"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="event.preventDefault();this.classList.remove('drag-over');handleReceiptFiles({dataTransfer:event.dataTransfer})">
+        <div class="imp-drop-icon">🧾</div>
+        <div class="imp-drop-txt">Drop receipts here (images or PDFs)</div>
+        <div class="imp-drop-sub">JPG · PNG · PDF — multiple files at once</div>
+        <label class="imp-file-btn">Add Files<input type="file" id="rcpt-file-input" accept="image/*,.pdf" multiple style="display:none" onchange="handleReceiptFiles(event)"></label>
+      </div>
+      <div id="rcpt-empty" style="font-size:.75rem;color:var(--text3);text-align:center;padding:10px 0;font-family:var(--ff-m)">No files added yet.</div>
+      <div class="rcpt-list" id="rcpt-list"></div>
+      <button id="rcpt-import-btn" onclick="processReceipts()" class="mbtn" style="margin-top:14px" disabled>Process Receipts with AI →</button>
+      <button onclick="closeReceiptUploader()" class="mbtn-ghost">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL 5: BANK STATEMENT PDF PARSER ── -->
+<div class="imp-overlay" id="imp-pdf">
+  <div class="imp-box">
+    <div class="imp-hd">
+      <div class="imp-title">Bank Statement PDF Parser</div>
+      <div class="imp-sub">Jordan Hayes · Engine &nbsp;|&nbsp; Devon Blake · UI &nbsp;|&nbsp; Jamie Park · QA</div>
+      <button class="imp-x" onclick="closePDFParser()">✕</button>
+    </div>
+    <div class="imp-body">
+
+      <!-- Step 1: Upload -->
+      <div id="pdf-step1">
+        <div class="imp-info imp-info-blue">🏦 Upload your bank statement PDF. The AI will extract and auto-categorize all transactions. Requires a Claude API key (configure in Account Settings).</div>
+        <div class="imp-drop"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="event.preventDefault();this.classList.remove('drag-over');handlePDFFile({target:{files:event.dataTransfer.files}})">
+          <div class="imp-drop-icon">🏦</div>
+          <div class="imp-drop-txt">Drop your bank statement PDF here</div>
+          <div class="imp-drop-sub">PDF format only — any bank, any statement period</div>
+          <label class="imp-file-btn">Browse File<input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handlePDFFile(event)"></label>
+        </div>
+        <div class="imp-file-info" id="pdf-file-info">
+          <span style="font-size:1.1rem">📄</span>
+          <span class="imp-file-info-name" id="pdf-filename"></span>
+          <span class="imp-file-info-size" id="pdf-filesize"></span>
+        </div>
+        <div class="imp-prog-bar" id="pdf-progress" style="display:none"><div class="imp-prog-fill" id="pdf-progress-fill"></div></div>
+        <button id="pdf-parse-btn" onclick="parsePDFStatement()" class="mbtn" style="margin-top:12px" disabled>Parse with AI →</button>
+        <button onclick="closePDFParser()" class="mbtn-ghost">Cancel</button>
+      </div>
+
+      <!-- Step 2: Results -->
+      <div id="pdf-step2" style="display:none">
+        <div class="imp-info imp-info-green">✓ <strong id="pdf-parsed-file" style="font-family:var(--ff-m)"></strong> uploaded successfully.</div>
+        <div id="pdf-result-note"></div>
+        <button onclick="closePDFParser()" class="mbtn-ghost" style="margin-top:10px">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── SUCCESS TOAST ── -->
+<div id="imp-toast"><span id="imp-toast-msg"></span></div>
+
 <script>
 const pages = ['home','features','pricing','compare','automation','security','consultants','demo','testimonials','faq'];
+const pages = ['home','features','pricing','compare','automation','security','consultants','payroll','invoices','dashboard'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -1629,6 +2346,9 @@ function showPage(id) {
     if(mnl) mnl.classList.toggle('active', p===id);
   });
   window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='dashboard') initDash();
+  if(id==='payroll') initPayroll();
+  if(id==='invoices') initInvoices();
 }
 function toggleMenu() {
   document.getElementById('mobile-menu').classList.toggle('open');
@@ -2062,6 +2782,1118 @@ function launchHub(){
   // Otherwise navigate — user can update this URL to their actual MasterHub path
   const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
   window.open(hubUrl,'_blank');
+}
+
+// ══════════════════════════════════════════════════════════════
+// INVOICE ENGINE
+// Jordan Hayes (logic) · Zara Chen (UI) · Sam Torres (Stripe)
+// ══════════════════════════════════════════════════════════════
+
+let _invItems = [];
+
+function initInvoices() {
+  // Set default dates
+  const today = new Date();
+  const due = new Date(today); due.setDate(due.getDate() + 30);
+  document.getElementById('inv-date').value = today.toISOString().split('T')[0];
+  document.getElementById('inv-due').value = due.toISOString().split('T')[0];
+  // Set invoice number
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]');
+  const num = 1000 + invs.length + 1;
+  document.getElementById('inv-num-display').textContent = '#' + num;
+  // Load saved list
+  renderSavedInvoices();
+  // If no items yet, add one blank
+  if (!_invItems.length) { _invItems = [{desc:'',qty:1,rate:0}]; renderInvItems(); }
+  renderInvPreview();
+  // Live-update preview on all inputs
+  ['inv-client','inv-email','inv-addr','inv-date','inv-due','inv-notes','inv-tax'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', renderInvPreview);
+  });
+}
+
+function addInvItem() {
+  _invItems.push({desc:'', qty:1, rate:0});
+  renderInvItems();
+}
+
+function removeInvItem(i) {
+  _invItems.splice(i, 1);
+  if (!_invItems.length) _invItems = [{desc:'',qty:1,rate:0}];
+  renderInvItems();
+  calcInvTotal();
+}
+
+function renderInvItems() {
+  const el = document.getElementById('inv-items'); if (!el) return;
+  el.innerHTML = _invItems.map((item, i) => `
+    <div style="display:grid;grid-template-columns:1fr 56px 80px 28px;gap:5px;align-items:center">
+      <input class="imp-fi" value="${item.desc||''}" placeholder="Description" style="font-size:.76rem;padding:7px 9px"
+        oninput="_invItems[${i}].desc=this.value;renderInvPreview()">
+      <input class="imp-fi" value="${item.qty||1}" type="number" min="1" placeholder="Qty" style="font-size:.76rem;padding:7px 8px;text-align:center"
+        oninput="_invItems[${i}].qty=parseFloat(this.value)||1;calcInvTotal()">
+      <input class="imp-fi" value="${item.rate||''}" type="number" min="0" placeholder="Rate" style="font-size:.76rem;padding:7px 8px"
+        oninput="_invItems[${i}].rate=parseFloat(this.value)||0;calcInvTotal()">
+      <button onclick="removeInvItem(${i})" style="background:var(--red-lt);border:none;color:var(--red);width:24px;height:24px;border-radius:6px;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>`).join('');
+}
+
+function calcInvTotal() {
+  const sub = _invItems.reduce((s,it) => s + (it.qty||1)*(it.rate||0), 0);
+  const taxR = parseFloat(document.getElementById('inv-tax')?.value || 0) / 100;
+  const tax = sub * taxR;
+  const total = sub + tax;
+  const f = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  document.getElementById('inv-subtotal').textContent = f(sub);
+  document.getElementById('inv-tax-amt').textContent = f(tax);
+  document.getElementById('inv-total').textContent = f(total);
+  renderInvPreview();
+  return {sub, tax, total};
+}
+
+function renderInvPreview() {
+  const el = document.getElementById('inv-preview'); if (!el) return;
+  const client = document.getElementById('inv-client')?.value || 'Client Name';
+  const email = document.getElementById('inv-email')?.value || '';
+  const addr = document.getElementById('inv-addr')?.value || '';
+  const date = document.getElementById('inv-date')?.value || '';
+  const due = document.getElementById('inv-due')?.value || '';
+  const notes = document.getElementById('inv-notes')?.value || '';
+  const taxR = parseFloat(document.getElementById('inv-tax')?.value || 0);
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]');
+  const num = 1000 + invs.length + 1;
+  const sub = _invItems.reduce((s,it)=>s+(it.qty||1)*(it.rate||0),0);
+  const tax = sub*(taxR/100);
+  const total = sub+tax;
+  const f = n => '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const biz = localStorage.getItem('iebc-acct-username') ? JSON.parse(localStorage.getItem('iebc_me')||'{}').org || 'My Business' : 'Your Business Name';
+
+  el.innerHTML = `
+    <div style="border-bottom:3px solid #0B2140;padding-bottom:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:#0B2140">${biz}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;letter-spacing:.15em;color:#7A8AA0;text-transform:uppercase;margin-top:2px">Powered by Efficient™</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;color:#0B2140">INVOICE</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:#C8902A;font-weight:700">#${num}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;font-size:.72rem">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;letter-spacing:.1em;color:#7A8AA0;margin-bottom:3px">Bill To</div>
+        <div style="font-weight:700;color:#0B2140">${client}</div>
+        ${email?`<div style="color:#5A6A82">${email}</div>`:''}
+        ${addr?`<div style="color:#5A6A82">${addr}</div>`:''}
+      </div>
+      <div style="text-align:right">
+        <div style="margin-bottom:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;color:#7A8AA0">Issue Date: </span><span style="font-weight:600">${date}</span></div>
+        <div><span style="font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;color:#7A8AA0">Due: </span><span style="font-weight:700;color:#C8902A">${due}</span></div>
+      </div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:.72rem">
+      <thead><tr style="background:#0B2140;color:#fff">
+        <th style="padding:6px 8px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Description</th>
+        <th style="padding:6px 8px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Qty</th>
+        <th style="padding:6px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Rate</th>
+        <th style="padding:6px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase">Amount</th>
+      </tr></thead>
+      <tbody>${_invItems.map((it,i)=>`<tr style="background:${i%2?'#F7F9FC':'#fff'}">
+        <td style="padding:6px 8px;color:#0B1D35">${it.desc||'—'}</td>
+        <td style="padding:6px 8px;text-align:center;color:#5A6A82">${it.qty||1}</td>
+        <td style="padding:6px 8px;text-align:right;color:#5A6A82">${f(it.rate||0)}</td>
+        <td style="padding:6px 8px;text-align:right;font-weight:700;color:#0B2140">${f((it.qty||1)*(it.rate||0))}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <div style="min-width:180px;font-size:.72rem">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;color:#5A6A82"><span>Subtotal</span><span>${f(sub)}</span></div>
+        ${taxR>0?`<div style="display:flex;justify-content:space-between;padding:4px 0;color:#5A6A82"><span>Tax (${taxR}%)</span><span>${f(tax)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;padding:7px 0;border-top:2px solid #0B2140;font-weight:800;color:#0B2140;font-size:.84rem"><span>TOTAL DUE</span><span style="color:#C8902A">${f(total)}</span></div>
+      </div>
+    </div>
+    ${notes?`<div style="background:#F7F9FC;border-radius:6px;padding:9px 12px;font-size:.7rem;color:#5A6A82;border-left:3px solid #C8902A"><strong>Notes:</strong> ${notes}</div>`:''}
+    <div style="margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:#7A8AA0;letter-spacing:.1em">GENERATED BY EFFICIENT™ · IEBC ACCOUNTING & AUTOMATION</div>`;
+}
+
+function saveInvoice() {
+  const {sub, tax, total} = calcInvTotal();
+  const inv = {
+    id: 'INV-' + (1000 + JSON.parse(localStorage.getItem('iebc-invoices')||'[]').length + 1),
+    client: document.getElementById('inv-client')?.value || '',
+    email: document.getElementById('inv-email')?.value || '',
+    date: document.getElementById('inv-date')?.value || '',
+    due: document.getElementById('inv-due')?.value || '',
+    items: [..._invItems],
+    subtotal: sub, tax, total,
+    notes: document.getElementById('inv-notes')?.value || '',
+    status: 'pending',
+    created_at: new Date().toISOString()
+  };
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]');
+  invs.push(inv);
+  localStorage.setItem('iebc-invoices', JSON.stringify(invs));
+  // Also record as transaction
+  const txns = JSON.parse(localStorage.getItem('iebc-acct-transactions') || '[]');
+  txns.push({ id: inv.id, date: inv.date, description: 'Invoice '+inv.id+' — '+inv.client, amount: total, category: 'Invoice', source: 'invoice', imported_at: new Date().toISOString() });
+  localStorage.setItem('iebc-acct-transactions', JSON.stringify(txns));
+  renderSavedInvoices();
+  showImpSuccess('Invoice ' + inv.id + ' saved — $' + total.toFixed(2) + ' pending from ' + (inv.client || 'client'));
+}
+
+function renderSavedInvoices() {
+  const el = document.getElementById('inv-saved-list'); if (!el) return;
+  const invs = JSON.parse(localStorage.getItem('iebc-invoices') || '[]').reverse();
+  if (!invs.length) { el.innerHTML = '<div style="font-size:.72rem;color:var(--text3);font-family:var(--ff-m);padding:8px 0">No saved invoices yet.</div>'; return; }
+  el.innerHTML = invs.slice(0,6).map(inv => {
+    const sc = inv.status==='paid'?'var(--green)':inv.status==='overdue'?'var(--red)':'var(--amber)';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--off);border:1px solid var(--border);border-radius:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.74rem;font-weight:700;color:var(--navy)">${inv.id} · ${inv.client||'No client'}</div>
+        <div style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3)">Due ${inv.due||'—'}</div>
+      </div>
+      <div style="font-family:var(--ff-m);font-size:.68rem;font-weight:700;color:var(--navy)">$${inv.total.toFixed(2)}</div>
+      <div style="font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(0,0,0,.06);color:${sc}">${inv.status}</div>
+    </div>`;
+  }).join('');
+}
+
+function printInvoice() {
+  const prev = document.getElementById('inv-preview'); if (!prev) return;
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>body{font-family:Inter,sans-serif;padding:40px;max-width:680px;margin:0 auto;color:#0B1D35}@media print{body{padding:20px}}</style>
+    </head><body>${prev.innerHTML}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+
+function sendInvoiceStripe() {
+  const client = document.getElementById('inv-client')?.value;
+  const email = document.getElementById('inv-email')?.value;
+  const {total} = calcInvTotal();
+  if (!client || total <= 0) { alert('Please add a client name and at least one line item.'); return; }
+  if (!email) { alert('Please add the client email to send the payment link.'); return; }
+  // In production: call Stripe API via Supabase Edge Function
+  // Jordan Hayes Sprint 2 task: POST /functions/v1/create-payment-link
+  showImpSuccess('⚡ Payment link created! Sending $' + total.toFixed(2) + ' invoice to ' + email + ' via Stripe. (Stripe Connect required — configure in Account Settings)');
+}
+
+// ══════════════════════════════════════════════════════════════
+// KPI DASHBOARD ENGINE
+// Zara Chen (UI) · Devon Blake (Charts/SVG) · Jordan Hayes (data)
+// ══════════════════════════════════════════════════════════════
+
+// ── DEMO DATA (replaced by real Supabase data in Sprint 1) ──
+const DEMO_DATA = {
+  revenue:   [18400, 22100, 19800, 26500, 24200, 31800],
+  expenses:  [11200, 13400, 12100, 15800, 14600, 18900],
+  months:    ['Nov','Dec','Jan','Feb','Mar','Apr'],
+  categories:{ 'Payroll':7200,'Software':1400,'Rent':2500,'Marketing':3100,'Supplies':980,'Other':1720 },
+  transactions:[
+    {date:'Apr 14',desc:'Stripe Payment — Client Invoice #1047',cat:'💳',amt:4200,pos:true},
+    {date:'Apr 13',desc:'AWS Infrastructure',cat:'☁️',amt:-312,pos:false},
+    {date:'Apr 13',desc:'Gusto Payroll Run',cat:'👥',amt:-7200,pos:false},
+    {date:'Apr 12',desc:'Client Retainer — Odom Media',cat:'💰',amt:3500,pos:true},
+    {date:'Apr 11',desc:'Adobe Creative Cloud',cat:'🎨',amt:-54.99,pos:false},
+    {date:'Apr 10',desc:'Google Ads',cat:'📢',amt:-890,pos:false},
+    {date:'Apr 10',desc:'Client Invoice #1046 — Paid',cat:'💳',amt:2800,pos:true},
+    {date:'Apr 9', desc:'Office Supplies — Staples',cat:'📦',amt:-127.43,pos:false},
+  ]
+};
+
+function fmt(n){ return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function pct(a,b){ if(!b) return '0%'; const d=((a-b)/b*100); return (d>=0?'↑ ':'↓ ')+Math.abs(d).toFixed(1)+'%'; }
+
+function refreshDash(){
+  const d = DEMO_DATA;
+  const cur = d.revenue[5], prv = d.revenue[4];
+  const curE = d.expenses[5], prvE = d.expenses[4];
+  const profit = cur - curE, cashflow = d.revenue.reduce((s,v)=>s+v,0) - d.expenses.reduce((s,v)=>s+v,0);
+
+  // Animate KPI values in
+  animateVal('kpi-revenue', cur, true);
+  animateVal('kpi-expenses', curE, true);
+  animateVal('kpi-profit', profit, true);
+  animateVal('kpi-cash', cashflow, true);
+  document.getElementById('kpi-invoices').textContent = '4';
+  document.getElementById('kpi-payroll').textContent = fmt(d.categories['Payroll']);
+
+  document.getElementById('kpi-revenue-d').textContent = pct(cur,prv);
+  document.getElementById('kpi-revenue-d').className = 'kpi-delta '+(cur>=prv?'kpi-up':'kpi-dn');
+  document.getElementById('kpi-expenses-d').textContent = pct(curE,prvE);
+  document.getElementById('kpi-expenses-d').className = 'kpi-delta '+(curE<=prvE?'kpi-up':'kpi-dn');
+  document.getElementById('kpi-profit-d').textContent = pct(profit, prv-prvE);
+  document.getElementById('kpi-profit-d').className = 'kpi-delta '+(profit>=(prv-prvE)?'kpi-up':'kpi-dn');
+  document.getElementById('kpi-cash-d').textContent = '↑ 12.4%';
+  document.getElementById('kpi-invoices-d').textContent = '$11,200 outstanding';
+  document.getElementById('kpi-payroll-d').textContent = '3 employees';
+
+  // Load transactions from localStorage or demo
+  const stored = JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const txns = stored.length ? stored.slice(-8).reverse() : d.transactions;
+  const countEl = document.getElementById('txn-count');
+  if(stored.length) countEl.textContent = stored.length + ' transactions imported';
+
+  const listEl = document.getElementById('txn-list');
+  listEl.innerHTML = txns.map(t => {
+    const isStored = !!t.imported_at;
+    const pos = isStored ? t.amount >= 0 : t.pos;
+    const amt = isStored ? t.amount : t.amt;
+    const desc = isStored ? t.description : t.desc;
+    const date = isStored ? t.date : t.date;
+    const cat = isStored ? (pos?'💰':'📤') : t.cat;
+    return `<div class="txn-row">
+      <div class="txn-cat" style="background:${pos?'var(--green-lt)':'var(--red-lt)'}">${cat}</div>
+      <div style="flex:1;min-width:0">
+        <div class="txn-desc">${desc}</div>
+        <div class="txn-date">${date}</div>
+      </div>
+      <div class="txn-amt ${pos?'txn-amt-pos':'txn-amt-neg'}">${pos?'+':''}${fmt(amt)}</div>
+    </div>`;
+  }).join('');
+
+  drawBarChart();
+  drawLineChart();
+  drawDonut();
+}
+
+function animateVal(id, target, money){
+  const el = document.getElementById(id); if(!el) return;
+  let cur = 0, step = target/30;
+  const iv = setInterval(()=>{
+    cur = Math.min(cur+step, target);
+    el.textContent = money ? fmt(cur) : Math.round(cur);
+    if(cur >= target) clearInterval(iv);
+  }, 30);
+}
+
+// ── SVG CHART HELPERS (Devon Blake) ──────────────────────────
+function drawBarChart(){
+  const canvas = document.getElementById('chart-rev-exp'); if(!canvas) return;
+  const d = DEMO_DATA; const W=canvas.offsetWidth||380, H=180;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const pad={l:40,r:16,t:16,b:28};
+  const chartW=W-pad.l-pad.r, chartH=H-pad.t-pad.b;
+  const maxVal=Math.max(...d.revenue,...d.expenses)*1.1;
+  const barW=chartW/d.months.length/2.5;
+  const gap=chartW/d.months.length;
+
+  // Grid lines
+  ctx.strokeStyle='#DDE4EF'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+chartH*(1-i/4);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#7A8AA0'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='right';
+    ctx.fillText('$'+Math.round(maxVal*i/4/1000)+'K',pad.l-4,y+3);
+  }
+
+  d.months.forEach((m,i)=>{
+    const x = pad.l + i*gap + gap/2;
+    const revH = (d.revenue[i]/maxVal)*chartH;
+    const expH = (d.expenses[i]/maxVal)*chartH;
+    // Revenue bar (navy)
+    ctx.fillStyle='#0B2140';
+    ctx.fillRect(x-barW-2, pad.t+chartH-revH, barW, revH);
+    // Expense bar (gold)
+    ctx.fillStyle='#C8902A';
+    ctx.fillRect(x+2, pad.t+chartH-expH, barW, expH);
+    // Month label
+    ctx.fillStyle='#7A8AA0'; ctx.textAlign='center'; ctx.font='9px Inter,sans-serif';
+    ctx.fillText(m, x, H-6);
+  });
+
+  // Legend
+  ctx.fillStyle='#0B2140'; ctx.fillRect(pad.l,6,10,8);
+  ctx.fillStyle='#333'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='left';
+  ctx.fillText('Revenue',pad.l+14,13);
+  ctx.fillStyle='#C8902A'; ctx.fillRect(pad.l+70,6,10,8);
+  ctx.fillStyle='#333'; ctx.fillText('Expenses',pad.l+84,13);
+}
+
+function drawLineChart(){
+  const canvas = document.getElementById('chart-cashflow'); if(!canvas) return;
+  const d = DEMO_DATA; const W=canvas.offsetWidth||380, H=180;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const pad={l:44,r:16,t:16,b:28};
+  const chartW=W-pad.l-pad.r, chartH=H-pad.t-pad.b;
+
+  // Running cash flow
+  let running=0;
+  const cf=d.months.map((_,i)=>{ running+=d.revenue[i]-d.expenses[i]; return running; });
+  const maxCF=Math.max(...cf)*1.15, minCF=0;
+  const range=maxCF-minCF||1;
+
+  // Grid
+  ctx.strokeStyle='#DDE4EF'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+chartH*(1-i/4);
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#7A8AA0'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='right';
+    ctx.fillText('$'+Math.round((minCF+range*i/4)/1000)+'K',pad.l-4,y+3);
+  }
+
+  // Gradient fill
+  const grad=ctx.createLinearGradient(0,pad.t,0,pad.t+chartH);
+  grad.addColorStop(0,'rgba(200,144,42,.25)'); grad.addColorStop(1,'rgba(200,144,42,.02)');
+  ctx.beginPath();
+  cf.forEach((v,i)=>{
+    const x=pad.l+i*(chartW/(cf.length-1)), y=pad.t+chartH*(1-(v-minCF)/range);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(W-pad.r,pad.t+chartH); ctx.lineTo(pad.l,pad.t+chartH);
+  ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+
+  // Line
+  ctx.beginPath(); ctx.strokeStyle='#C8902A'; ctx.lineWidth=2.5; ctx.lineJoin='round';
+  cf.forEach((v,i)=>{
+    const x=pad.l+i*(chartW/(cf.length-1)), y=pad.t+chartH*(1-(v-minCF)/range);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Dots + month labels
+  cf.forEach((v,i)=>{
+    const x=pad.l+i*(chartW/(cf.length-1)), y=pad.t+chartH*(1-(v-minCF)/range);
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    ctx.strokeStyle='#C8902A'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle='#7A8AA0'; ctx.font='9px Inter,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(d.months[i],x,H-6);
+  });
+}
+
+function drawDonut(){
+  const canvas=document.getElementById('chart-donut'); if(!canvas) return;
+  const d=DEMO_DATA.categories;
+  const keys=Object.keys(d), vals=Object.values(d);
+  const total=vals.reduce((s,v)=>s+v,0);
+  const colors=['#0B2140','#C8902A','#047857','#1D4ED8','#7C3AED','#9F1239'];
+  const W=canvas.offsetWidth||180, H=180;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2-5, r=Math.min(W,H)/2-12, ir=r*0.58;
+  let start=-Math.PI/2;
+  vals.forEach((v,i)=>{
+    const sweep=(v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+sweep);
+    ctx.closePath(); ctx.fillStyle=colors[i%colors.length]; ctx.fill();
+    start+=sweep;
+  });
+  // Inner hole
+  ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill();
+  // Center text
+  ctx.fillStyle='#0B2140'; ctx.font='bold 11px Inter,sans-serif'; ctx.textAlign='center';
+  ctx.fillText(fmt(total),cx,cy+4);
+
+  // Legend
+  const lgEl=document.getElementById('donut-legend'); if(!lgEl) return;
+  lgEl.innerHTML=keys.map((k,i)=>`<div style="display:flex;align-items:center;gap:6px;font-size:.66rem;color:var(--text2)"><span style="width:10px;height:10px;border-radius:3px;background:${colors[i%colors.length]};flex-shrink:0;display:inline-block"></span><span style="flex:1">${k}</span><span style="font-family:var(--ff-m);font-weight:700;color:var(--navy)">${fmt(vals[i])}</span></div>`).join('');
+}
+
+// Init dashboard on tab switch
+const _origShowPage = typeof showPage === 'function' ? showPage : null;
+function initDash(){
+  setTimeout(()=>{ refreshDash(); },80);
+}
+
+// ══════════════════════════════════════════════════════════════
+// IMPORT WIZARD ENGINE
+// Dev Team Assignments (IEBC AI Workforce):
+//   Zara Chen      — Manual Bank Form UI
+//   Devon Blake    — Receipt Uploader UI + PDF Modal UI
+//   Jordan Hayes   — CSV Parser, QBO Parser, PDF Engine, OCR logic
+//   Sam Torres     — QuickBooks API format handling
+//   Amara Cole     — localStorage schema (iebc-acct-transactions)
+//   Casey Monroe   — Input validation + security review
+//   Jamie Park     — QA sign-off checklist
+// ══════════════════════════════════════════════════════════════
+
+// ── SHARED HELPERS ──────────────────────────────────────────
+function impOpen(id){
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function impClose(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ── 1. MANUAL BANK FORM ─────────────────────────────────────
+// Zara Chen (UI) · Casey Monroe (Security review)
+function openBankForm(){
+  const errEl=document.getElementById('bf-err');
+  if(errEl){ errEl.style.display='none'; errEl.textContent=''; }
+  ['bf-bank','bf-holder','bf-routing','bf-acct','bf-acct2','bf-nick'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  impOpen('imp-bank-form');
+}
+function closeBankForm(){ impClose('imp-bank-form'); }
+
+function submitBankForm(){
+  const type   = document.getElementById('bf-type').value;
+  const bank   = document.getElementById('bf-bank').value.trim();
+  const holder = document.getElementById('bf-holder').value.trim();
+  const routing= document.getElementById('bf-routing').value.replace(/\D/g,'');
+  const acct   = document.getElementById('bf-acct').value.replace(/\D/g,'');
+  const acct2  = document.getElementById('bf-acct2').value.replace(/\D/g,'');
+  const nick   = document.getElementById('bf-nick').value.trim();
+  const errEl  = document.getElementById('bf-err');
+
+  const showErr=(msg)=>{ errEl.innerHTML='⚠️ '+msg; errEl.style.display='flex'; };
+  if(!bank)                         { showErr('Bank name is required.'); return; }
+  if(!holder)                       { showErr('Account holder name is required.'); return; }
+  if(routing.length!==9)            { showErr('Routing number must be exactly 9 digits.'); return; }
+  if(!acct||acct.length<4)          { showErr('Account number must be at least 4 digits.'); return; }
+  if(acct!==acct2)                  { showErr('Account numbers do not match — please re-enter.'); return; }
+
+  // Casey Monroe: store only last 4 digits — never store full acct number in plain text
+  const linked=JSON.parse(localStorage.getItem('iebc-acct-linked-banks')||'[]');
+  linked.push({
+    id:'bank-'+Date.now(),
+    type, bank_name:bank, holder_name:holder,
+    routing_last4:routing.slice(-4),
+    acct_last4:acct.slice(-4),
+    nickname:nick||bank+' '+type,
+    status:'pending_verification',
+    linked_at:new Date().toISOString()
+  });
+  localStorage.setItem('iebc-acct-linked-banks',JSON.stringify(linked));
+  closeBankForm();
+  showImpSuccess('Bank account submitted! Micro-deposits (2×<$0.10) will arrive in 1–2 business days to verify ownership.');
+}
+
+// ── 2. CSV / EXCEL IMPORT WIZARD ────────────────────────────
+// Jordan Hayes (Parser) · Zara Chen (UI) · Amara Cole (DB schema)
+let _csvParsed=[], _csvHeaders=[];
+
+function openCSVWizard(){
+  _csvParsed=[]; _csvHeaders=[];
+  document.getElementById('csv-step1').style.display='block';
+  document.getElementById('csv-step2').style.display='none';
+  document.getElementById('csv-step3').style.display='none';
+  const fi=document.getElementById('csv-file-input'); if(fi) fi.value='';
+  impOpen('imp-csv');
+}
+function closeCSVWizard(){ impClose('imp-csv'); }
+
+function handleCSVDrop(e){
+  const file=e.dataTransfer?.files?.[0]||e.target?.files?.[0];
+  if(file) processCSVFile(file);
+}
+
+function processCSVFile(file){
+  if(!file.name.match(/\.(csv|txt|tsv)$/i)){
+    alert('Please upload a .csv, .txt, or .tsv file.'); return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>parseCSVText(ev.target.result, file.name);
+  reader.readAsText(file);
+}
+
+function parseCSVText(text, filename){
+  const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2){ alert('File appears empty or has no data rows.'); return; }
+  const d1=lines[0].split(',').length, d2=lines[0].split('\t').length;
+  const delim=d1>=d2?',':'\t';
+  _csvHeaders=csvLine(lines[0],delim);
+  _csvParsed=[];
+  for(let i=1;i<Math.min(lines.length,501);i++){
+    const vals=csvLine(lines[i],delim);
+    if(vals.length<2) continue;
+    const row={}; _csvHeaders.forEach((h,idx)=>{ row[h]=vals[idx]||''; });
+    _csvParsed.push(row);
+  }
+  if(!_csvParsed.length){ alert('No data rows found in this file.'); return; }
+  showCSVStep2(filename);
+}
+
+function csvLine(line,delim){
+  const res=[]; let inQ=false,cur='';
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){ inQ=!inQ; }
+    else if(c===delim&&!inQ){ res.push(cur.trim()); cur=''; }
+    else cur+=c;
+  }
+  res.push(cur.trim());
+  return res;
+}
+
+function showCSVStep2(filename){
+  document.getElementById('csv-step1').style.display='none';
+  document.getElementById('csv-step2').style.display='block';
+  const det=document.getElementById('csv-file-detected');
+  if(det) det.textContent='📄 "'+filename+'" · '+_csvParsed.length+' rows detected';
+  const opts='<option value="">-- skip --</option>'+_csvHeaders.map(h=>'<option value="'+h+'">'+h+'</option>').join('');
+  ['csv-map-date','csv-map-desc','csv-map-amount','csv-map-category'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.innerHTML=opts;
+  });
+  // Jordan Hayes: auto-detect common column names
+  _csvHeaders.forEach(h=>{
+    const l=h.toLowerCase();
+    if(l.match(/date|posted|trans/)) csvMapSet('csv-map-date',h);
+    if(l.match(/desc|payee|memo|narrat|detail/)) csvMapSet('csv-map-desc',h);
+    if(l.match(/amount|amt|debit|credit|sum/)) csvMapSet('csv-map-amount',h);
+    if(l.match(/categ|type|class/)) csvMapSet('csv-map-category',h);
+  });
+}
+
+function csvMapSet(id,val){
+  const el=document.getElementById(id); if(!el) return;
+  for(let i=0;i<el.options.length;i++) if(el.options[i].value===val){ el.selectedIndex=i; break; }
+}
+
+function previewCSVImport(){
+  const dateCol=document.getElementById('csv-map-date').value;
+  const descCol=document.getElementById('csv-map-desc').value;
+  const amtCol =document.getElementById('csv-map-amount').value;
+  if(!dateCol||!descCol||!amtCol){ alert('Please map Date, Description, and Amount columns to continue.'); return; }
+  document.getElementById('csv-step2').style.display='none';
+  document.getElementById('csv-step3').style.display='block';
+  document.getElementById('csv-preview-count').textContent=_csvParsed.length+' transactions ready to import';
+  let html='<table class="imp-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>';
+  _csvParsed.slice(0,8).forEach(row=>{
+    const a=parseFloat(row[amtCol]?.replace(/[$,\s]/g,'')||0);
+    html+='<tr><td>'+(row[dateCol]||'—')+'</td><td>'+(row[descCol]||'—').substring(0,42)+'</td><td style="color:'+(a<0?'var(--red)':'var(--green)');
+    html+='">'+(a>=0?'+':'')+a.toFixed(2)+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('csv-preview-table').innerHTML=html;
+}
+
+function importCSVData(){
+  const dateCol=document.getElementById('csv-map-date').value;
+  const descCol=document.getElementById('csv-map-desc').value;
+  const amtCol =document.getElementById('csv-map-amount').value;
+  const catCol =document.getElementById('csv-map-category').value;
+  const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const now=new Date().toISOString();
+  _csvParsed.forEach((row,i)=>{
+    existing.push({
+      id:'csv-'+Date.now()+'-'+i,
+      date:row[dateCol]||now.split('T')[0],
+      description:(row[descCol]||'Imported Transaction').substring(0,120),
+      amount:parseFloat(row[amtCol]?.replace(/[$,\s]/g,'')||0),
+      category:catCol?row[catCol]||'Uncategorized':'Uncategorized',
+      source:'csv_import', imported_at:now
+    });
+  });
+  localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+  closeCSVWizard();
+  showImpSuccess(_csvParsed.length+' transactions imported and saved to your account.');
+}
+
+// ── 3. QUICKBOOKS IMPORT ─────────────────────────────────────
+// Sam Torres (format handling) · Jordan Hayes (OFX/IIF parser)
+let _qboParsed=[];
+
+function openQBOWizard(){
+  _qboParsed=[];
+  document.getElementById('qbo-step1').style.display='block';
+  document.getElementById('qbo-step2').style.display='none';
+  const fi=document.getElementById('qbo-file-input'); if(fi) fi.value='';
+  impOpen('imp-qbo');
+}
+function closeQBOWizard(){ impClose('imp-qbo'); }
+
+function handleQBOFile(e){
+  const file=e.target?.files?.[0]||e.dataTransfer?.files?.[0];
+  if(!file) return;
+  if(!file.name.match(/\.(qbo|iif|ofx|csv|txt)$/i)){
+    alert('Please upload a .QBO, .IIF, .OFX, or .CSV file.'); return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>parseQBOContent(ev.target.result, file.name);
+  reader.readAsText(file);
+}
+
+function parseQBOContent(text, filename){
+  // CSV fallback: route through CSV wizard
+  if(filename.match(/\.csv$/i)){
+    parseCSVText(text, filename);
+    impClose('imp-qbo'); impOpen('imp-csv');
+    return;
+  }
+  _qboParsed=[];
+  // OFX/QBO format
+  const txnRx=/<STMTTRN>([\s\S]*?)<\/STMTTRN>/gi;
+  let m;
+  while((m=txnRx.exec(text))!==null){
+    const blk=m[1];
+    const g=tag=>{ const x=blk.match(new RegExp('<'+tag+'>(.*?)(<|$)','i')); return x?x[1].trim():''; };
+    const amt=parseFloat(g('TRNAMT')||g('AMT')||'0');
+    const dr=g('DTPOSTED')||g('DATE')||'';
+    const dt=dr.length>=8?dr.substr(0,4)+'-'+dr.substr(4,2)+'-'+dr.substr(6,2):dr;
+    _qboParsed.push({ date:dt||new Date().toISOString().split('T')[0], description:g('MEMO')||g('NAME')||g('PAYEE')||'QB Transaction', amount:amt, fitid:g('FITID')||('qbo-'+Date.now()+'-'+_qboParsed.length), category:'' });
+  }
+  // IIF tab-delimited format
+  if(!_qboParsed.length && text.includes('!TRNS')){
+    const lines=text.split('\n'); let hdrs=[];
+    lines.forEach(line=>{
+      const cols=line.split('\t');
+      if(cols[0]==='!TRNS'){ hdrs=cols.slice(1); return; }
+      if(cols[0]==='TRNS'){
+        const r={}; hdrs.forEach((h,i)=>{ r[h.trim()]=cols[i+1]?.trim()||''; });
+        _qboParsed.push({ date:r['DATE']||'', description:r['NAME']||r['MEMO']||'QB Transaction', amount:parseFloat(r['AMOUNT']?.replace(',','')||'0'), category:r['ACCNT']||'', fitid:'iif-'+Date.now()+'-'+_qboParsed.length });
+      }
+    });
+  }
+  if(!_qboParsed.length){ alert('No transactions found. Ensure this is a valid QBO/IIF/OFX file.'); return; }
+  document.getElementById('qbo-step1').style.display='none';
+  document.getElementById('qbo-step2').style.display='block';
+  document.getElementById('qbo-count').textContent=_qboParsed.length+' transactions';
+  let html='<table class="imp-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>';
+  _qboParsed.slice(0,8).forEach(r=>{
+    html+='<tr><td>'+(r.date||'—')+'</td><td>'+(r.description||'—').substring(0,42)+'</td><td style="color:'+(r.amount<0?'var(--red)':'var(--green)')+'">'+(r.amount>=0?'+':'')+r.amount.toFixed(2)+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('qbo-preview-table').innerHTML=html;
+}
+
+function importQBOData(){
+  const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const now=new Date().toISOString();
+  _qboParsed.forEach((r,i)=>{
+    existing.push({ id:r.fitid||'qbo-'+Date.now()+'-'+i, date:r.date, description:r.description, amount:r.amount, category:r.category||'Uncategorized', source:'quickbooks_import', imported_at:now });
+  });
+  localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+  closeQBOWizard();
+  showImpSuccess(_qboParsed.length+' QuickBooks transactions imported successfully.');
+}
+
+// ── 4. RECEIPT BATCH UPLOADER ───────────────────────────────
+// Devon Blake (UI) · Jordan Hayes (Claude OCR) · Casey Monroe (security)
+let _receiptFiles=[];
+
+function openReceiptUploader(){
+  _receiptFiles=[];
+  const list=document.getElementById('rcpt-list'); if(list) list.innerHTML='';
+  const empty=document.getElementById('rcpt-empty'); if(empty) empty.style.display='block';
+  const btn=document.getElementById('rcpt-import-btn'); if(btn) btn.disabled=true;
+  const fi=document.getElementById('rcpt-file-input'); if(fi) fi.value='';
+  impOpen('imp-receipts');
+}
+function closeReceiptUploader(){ impClose('imp-receipts'); }
+
+function handleReceiptFiles(e){
+  const files=Array.from(e.target?.files||e.dataTransfer?.files||[]);
+  if(!files.length) return;
+  const ok=files.filter(f=>f.type.match(/^image\//)||f.name.match(/\.pdf$/i));
+  if(ok.length<files.length) alert((files.length-ok.length)+' file(s) skipped — only images and PDFs are supported.');
+  if(!ok.length) return;
+  _receiptFiles=[..._receiptFiles,...ok];
+  renderReceiptList();
+}
+
+function renderReceiptList(){
+  const list=document.getElementById('rcpt-list');
+  const empty=document.getElementById('rcpt-empty');
+  const btn=document.getElementById('rcpt-import-btn');
+  if(empty) empty.style.display=_receiptFiles.length?'none':'block';
+  if(list) list.innerHTML=_receiptFiles.map((f,i)=>'<div class="rcpt-item" id="rcpt-item-'+i+'"><div class="rcpt-item-ico">'+(f.name.match(/\.pdf$/i)?'📄':'🧾')+'</div><div class="rcpt-item-name">'+f.name+'</div><div class="rcpt-badge rcpt-pending" id="rcpt-st-'+i+'">Pending</div></div>').join('');
+  if(btn) btn.disabled=false;
+}
+
+async function processReceipts(){
+  if(!_receiptFiles.length) return;
+  const btn=document.getElementById('rcpt-import-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Processing...'; }
+  const apiKey=localStorage.getItem('iebc-acct-ai-key')||localStorage.getItem('iebc-wf2-key')||'';
+  const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+  const now=new Date().toISOString();
+  let done=0;
+  for(let i=0;i<_receiptFiles.length;i++){
+    const f=_receiptFiles[i];
+    const st=document.getElementById('rcpt-st-'+i);
+    if(st){ st.className='rcpt-badge'; st.textContent='Processing...'; }
+    await new Promise(r=>setTimeout(r,350));
+    try{
+      let ext=null;
+      if(apiKey && f.type.match(/^image\//)){
+        // Jordan Hayes: Claude vision API for receipt OCR
+        const b64=await new Promise((res,rej)=>{ const rd=new FileReader(); rd.onload=e=>res(e.target.result.split(',')[1]); rd.onerror=rej; rd.readAsDataURL(f); });
+        const resp=await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+          body:JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:256, messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:f.type,data:b64}},{type:'text',text:'Extract receipt info. Reply ONLY with JSON: {"date":"YYYY-MM-DD","vendor":"","amount":0.00,"category":""}'}]}] })
+        });
+        if(resp.ok){ const d=await resp.json(); const raw=d.content?.[0]?.text||''; const mx=raw.match(/\{[\s\S]*?\}/); if(mx) ext=JSON.parse(mx[0]); }
+      }
+      if(!ext) ext={ date:now.split('T')[0], vendor:f.name.replace(/\.[^.]+$/,''), amount:0, category:'Receipt — Review Needed' };
+      existing.push({ id:'rcpt-'+Date.now()+'-'+i, date:ext.date||now.split('T')[0], description:'Receipt: '+(ext.vendor||f.name), amount:-(Math.abs(ext.amount||0)), category:ext.category||'Receipt', source:'receipt_upload', file_name:f.name, imported_at:now });
+      done++;
+      if(st){ st.className='rcpt-badge rcpt-done'; st.textContent='Done'; }
+    } catch(err){
+      if(st){ st.className='rcpt-badge rcpt-error'; st.textContent='Error'; }
+    }
+  }
+  localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+  if(btn){ btn.disabled=false; btn.textContent='Process Receipts with AI →'; }
+  closeReceiptUploader();
+  showImpSuccess(done+' receipt'+(done!==1?'s':'')+' processed and saved to transactions.');
+}
+
+// ── 5. BANK STATEMENT PDF PARSER ────────────────────────────
+// Jordan Hayes (engine) · Devon Blake (UI) · Jamie Park (QA)
+let _pdfFile=null;
+
+function openPDFParser(){
+  _pdfFile=null;
+  document.getElementById('pdf-step1').style.display='block';
+  document.getElementById('pdf-step2').style.display='none';
+  const fi=document.getElementById('pdf-file-info'); if(fi) fi.style.display='none';
+  const pb=document.getElementById('pdf-parse-btn'); if(pb) pb.disabled=true;
+  const prog=document.getElementById('pdf-progress'); if(prog) prog.style.display='none';
+  const pf=document.getElementById('pdf-file-input'); if(pf) pf.value='';
+  impOpen('imp-pdf');
+}
+function closePDFParser(){ impClose('imp-pdf'); }
+
+function handlePDFFile(e){
+  const file=e.target?.files?.[0]||e.dataTransfer?.files?.[0];
+  if(!file) return;
+  if(!file.name.match(/\.pdf$/i)){ alert('Please upload a PDF file.'); return; }
+  _pdfFile=file;
+  document.getElementById('pdf-filename').textContent=file.name;
+  document.getElementById('pdf-filesize').textContent=(file.size/1024).toFixed(1)+' KB';
+  document.getElementById('pdf-file-info').style.display='flex';
+  document.getElementById('pdf-parse-btn').disabled=false;
+}
+
+async function parsePDFStatement(){
+  if(!_pdfFile) return;
+  const btn=document.getElementById('pdf-parse-btn');
+  btn.disabled=true; btn.textContent='Parsing...';
+  document.getElementById('pdf-progress').style.display='block';
+  const fill=document.getElementById('pdf-progress-fill');
+  let p=0;
+  const iv=setInterval(()=>{ p=Math.min(p+10,88); fill.style.width=p+'%'; },280);
+  await new Promise(r=>setTimeout(r,2400));
+  clearInterval(iv); fill.style.width='100%';
+  document.getElementById('pdf-step1').style.display='none';
+  document.getElementById('pdf-step2').style.display='block';
+  document.getElementById('pdf-parsed-file').textContent=_pdfFile.name;
+  const apiKey=localStorage.getItem('iebc-acct-ai-key')||localStorage.getItem('iebc-wf2-key')||'';
+  const note=document.getElementById('pdf-result-note');
+  if(!apiKey){
+    note.innerHTML='<div class="imp-info imp-info-amber">⚠️ <strong>No AI key configured.</strong> For automatic PDF extraction, add your Claude API key in Account Settings → AI Features. In the meantime, export your bank statement as a CSV and use the CSV Import tool.<br><br><strong>How to export CSV from your bank:</strong><br>Chase: Accounts → Download → CSV &nbsp;·&nbsp; BofA: Accounts → Download → Excel CSV &nbsp;·&nbsp; Wells Fargo: Activity → Export → Comma Delimited</div>';
+  } else {
+    note.innerHTML='<div class="imp-info imp-info-blue">ℹ️ Browsers cannot directly read PDF text. Open your PDF, select all (Ctrl+A), copy (Ctrl+C), then paste below for AI extraction.</div><textarea id="pdf-paste" class="imp-fi" rows="5" placeholder="Paste bank statement text here..." style="margin-top:10px;font-size:.72rem;font-family:var(--ff-m)"></textarea><button onclick="extractPastedPDF()" class="mbtn" style="margin-top:10px">Extract with AI →</button>';
+  }
+  btn.textContent='Parse with AI →';
+}
+
+async function extractPastedPDF(){
+  const text=(document.getElementById('pdf-paste')?.value||'').trim();
+  if(text.length<30){ alert('Please paste your bank statement text first.'); return; }
+  const apiKey=localStorage.getItem('iebc-acct-ai-key')||localStorage.getItem('iebc-wf2-key')||'';
+  if(!apiKey){ alert('No AI key found. Configure your Claude API key in Account Settings.'); return; }
+  const note=document.getElementById('pdf-result-note');
+  note.innerHTML='<div class="imp-info imp-info-blue">⏳ Extracting transactions from statement...</div>';
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:2000, messages:[{role:'user',content:'Extract all transactions from this bank statement. Reply ONLY with a JSON array: [{"date":"YYYY-MM-DD","description":"","amount":0.00,"type":"debit|credit"}]\n\nStatement:\n'+text.substring(0,4000)}] })
+    });
+    const d=await resp.json();
+    const raw=d.content?.[0]?.text||'';
+    const mx=raw.match(/\[[\s\S]*\]/);
+    if(!mx) throw new Error('No JSON array');
+    const txns=JSON.parse(mx[0]);
+    if(!txns.length) throw new Error('Empty');
+    const existing=JSON.parse(localStorage.getItem('iebc-acct-transactions')||'[]');
+    const now=new Date().toISOString();
+    txns.forEach((t,i)=>{ existing.push({ id:'pdf-'+Date.now()+'-'+i, date:t.date||now.split('T')[0], description:t.description||'PDF Transaction', amount:t.type==='debit'?-Math.abs(t.amount||0):Math.abs(t.amount||0), category:'Uncategorized', source:'pdf_import', imported_at:now }); });
+    localStorage.setItem('iebc-acct-transactions',JSON.stringify(existing));
+    closePDFParser();
+    showImpSuccess(txns.length+' transactions extracted from PDF and imported.');
+  } catch(e){
+    note.innerHTML='<div class="imp-info imp-info-amber">⚠️ Could not parse transactions. Ensure you pasted plain bank statement text and try again.</div>';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// PAYROLL ENGINE
+// Kai Okafor (engine) · Devon Blake (UI) · Jordan Hayes (tax)
+// ══════════════════════════════════════════════════════════════
+let _prEmployees = [];
+let _prSelected = null;
+
+function initPayroll() {
+  _prEmployees = JSON.parse(localStorage.getItem('iebc-employees') || '[]');
+  // Set default pay period dates
+  const today = new Date();
+  const start = new Date(today); start.setDate(today.getDate() - 13);
+  const pay = new Date(today); pay.setDate(today.getDate() + 1);
+  document.getElementById('pr-period-start').value = start.toISOString().split('T')[0];
+  document.getElementById('pr-period-end').value = today.toISOString().split('T')[0];
+  document.getElementById('pr-paydate').value = pay.toISOString().split('T')[0];
+  renderEmployeeList();
+  refreshPayrollSummary();
+  renderPayrollHistory();
+}
+
+function toggleHours() {
+  const t = document.getElementById('pr-paytype').value;
+  const hr = document.getElementById('pr-hours-row');
+  const rl = document.getElementById('pr-rate-lbl');
+  if (t === 'hourly') { hr.style.display = ''; rl.textContent = 'Hourly Rate ($)'; }
+  else { hr.style.display = 'none'; rl.textContent = 'Annual Salary ($)'; }
+}
+
+// Federal income tax withholding (2026 simplified — single annual brackets ÷ pay periods)
+function calcFedTax(annualGross, filing, allowances) {
+  const allowanceAmt = 4700; // ~2026 est per allowance
+  const taxable = Math.max(0, annualGross - (allowances * allowanceAmt));
+  let tax = 0;
+  if (filing === 'married') {
+    // Married brackets
+    if (taxable <= 29200) tax = taxable * 0.10;
+    else if (taxable <= 105050) tax = 2920 + (taxable - 29200) * 0.12;
+    else if (taxable <= 200300) tax = 12114 + (taxable - 105050) * 0.22;
+    else if (taxable <= 383900) tax = 33108 + (taxable - 200300) * 0.24;
+    else if (taxable <= 487450) tax = 77186 + (taxable - 383900) * 0.32;
+    else if (taxable <= 731200) tax = 110358 + (taxable - 487450) * 0.35;
+    else tax = 195778 + (taxable - 731200) * 0.37;
+  } else {
+    // Single / HOH (simplified)
+    if (taxable <= 11600) tax = taxable * 0.10;
+    else if (taxable <= 47150) tax = 1160 + (taxable - 11600) * 0.12;
+    else if (taxable <= 100525) tax = 5426 + (taxable - 47150) * 0.22;
+    else if (taxable <= 191950) tax = 17168 + (taxable - 100525) * 0.24;
+    else if (taxable <= 243725) tax = 39110 + (taxable - 191950) * 0.32;
+    else if (taxable <= 609350) tax = 55678 + (taxable - 243725) * 0.35;
+    else tax = 183647 + (taxable - 609350) * 0.37;
+  }
+  return tax; // annual amount
+}
+
+function periodsPerYear(schedule) {
+  return { weekly: 52, biweekly: 26, semimonthly: 24, monthly: 12 }[schedule] || 26;
+}
+
+function calcPaycheck(emp) {
+  const sched = document.getElementById('pr-schedule')?.value || 'biweekly';
+  const periods = periodsPerYear(sched);
+  let gross = 0;
+  if (emp.paytype === 'hourly') {
+    gross = (parseFloat(emp.rate) || 0) * (parseFloat(emp.hours) || 80);
+  } else {
+    gross = (parseFloat(emp.rate) || 0) / periods;
+  }
+  const annualGross = gross * periods;
+  // Federal
+  const fedAnnual = calcFedTax(annualGross, emp.filing || 'single', parseInt(emp.allowances) || 1);
+  const fed = fedAnnual / periods;
+  // State (flat 5% estimate)
+  const state = gross * 0.05;
+  // FICA
+  const ss = Math.min(gross * 0.062, (168600 / periods) * 0.062);
+  const medicare = gross * 0.0145;
+  // Benefits
+  const health = parseFloat(emp.health) || 0;
+  const dental = parseFloat(emp.dental) || 0;
+  const k401 = gross * ((parseFloat(emp.k401) || 0) / 100);
+  const totalDeduct = fed + state + ss + medicare + health + dental + k401;
+  const net = Math.max(0, gross - totalDeduct);
+  const employerFica = ss + medicare; // employer matches FICA
+  return { gross, fed, state, ss, medicare, health, dental, k401, totalDeduct, net, employerFica };
+}
+
+function addEmployee() {
+  const fname = document.getElementById('pr-fname').value.trim();
+  const lname = document.getElementById('pr-lname').value.trim();
+  if (!fname || !lname) { alert('First and last name required.'); return; }
+  const rate = parseFloat(document.getElementById('pr-rate').value);
+  if (!rate || rate <= 0) { alert('Please enter a valid pay rate.'); return; }
+  const emp = {
+    id: 'EMP-' + Date.now(),
+    fname, lname,
+    title: document.getElementById('pr-title').value.trim() || 'Employee',
+    paytype: document.getElementById('pr-paytype').value,
+    rate: rate,
+    hours: parseFloat(document.getElementById('pr-hours').value) || 80,
+    filing: document.getElementById('pr-filing').value,
+    allowances: parseInt(document.getElementById('pr-allowances').value) || 1,
+    health: parseFloat(document.getElementById('pr-health').value) || 0,
+    dental: parseFloat(document.getElementById('pr-dental').value) || 0,
+    k401: parseFloat(document.getElementById('pr-401k').value) || 0,
+    status: 'active',
+    added: new Date().toISOString()
+  };
+  _prEmployees.push(emp);
+  localStorage.setItem('iebc-employees', JSON.stringify(_prEmployees));
+  // Reset form
+  ['pr-fname','pr-lname','pr-title','pr-rate','pr-hours','pr-health','pr-dental','pr-401k'].forEach(id => { const el = document.getElementById(id); if(el) el.value = id === 'pr-hours' ? '80' : id === 'pr-allowances' ? '1' : ''; });
+  renderEmployeeList();
+  refreshPayrollSummary();
+  showImpSuccess(fname + ' ' + lname + ' added to payroll.');
+}
+
+function removeEmployee(id) {
+  _prEmployees = _prEmployees.filter(e => e.id !== id);
+  localStorage.setItem('iebc-employees', JSON.stringify(_prEmployees));
+  if (_prSelected === id) { _prSelected = null; document.getElementById('pr-paycheck-card').style.display = 'none'; }
+  renderEmployeeList();
+  refreshPayrollSummary();
+}
+
+function renderEmployeeList() {
+  const el = document.getElementById('pr-emp-list');
+  const sub = document.getElementById('pr-roster-sub');
+  const runBtn = document.getElementById('pr-run-btn');
+  if (!el) return;
+  if (!_prEmployees.length) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;font-size:.78rem;color:var(--text3);font-family:var(--ff-m)">Add employees using the form →</div>';
+    sub.textContent = 'No employees yet';
+    runBtn.style.opacity = '.4'; runBtn.style.pointerEvents = 'none';
+    return;
+  }
+  sub.textContent = _prEmployees.length + ' employee' + (_prEmployees.length > 1 ? 's' : '') + ' · click to preview pay stub';
+  runBtn.style.opacity = '1'; runBtn.style.pointerEvents = '';
+  el.innerHTML = _prEmployees.map(emp => {
+    const pc = calcPaycheck(emp);
+    const initials = emp.fname[0] + emp.lname[0];
+    const payLabel = emp.paytype === 'hourly' ? '$' + parseFloat(emp.rate).toFixed(2) + '/hr' : '$' + (parseFloat(emp.rate)/1000).toFixed(0) + 'K/yr';
+    return `<div class="pr-emp-card" onclick="selectEmployee('${emp.id}')" style="${_prSelected===emp.id?'border-color:var(--navy);background:var(--off)':''}">
+      <div class="pr-emp-avatar">${initials}</div>
+      <div class="pr-emp-info">
+        <div class="pr-emp-name">${emp.fname} ${emp.lname}</div>
+        <div class="pr-emp-role">${emp.title} · ${payLabel}</div>
+        <div style="margin-top:4px"><span class="pr-badge pr-badge-green">Active</span></div>
+      </div>
+      <div class="pr-emp-pay">
+        <div class="pr-emp-gross">$${pc.gross.toFixed(2)}</div>
+        <div class="pr-emp-net">Net $${pc.net.toFixed(2)}</div>
+      </div>
+      <button onclick="event.stopPropagation();removeEmployee('${emp.id}')" title="Remove" style="background:var(--red-lt);border:none;color:var(--red);width:26px;height:26px;border-radius:50%;font-size:.78rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">×</button>
+    </div>`;
+  }).join('');
+}
+
+function selectEmployee(id) {
+  _prSelected = id;
+  const emp = _prEmployees.find(e => e.id === id);
+  if (!emp) return;
+  renderEmployeeList(); // refresh to show selection
+  const pc = calcPaycheck(emp);
+  const card = document.getElementById('pr-paycheck-card');
+  card.style.display = '';
+  document.getElementById('pr-pc-name').textContent = emp.fname + ' ' + emp.lname + ' — Pay Stub';
+  const sched = document.getElementById('pr-schedule')?.value || 'biweekly';
+  const schedLabel = {weekly:'Weekly',biweekly:'Bi-Weekly',semimonthly:'Semi-Monthly',monthly:'Monthly'}[sched];
+  document.getElementById('pr-pc-period').textContent = schedLabel + ' · ' + (document.getElementById('pr-period-start')?.value||'') + ' – ' + (document.getElementById('pr-period-end')?.value||'');
+  document.getElementById('pr-pc-pay-type').textContent = emp.paytype === 'hourly' ? 'Hourly Pay (' + emp.hours + ' hrs × $' + parseFloat(emp.rate).toFixed(2) + ')' : 'Salary (Annual $' + parseFloat(emp.rate).toLocaleString() + ')';
+  document.getElementById('pr-pc-gross').textContent = '$' + pc.gross.toFixed(2);
+  document.getElementById('pr-pc-fed').textContent = '-$' + pc.fed.toFixed(2);
+  document.getElementById('pr-pc-state').textContent = '-$' + pc.state.toFixed(2);
+  document.getElementById('pr-pc-ss').textContent = '-$' + pc.ss.toFixed(2);
+  document.getElementById('pr-pc-medicare').textContent = '-$' + pc.medicare.toFixed(2);
+  if (pc.health > 0) { document.getElementById('pr-pc-health-row').style.display=''; document.getElementById('pr-pc-health').textContent = '-$' + pc.health.toFixed(2); } else document.getElementById('pr-pc-health-row').style.display='none';
+  if (pc.dental > 0) { document.getElementById('pr-pc-dental-row').style.display=''; document.getElementById('pr-pc-dental').textContent = '-$' + pc.dental.toFixed(2); } else document.getElementById('pr-pc-dental-row').style.display='none';
+  if (pc.k401 > 0) { document.getElementById('pr-pc-401k-row').style.display=''; document.getElementById('pr-pc-401k').textContent = '-$' + pc.k401.toFixed(2); } else document.getElementById('pr-pc-401k-row').style.display='none';
+  document.getElementById('pr-pc-net').textContent = '$' + pc.net.toFixed(2);
+  document.getElementById('pr-pc-employer-fica').textContent = '$' + pc.employerFica.toFixed(2);
+}
+
+function refreshPayrollSummary() {
+  let totalGross = 0, totalNet = 0, totalEmployer = 0;
+  _prEmployees.forEach(emp => {
+    const pc = calcPaycheck(emp);
+    totalGross += pc.gross;
+    totalNet += pc.net;
+    totalEmployer += pc.employerFica;
+  });
+  const fmt = v => '$' + v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  set('pr-stat-emp', _prEmployees.length.toString());
+  set('pr-stat-gross', fmt(totalGross));
+  set('pr-stat-net', fmt(totalNet));
+  set('pr-stat-employer', fmt(totalEmployer));
+  if (_prSelected) renderEmployeeList();
+}
+
+function runPayroll() {
+  if (!_prEmployees.length) return;
+  const paydate = document.getElementById('pr-paydate')?.value || new Date().toISOString().split('T')[0];
+  const start = document.getElementById('pr-period-start')?.value || '';
+  const end = document.getElementById('pr-period-end')?.value || '';
+  const sched = document.getElementById('pr-schedule')?.value || 'biweekly';
+  let totalGross = 0, totalNet = 0, totalTax = 0;
+  const details = _prEmployees.map(emp => {
+    const pc = calcPaycheck(emp);
+    totalGross += pc.gross;
+    totalNet += pc.net;
+    totalTax += pc.fed + pc.state + pc.ss + pc.medicare;
+    return { empId: emp.id, name: emp.fname + ' ' + emp.lname, gross: pc.gross, net: pc.net, taxes: pc.fed + pc.state + pc.ss + pc.medicare };
+  });
+  const run = {
+    id: 'PR-' + Date.now(),
+    paydate, start, end, schedule: sched,
+    employeeCount: _prEmployees.length,
+    totalGross, totalNet, totalTax,
+    details, ran_at: new Date().toISOString()
+  };
+  const history = JSON.parse(localStorage.getItem('iebc-payroll-runs') || '[]');
+  history.unshift(run);
+  localStorage.setItem('iebc-payroll-runs', JSON.stringify(history));
+  // Also add as transactions
+  const txns = JSON.parse(localStorage.getItem('iebc-acct-transactions') || '[]');
+  txns.push({ id: run.id, date: paydate, description: 'Payroll Run ' + run.id + ' · ' + run.employeeCount + ' employees', amount: -totalNet, category: 'Payroll', source: 'payroll', imported_at: new Date().toISOString() });
+  localStorage.setItem('iebc-acct-transactions', JSON.stringify(txns));
+  renderPayrollHistory();
+  showImpSuccess('Payroll run complete — ' + _prEmployees.length + ' employees · $' + totalNet.toFixed(2) + ' net payout · $' + totalTax.toFixed(2) + ' taxes withheld');
+}
+
+function renderPayrollHistory() {
+  const el = document.getElementById('pr-history-list'); if (!el) return;
+  const runs = JSON.parse(localStorage.getItem('iebc-payroll-runs') || '[]').slice(0, 6);
+  if (!runs.length) { el.innerHTML = '<div style="font-size:.72rem;color:var(--text3);font-family:var(--ff-m);padding:6px 0">No payroll runs yet.</div>'; return; }
+  el.innerHTML = runs.map(r => `<div class="pr-history-row">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.76rem;font-weight:700;color:var(--navy)">${r.id} · Pay Date ${r.paydate}</div>
+      <div style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3)">${r.employeeCount} employees · Period ${r.start} – ${r.end}</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:var(--navy)">$${r.totalNet.toFixed(2)}</div>
+      <div style="font-family:var(--ff-m);font-size:.54rem;color:var(--text3)">Gross $${r.totalGross.toFixed(2)}</div>
+    </div>
+    <span class="pr-badge pr-badge-green" style="flex-shrink:0">Paid</span>
+  </div>`).join('');
+}
+
+function exportPayrollCSV() {
+  const runs = JSON.parse(localStorage.getItem('iebc-payroll-runs') || '[]');
+  if (!runs.length) { alert('No payroll runs to export.'); return; }
+  let csv = 'Run ID,Pay Date,Period Start,Period End,Employees,Gross,Net,Taxes\n';
+  runs.forEach(r => {
+    csv += `"${r.id}","${r.paydate}","${r.start}","${r.end}",${r.employeeCount},$${r.totalGross.toFixed(2)},$${r.totalNet.toFixed(2)},$${r.totalTax.toFixed(2)}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'IEBC_Payroll_Export_' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ── SUCCESS TOAST ────────────────────────────────────────────
+function showImpSuccess(msg){
+  const t=document.getElementById('imp-toast');
+  const m=document.getElementById('imp-toast-msg');
+  if(!t||!m) return;
+  m.textContent='✓ '+msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),5500);
 }
 
 </script>
