@@ -408,6 +408,98 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   .sec-grid{grid-template-columns:1fr}
   .auto-stats{grid-template-columns:1fr 1fr}
 }
+
+/* ══ DEMO PAGE ══ */
+.demo-app{background:var(--off2);border:1.5px solid var(--border2);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);max-width:1000px;margin:0 auto}
+.demo-topbar{background:var(--navy);padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--gold)}
+.demo-dots{display:flex;gap:5px}.demo-dot{width:10px;height:10px;border-radius:50%}
+.demo-dot:nth-child(1){background:#FF5F57}.demo-dot:nth-child(2){background:#FFBD2E}.demo-dot:nth-child(3){background:#28C840}
+.demo-title{font-family:var(--ff-m);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85);margin-left:4px}
+.demo-body{display:grid;grid-template-columns:200px 1fr;min-height:480px}
+.demo-sidebar{background:var(--navy2);padding:16px 0;border-right:1px solid rgba(255,255,255,.06)}
+.demo-sidebar-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-family:var(--ff-m);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s}
+.demo-sidebar-item.active{background:rgba(200,144,42,.15);color:var(--gold2);border-right:2px solid var(--gold)}
+.demo-sidebar-item:hover:not(.active){background:rgba(255,255,255,.04);color:rgba(255,255,255,.85)}
+.demo-sidebar-icon{font-size:.95rem;width:18px;text-align:center}
+.demo-main{padding:22px 24px;overflow:auto}
+.demo-panel{display:none}.demo-panel.active{display:block}
+.demo-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.demo-kpi{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.demo-kpi-lbl{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.demo-kpi-val{font-family:var(--ff-h);font-size:1.25rem;font-weight:900;color:var(--navy);line-height:1.1}
+.demo-kpi-chg{font-family:var(--ff-m);font-size:.52rem;margin-top:3px;font-weight:700}
+.demo-kpi-chg.up{color:var(--green)}.demo-kpi-chg.down{color:var(--red)}
+.demo-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.demo-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px}
+.demo-card-title{font-family:var(--ff-h);font-size:.8rem;font-weight:800;color:var(--navy);margin-bottom:12px;font-style:italic}
+.demo-chart{display:flex;align-items:flex-end;gap:5px;height:90px}
+.demo-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.demo-bar{width:100%;background:linear-gradient(to top,var(--navy3),var(--navy));border-radius:3px 3px 0 0;transition:height .3s}
+.demo-bar.exp{background:linear-gradient(to top,rgba(220,38,38,.5),rgba(220,38,38,.3))}
+.demo-bar-lbl{font-family:var(--ff-m);font-size:.42rem;color:var(--text3);text-transform:uppercase}
+.demo-tx-list{display:flex;flex-direction:column;gap:7px}
+.demo-tx{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.demo-tx:last-child{border-bottom:none}
+.demo-tx-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.demo-tx-name{font-size:.76rem;font-weight:600;color:var(--navy);line-height:1.2}
+.demo-tx-cat{font-family:var(--ff-m);font-size:.48rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.demo-tx-amt{margin-left:auto;font-family:var(--ff-h);font-size:.88rem;font-weight:800}
+.demo-tx-amt.cr{color:var(--green)}.demo-tx-amt.db{color:var(--red)}
+.demo-inv-list{display:flex;flex-direction:column;gap:8px}
+.demo-inv{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
+.demo-inv-num{font-family:var(--ff-m);font-size:.6rem;font-weight:700;color:var(--navy);min-width:60px}
+.demo-inv-client{font-size:.76rem;font-weight:600;color:var(--text);flex:1}
+.demo-inv-amt{font-family:var(--ff-h);font-size:.9rem;font-weight:800;color:var(--navy);min-width:72px;text-align:right}
+.demo-inv-badge{font-family:var(--ff-m);font-size:.48rem;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.badge-paid{background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2)}
+.badge-sent{background:var(--blue-lt);color:var(--blue);border:1px solid rgba(29,78,216,.18)}
+.badge-draft{background:var(--off2);color:var(--text3);border:1px solid var(--border2)}
+.badge-overdue{background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2)}
+.demo-report-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.demo-report-row:last-child{border-bottom:none;padding-top:12px;font-weight:700}
+.demo-report-lbl{font-size:.78rem;color:var(--text2)}
+.demo-report-val{font-family:var(--ff-h);font-size:.9rem;font-weight:800;color:var(--navy)}
+.demo-report-val.pos{color:var(--green)}.demo-report-val.neg{color:var(--red)}
+.demo-section-btn{font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:5px 12px;border:1.5px solid var(--border2);border-radius:6px;background:var(--off);cursor:pointer;color:var(--navy);transition:all .15s;margin-left:auto;display:block;margin-bottom:10px}
+.demo-section-btn:hover{border-color:var(--navy);background:var(--navy);color:var(--gold2)}
+.demo-tab-row{display:flex;gap:6px;margin-bottom:14px}
+.demo-tab{font-family:var(--ff-m);font-size:.54rem;font-weight:700;padding:6px 13px;border-radius:7px;border:1.5px solid var(--border);background:transparent;cursor:pointer;color:var(--text3);transition:all .15s}
+.demo-tab.active{background:var(--navy);color:var(--gold2);border-color:var(--navy)}
+@media(max-width:700px){.demo-body{grid-template-columns:1fr}.demo-sidebar{display:none}.demo-kpi-row{grid-template-columns:1fr 1fr}.demo-2col{grid-template-columns:1fr}}
+
+/* ══ TESTIMONIALS PAGE ══ */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tcard-r{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:24px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden}
+.tcard-r::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.tcard-r:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.tcard-stars{color:var(--gold2);font-size:1rem;margin-bottom:10px;letter-spacing:2px}
+.tcard-quote{font-size:.83rem;color:var(--text2);line-height:1.72;flex:1;margin-bottom:16px;font-style:italic}
+.tcard-quote::before{content:'\201C';font-family:var(--ff-h);font-size:2rem;color:var(--gold);line-height:0;vertical-align:-0.5rem;margin-right:2px}
+.tcard-author{display:flex;align-items:center;gap:11px;border-top:1px solid var(--border);padding-top:14px}
+.tcard-av{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:.72rem;font-weight:900;color:#fff;flex-shrink:0}
+.tcard-name{font-size:.8rem;font-weight:700;color:var(--navy);line-height:1.2}
+.tcard-biz{font-family:var(--ff-m);font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:1px}
+.tcard-badge{display:inline-block;font-family:var(--ff-m);font-size:.48rem;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--gold-lt);color:var(--gold);border:1px solid var(--gold-md);margin-top:4px}
+.trust-strip{background:var(--navy);border-radius:16px;padding:28px 32px;margin-top:36px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
+.ts-item-val{font-family:var(--ff-h);font-size:2rem;font-weight:900;color:var(--gold3);font-style:italic;line-height:1}
+.ts-item-lbl{font-family:var(--ff-m);font-size:.54rem;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+@media(max-width:900px){.testi-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.testi-grid{grid-template-columns:1fr}.trust-strip{grid-template-columns:1fr 1fr}}
+
+/* ══ FAQ PAGE ══ */
+.faq-list{display:flex;flex-direction:column;gap:8px;max-width:760px;margin:0 auto}
+.faq-item{background:var(--white);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .18s}
+.faq-item.open{border-color:var(--navy)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;gap:14px;user-select:none}
+.faq-q-text{font-size:.88rem;font-weight:700;color:var(--navy);line-height:1.4}
+.faq-icon{font-size:1.2rem;color:var(--gold);flex-shrink:0;transition:transform .22s;font-family:var(--ff-m);font-weight:700}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .25s}
+.faq-a-inner{padding:0 20px 16px;font-size:.82rem;color:var(--text2);line-height:1.78;border-top:1px solid var(--border)}
+.faq-item.open .faq-a{max-height:400px}
+.faq-item.open .faq-a-inner{padding:14px 20px 18px}
+.faq-cat-hd{font-family:var(--ff-m);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:28px 0 10px;font-weight:700;max-width:760px;margin-left:auto;margin-right:auto}
+.faq-cat-hd:first-child{margin-top:0}
 </style>
 </head>
 <body>
@@ -426,6 +518,9 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-automation" onclick="showPage('automation')">Automation</button>
     <button class="nav-link" id="nl-security" onclick="showPage('security')">Security</button>
     <button class="nav-link" id="nl-consultants" onclick="showPage('consultants')">Advisors</button>
+    <button class="nav-link" id="nl-demo" onclick="showPage('demo')">Demo</button>
+    <button class="nav-link" id="nl-testimonials" onclick="showPage('testimonials')">Reviews</button>
+    <button class="nav-link" id="nl-faq" onclick="showPage('faq')">FAQ</button>
   </div>
   <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
@@ -440,6 +535,9 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-automation" onclick="showPage('automation');toggleMenu()">Automation</button>
   <button class="nav-mobile-link" id="mnl-security" onclick="showPage('security');toggleMenu()">Security</button>
   <button class="nav-mobile-link" id="mnl-consultants" onclick="showPage('consultants');toggleMenu()">Advisors</button>
+  <button class="nav-mobile-link" id="mnl-demo" onclick="showPage('demo');toggleMenu()">Demo</button>
+  <button class="nav-mobile-link" id="mnl-testimonials" onclick="showPage('testimonials');toggleMenu()">Reviews</button>
+  <button class="nav-mobile-link" id="mnl-faq" onclick="showPage('faq');toggleMenu()">FAQ</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
 </div>
 
@@ -733,6 +831,70 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
           <li>Benefits administration tracking</li>
           <li>Garnishment management & ACA compliance</li>
           <li>AI payroll verification before runs</li>
+        </ul>
+      </div>
+      <div class="fblock" style="border-top:3px solid var(--blue)">
+        <div class="fblock-icon">🧾</div>
+        <div class="fblock-title">Invoicing & Billing</div>
+        <div class="fblock-desc">Send professional invoices, collect payments, and track who owes what — all in one place. Recurring billing runs automatically so you never miss a payment.</div>
+        <ul class="fblock-list">
+          <li>Custom branded invoice templates</li>
+          <li>Recurring invoice scheduling (weekly/monthly)</li>
+          <li>Online payment links (ACH, card, Stripe)</li>
+          <li>Automatic payment reminders (3, 7, 14 days overdue)</li>
+          <li>Real-time invoice status tracking (draft → sent → paid)</li>
+          <li>Client portal — clients view & pay invoices online</li>
+          <li>Retainer billing with deposit tracking</li>
+          <li>Bulk invoice generation for multiple clients</li>
+          <li>Late fee automation on overdue invoices</li>
+        </ul>
+      </div>
+      <div class="fblock" style="border-top:3px solid #7c3aed">
+        <div class="fblock-icon">📊</div>
+        <div class="fblock-title">Financial Reports</div>
+        <div class="fblock-desc">Every report your business needs — auto-generated on schedule and available on demand. No accountant required to understand your numbers.</div>
+        <ul class="fblock-list">
+          <li>Profit & Loss — monthly, quarterly, annual</li>
+          <li>Balance Sheet — assets, liabilities, equity</li>
+          <li>Cash Flow Statement — inflows vs. outflows</li>
+          <li>Accounts Receivable & Payable aging reports</li>
+          <li>Expense by category breakdown (chart + table)</li>
+          <li>Revenue trend & growth-rate visualizations</li>
+          <li>Budget vs. actual variance reports</li>
+          <li>One-click export: PDF, Excel, CSV</li>
+          <li>Auto-email reports to advisor every Monday</li>
+        </ul>
+      </div>
+      <div class="fblock" style="border-top:3px solid #dc2626">
+        <div class="fblock-icon">🏛️</div>
+        <div class="fblock-title">Tax Center</div>
+        <div class="fblock-desc">Never scramble at tax time again. IEBC tracks deductions year-round, estimates your quarterly liability, and prepares everything your CPA needs to file.</div>
+        <ul class="fblock-list">
+          <li>Quarterly estimated tax calculation (auto-alert)</li>
+          <li>Deduction tracker — mileage, home office, meals</li>
+          <li>1099 contractor management & filing</li>
+          <li>Sales tax tracking by state & jurisdiction</li>
+          <li>Tax-ready P&L and balance sheet for CPA</li>
+          <li>Year-end tax package (one-click export)</li>
+          <li>Multi-state nexus tracking & apportionment</li>
+          <li>R&D tax credit documentation assistant</li>
+          <li>IRS audit log — every deduction documented</li>
+        </ul>
+      </div>
+      <div class="fblock" style="border-top:3px solid var(--gold)">
+        <div class="fblock-icon">🎯</div>
+        <div class="fblock-title">Budgeting & Forecasting</div>
+        <div class="fblock-desc">Set budgets, track actuals in real time, and get AI forecasts so you can make decisions before problems happen — not after.</div>
+        <ul class="fblock-list">
+          <li>Monthly budget builder by category</li>
+          <li>Live budget vs. actual dashboard</li>
+          <li>Over-budget alerts (instant notification)</li>
+          <li>AI 3-month cash flow forecast</li>
+          <li>Revenue goal tracking with progress bar</li>
+          <li>Scenario planning (best / base / worst case)</li>
+          <li>Department or project budget allocation</li>
+          <li>Burn rate calculator for startups</li>
+          <li>Rolling 12-month trend visualization</li>
         </ul>
       </div>
     </div>
@@ -1065,6 +1227,376 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   </div>
 </div>
 
+<!-- PAGE: DEMO -->
+<div class="page" id="page-demo">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Live Preview</span>
+    <div class="page-hero-title">See the <em>Dashboard</em> in Action</div>
+    <div class="page-hero-desc">An interactive preview of the IEBC accounting dashboard — the interface your clients use from day one.</div>
+  </div>
+  <div class="wrap">
+    <div class="demo-app">
+      <div class="demo-topbar">
+        <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
+        <div class="demo-title">IEBC Accounting Suite — acme-design-co.iebc.app</div>
+      </div>
+      <div class="demo-body">
+        <!-- Sidebar -->
+        <div class="demo-sidebar">
+          <div class="demo-sidebar-item active" onclick="demoSwitch('dashboard',this)"><span class="demo-sidebar-icon">📊</span>Dashboard</div>
+          <div class="demo-sidebar-item" onclick="demoSwitch('pl',this)"><span class="demo-sidebar-icon">📈</span>P&amp;L Report</div>
+          <div class="demo-sidebar-item" onclick="demoSwitch('invoices',this)"><span class="demo-sidebar-icon">🧾</span>Invoices</div>
+          <div class="demo-sidebar-item" onclick="demoSwitch('transactions',this)"><span class="demo-sidebar-icon">🏦</span>Transactions</div>
+          <div class="demo-sidebar-item" onclick="demoSwitch('tax',this)"><span class="demo-sidebar-icon">🏛️</span>Tax Center</div>
+        </div>
+        <!-- Main Content -->
+        <div class="demo-main">
+
+          <!-- Dashboard Panel -->
+          <div class="demo-panel active" id="dp-dashboard">
+            <div class="demo-kpi-row">
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Revenue (MTD)</div><div class="demo-kpi-val">$24,850</div><div class="demo-kpi-chg up">↑ 12% vs last month</div></div>
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Expenses (MTD)</div><div class="demo-kpi-val">$9,320</div><div class="demo-kpi-chg down">↑ 4% vs last month</div></div>
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Net Profit</div><div class="demo-kpi-val">$15,530</div><div class="demo-kpi-chg up">↑ 18% margin</div></div>
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Cash Balance</div><div class="demo-kpi-val">$47,200</div><div class="demo-kpi-chg up">3 accounts linked</div></div>
+            </div>
+            <div class="demo-2col">
+              <div class="demo-card">
+                <div class="demo-card-title">Monthly P&amp;L — Last 6 Months</div>
+                <div class="demo-chart">
+                  <div class="demo-bar-wrap"><div class="demo-bar" style="height:52px"></div><div class="demo-bar-lbl">Nov</div></div>
+                  <div class="demo-bar-wrap"><div class="demo-bar" style="height:61px"></div><div class="demo-bar-lbl">Dec</div></div>
+                  <div class="demo-bar-wrap"><div class="demo-bar" style="height:44px"></div><div class="demo-bar-lbl">Jan</div></div>
+                  <div class="demo-bar-wrap"><div class="demo-bar" style="height:70px"></div><div class="demo-bar-lbl">Feb</div></div>
+                  <div class="demo-bar-wrap"><div class="demo-bar" style="height:55px"></div><div class="demo-bar-lbl">Mar</div></div>
+                  <div class="demo-bar-wrap"><div class="demo-bar" style="height:86px"></div><div class="demo-bar-lbl">Apr</div></div>
+                </div>
+              </div>
+              <div class="demo-card">
+                <div class="demo-card-title">Recent Transactions</div>
+                <div class="demo-tx-list">
+                  <div class="demo-tx"><div class="demo-tx-icon" style="background:#e0f2fe">☁️</div><div><div class="demo-tx-name">AWS Cloud Services</div><div class="demo-tx-cat">Software &amp; Tech</div></div><div class="demo-tx-amt db">-$284</div></div>
+                  <div class="demo-tx"><div class="demo-tx-icon" style="background:#dcfce7">💼</div><div><div class="demo-tx-name">Client Payment — Apex Co.</div><div class="demo-tx-cat">Service Revenue</div></div><div class="demo-tx-amt cr">+$4,200</div></div>
+                  <div class="demo-tx"><div class="demo-tx-icon" style="background:#fef3c7">🍽️</div><div><div class="demo-tx-name">Client Lunch — The Capital Grille</div><div class="demo-tx-cat">Meals &amp; Entertainment</div></div><div class="demo-tx-amt db">-$127</div></div>
+                  <div class="demo-tx"><div class="demo-tx-icon" style="background:#ede9fe">📦</div><div><div class="demo-tx-name">FedEx Shipping</div><div class="demo-tx-cat">Office Supplies</div></div><div class="demo-tx-amt db">-$43</div></div>
+                  <div class="demo-tx"><div class="demo-tx-icon" style="background:#dcfce7">💼</div><div><div class="demo-tx-name">Retainer — Bright Media</div><div class="demo-tx-cat">Retainer Income</div></div><div class="demo-tx-amt cr">+$2,500</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- P&L Panel -->
+          <div class="demo-panel" id="dp-pl">
+            <div class="demo-tab-row">
+              <button class="demo-tab active">This Month</button>
+              <button class="demo-tab">This Quarter</button>
+              <button class="demo-tab">This Year</button>
+            </div>
+            <div class="demo-2col">
+              <div class="demo-card" style="border-top:3px solid var(--navy)">
+                <div class="demo-card-title">Profit &amp; Loss Statement</div>
+                <div class="demo-report-row"><span class="demo-report-lbl" style="font-weight:700;color:var(--green)">INCOME</span><span></span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Service Revenue</span><span class="demo-report-val">$18,400</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Retainer Income</span><span class="demo-report-val">$6,450</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl" style="font-weight:700">Gross Revenue</span><span class="demo-report-val" style="color:var(--green)">$24,850</span></div>
+                <div class="demo-report-row" style="margin-top:8px"><span class="demo-report-lbl" style="font-weight:700;color:var(--red)">EXPENSES</span><span></span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Payroll</span><span class="demo-report-val neg">-$4,800</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Software &amp; Tech</span><span class="demo-report-val neg">-$1,240</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Advertising</span><span class="demo-report-val neg">-$1,800</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Other Expenses</span><span class="demo-report-val neg">-$1,480</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl" style="font-weight:700">Total Expenses</span><span class="demo-report-val neg">-$9,320</span></div>
+                <div class="demo-report-row" style="border-top:2px solid var(--navy);margin-top:4px"><span class="demo-report-lbl" style="font-weight:800;font-size:.9rem">NET PROFIT</span><span class="demo-report-val pos" style="font-size:1rem">$15,530</span></div>
+              </div>
+              <div class="demo-card">
+                <div class="demo-card-title">Top Expense Categories</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div><div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:3px"><span>Payroll</span><span style="font-weight:700">$4,800</span></div><div style="height:6px;background:var(--border);border-radius:3px"><div style="height:100%;width:52%;background:var(--navy);border-radius:3px"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:3px"><span>Advertising</span><span style="font-weight:700">$1,800</span></div><div style="height:6px;background:var(--border);border-radius:3px"><div style="height:100%;width:19%;background:var(--gold);border-radius:3px"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:3px"><span>Software &amp; Tech</span><span style="font-weight:700">$1,240</span></div><div style="height:6px;background:var(--border);border-radius:3px"><div style="height:100%;width:13%;background:var(--blue);border-radius:3px"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:3px"><span>Meals &amp; Entertainment</span><span style="font-weight:700">$640</span></div><div style="height:6px;background:var(--border);border-radius:3px"><div style="height:100%;width:7%;background:var(--green);border-radius:3px"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:3px"><span>Other</span><span style="font-weight:700">$840</span></div><div style="height:6px;background:var(--border);border-radius:3px"><div style="height:100%;width:9%;background:var(--text3);border-radius:3px"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Invoices Panel -->
+          <div class="demo-panel" id="dp-invoices">
+            <div class="demo-tab-row">
+              <button class="demo-tab active">All</button>
+              <button class="demo-tab">Paid</button>
+              <button class="demo-tab">Outstanding</button>
+              <button class="demo-tab">Overdue</button>
+            </div>
+            <div class="demo-inv-list">
+              <div class="demo-inv"><span class="demo-inv-num">INV-0044</span><span class="demo-inv-client">Apex Co. — Brand Identity Package</span><span class="demo-inv-amt">$4,200</span><span class="demo-inv-badge badge-paid">Paid</span></div>
+              <div class="demo-inv"><span class="demo-inv-num">INV-0043</span><span class="demo-inv-client">Bright Media — Monthly Retainer (Apr)</span><span class="demo-inv-amt">$2,500</span><span class="demo-inv-badge badge-paid">Paid</span></div>
+              <div class="demo-inv"><span class="demo-inv-num">INV-0042</span><span class="demo-inv-client">Northgate LLC — Website Redesign Phase 2</span><span class="demo-inv-amt">$6,800</span><span class="demo-inv-badge badge-sent">Sent · Due Apr 28</span></div>
+              <div class="demo-inv"><span class="demo-inv-num">INV-0041</span><span class="demo-inv-client">Cascade Group — Social Media Management</span><span class="demo-inv-amt">$1,400</span><span class="demo-inv-badge badge-overdue">Overdue 12d</span></div>
+              <div class="demo-inv"><span class="demo-inv-num">INV-0040</span><span class="demo-inv-client">Summit Ventures — SEO Audit Report</span><span class="demo-inv-amt">$900</span><span class="demo-inv-badge badge-draft">Draft</span></div>
+            </div>
+          </div>
+
+          <!-- Transactions Panel -->
+          <div class="demo-panel" id="dp-transactions">
+            <div class="demo-kpi-row" style="grid-template-columns:repeat(3,1fr)">
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Chase Business ••••4821</div><div class="demo-kpi-val" style="font-size:1rem">$34,420</div><div class="demo-kpi-chg up">Checking</div></div>
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Chase Visa ••••9204</div><div class="demo-kpi-val" style="font-size:1rem">$8,120</div><div class="demo-kpi-chg down">Credit Card</div></div>
+              <div class="demo-kpi"><div class="demo-kpi-lbl">Wells Fargo ••••3317</div><div class="demo-kpi-val" style="font-size:1rem">$4,660</div><div class="demo-kpi-chg up">Savings</div></div>
+            </div>
+            <div class="demo-card" style="margin-top:0">
+              <div class="demo-card-title">Recent Transactions — All Accounts</div>
+              <div class="demo-tx-list">
+                <div class="demo-tx"><div class="demo-tx-icon" style="background:#fef3c7">🟡</div><div><div class="demo-tx-name">LinkedIn Ads</div><div class="demo-tx-cat">Advertising · Chase ••••4821</div></div><div class="demo-tx-amt db">-$620</div></div>
+                <div class="demo-tx"><div class="demo-tx-icon" style="background:#dcfce7">💼</div><div><div class="demo-tx-name">ACH Deposit — Apex Co.</div><div class="demo-tx-cat">Service Revenue · Chase ••••4821</div></div><div class="demo-tx-amt cr">+$4,200</div></div>
+                <div class="demo-tx"><div class="demo-tx-icon" style="background:#e0f2fe">🖥️</div><div><div class="demo-tx-name">Adobe Creative Cloud</div><div class="demo-tx-cat">Software &amp; Tech · Chase ••••9204</div></div><div class="demo-tx-amt db">-$89</div></div>
+                <div class="demo-tx"><div class="demo-tx-icon" style="background:#fce7f3">✈️</div><div><div class="demo-tx-name">Delta Airlines</div><div class="demo-tx-cat">Travel · Chase ••••9204</div></div><div class="demo-tx-amt db">-$438</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tax Panel -->
+          <div class="demo-panel" id="dp-tax">
+            <div class="demo-2col">
+              <div class="demo-card" style="border-top:3px solid var(--red)">
+                <div class="demo-card-title">Tax Estimator — Q2 2026</div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Gross Revenue (YTD)</span><span class="demo-report-val">$74,550</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Total Deductions (YTD)</span><span class="demo-report-val pos">-$27,960</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Net Taxable Income</span><span class="demo-report-val">$46,590</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">SE Tax (15.3%)</span><span class="demo-report-val neg">$7,128</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl">Federal Income Tax (Est.)</span><span class="demo-report-val neg">$5,240</span></div>
+                <div class="demo-report-row"><span class="demo-report-lbl" style="font-weight:800">Q2 Payment Due (Apr 15)</span><span class="demo-report-val neg" style="font-size:1rem">$3,092</span></div>
+              </div>
+              <div class="demo-card">
+                <div class="demo-card-title">Top Deductions Tracked</div>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <div class="demo-report-row"><span class="demo-report-lbl">🚗 Mileage (4,280 mi)</span><span class="demo-report-val pos">$2,868</span></div>
+                  <div class="demo-report-row"><span class="demo-report-lbl">🏠 Home Office (sq ft)</span><span class="demo-report-val pos">$1,920</span></div>
+                  <div class="demo-report-row"><span class="demo-report-lbl">💻 Software &amp; Tech</span><span class="demo-report-val pos">$4,840</span></div>
+                  <div class="demo-report-row"><span class="demo-report-lbl">📢 Advertising</span><span class="demo-report-val pos">$7,200</span></div>
+                  <div class="demo-report-row"><span class="demo-report-lbl">🍽️ Meals (50% deductible)</span><span class="demo-report-val pos">$1,140</span></div>
+                  <div class="demo-report-row" style="font-weight:700"><span class="demo-report-lbl">Total Deductions</span><span class="demo-report-val pos">$27,960</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end demo-main -->
+      </div><!-- end demo-body -->
+    </div><!-- end demo-app -->
+    <div style="text-align:center;margin-top:32px">
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:18px">This is a preview of the real dashboard your clients log into from day one.</p>
+      <button class="cta-btn" style="background:linear-gradient(135deg,var(--navy),var(--navy3));color:var(--gold2)" onclick="openModal()">Start My Free 30-Day Trial →</button>
+    </div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>Dashboard preview uses illustrative demo data</span>
+  </div>
+</div>
+
+<!-- PAGE: TESTIMONIALS -->
+<div class="page" id="page-testimonials">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">Client Reviews</span>
+    <div class="page-hero-title">What Our <em>Clients Say</em></div>
+    <div class="page-hero-desc">Real feedback from business owners who switched to IEBC and never looked back.</div>
+  </div>
+  <div class="wrap">
+    <div class="testi-grid">
+
+      <div class="tcard-r">
+        <div class="tcard-stars">★★★★★</div>
+        <div class="tcard-quote">Switched from QuickBooks after 6 years and I genuinely can't believe the difference. The AI scans my receipts in seconds and the payroll just runs itself. My accountant loves that everything exports clean for tax season.</div>
+        <div class="tcard-author">
+          <div class="tcard-av" style="background:linear-gradient(135deg,var(--navy),var(--navy3))">RL</div>
+          <div>
+            <div class="tcard-name">Rachel Liu</div>
+            <div class="tcard-biz">Founder · Cascade Brand Studio</div>
+            <div class="tcard-badge">Switched from QuickBooks</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard-r">
+        <div class="tcard-stars">★★★★★</div>
+        <div class="tcard-quote">I run an LLC with 4 employees and 12 1099 contractors. IEBC handles all of it — payroll runs on time, 1099s come out automatically, and Marcus (my advisor) answers within hours. Worth every penny at $17/month.</div>
+        <div class="tcard-author">
+          <div class="tcard-av" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy)">DW</div>
+          <div>
+            <div class="tcard-name">David Wu</div>
+            <div class="tcard-biz">Owner · Summit Logistics LLC</div>
+            <div class="tcard-badge">2-Year Plan</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard-r">
+        <div class="tcard-stars">★★★★★</div>
+        <div class="tcard-quote">As a freelancer I was drowning in receipts and terrified every tax season. IEBC changed that completely. The quarterly tax estimates alone saved me from a massive surprise bill last April. I'm never going back.</div>
+        <div class="tcard-author">
+          <div class="tcard-av" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">SP</div>
+          <div>
+            <div class="tcard-name">Samantha Park</div>
+            <div class="tcard-biz">Independent UX Consultant</div>
+            <div class="tcard-badge">Annual Plan</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard-r">
+        <div class="tcard-stars">★★★★★</div>
+        <div class="tcard-quote">The bank linking is seamless — three accounts connected in under 5 minutes. Every morning my books are already updated. I used to spend 6 hours a month on bookkeeping. Now it's 20 minutes to review what IEBC did automatically.</div>
+        <div class="tcard-author">
+          <div class="tcard-av" style="background:linear-gradient(135deg,var(--green),#059669)">TM</div>
+          <div>
+            <div class="tcard-name">Tom Martinez</div>
+            <div class="tcard-biz">CEO · Northgate Construction</div>
+            <div class="tcard-badge">Month-to-Month</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard-r">
+        <div class="tcard-stars">★★★★★</div>
+        <div class="tcard-quote">Victoria (Chief Advisor) reviewed our entire financial structure in the first week and found $14,000 in deductions we were missing. That alone paid for 5 years of the subscription. The team is brilliant.</div>
+        <div class="tcard-author">
+          <div class="tcard-av" style="background:linear-gradient(135deg,var(--blue),#3b82f6)">AK</div>
+          <div>
+            <div class="tcard-name">Aisha Khan</div>
+            <div class="tcard-biz">Co-founder · Apex Digital Agency</div>
+            <div class="tcard-badge">2-Year Plan</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard-r">
+        <div class="tcard-stars">★★★★★</div>
+        <div class="tcard-quote">I compared IEBC to Zoho Books, FreshBooks, and QuickBooks before signing up. Nothing comes close for the price. Full payroll, real advisors, AI receipt scanning — all for $14/month on the 2-year plan. It's not even close.</div>
+        <div class="tcard-author">
+          <div class="tcard-av" style="background:linear-gradient(135deg,#dc2626,#f87171)">JB</div>
+          <div>
+            <div class="tcard-name">Jordan Brooks</div>
+            <div class="tcard-biz">Owner · Brooks Consulting Group</div>
+            <div class="tcard-badge">Switched from Zoho Books</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="trust-strip">
+      <div><div class="ts-item-val">4.9★</div><div class="ts-item-lbl">Average Rating</div></div>
+      <div><div class="ts-item-val">98%</div><div class="ts-item-lbl">Would Recommend</div></div>
+      <div><div class="ts-item-val">18 hrs</div><div class="ts-item-lbl">Saved Per Month</div></div>
+      <div><div class="ts-item-val">30-Day</div><div class="ts-item-lbl">Free Trial</div></div>
+    </div>
+
+  </div>
+  <div class="cta-band">
+    <div class="cta-title">Join Hundreds of <em>Happy Business Owners</em></div>
+    <div class="cta-sub">30-day free trial. No credit card charge until day 31. Cancel with 7 days notice.</div>
+    <button class="cta-btn" onclick="openModal()">Start My Free 30-Day Trial</button>
+    <div class="cta-fine">From $14/mo · Advisor matched within 1 business day</div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>Reviews from verified IEBC clients</span>
+  </div>
+</div>
+
+<!-- PAGE: FAQ -->
+<div class="page" id="page-faq">
+  <div class="page-hero">
+    <span class="page-hero-eyebrow">FAQ</span>
+    <div class="page-hero-title">Frequently Asked <em>Questions</em></div>
+    <div class="page-hero-desc">Everything you need to know before starting your free trial.</div>
+  </div>
+  <div class="wrap-narrow">
+
+    <div class="faq-cat-hd">💰 Pricing &amp; Billing</div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">What does the free trial include?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Your 30-day free trial includes 100% of the plan you choose — every feature, your dedicated advisor, bank linking, payroll, AI receipt scanning, and all automations. Your card is held but not charged until day 31. Cancel with 7 days notice before day 31 and you're never billed.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Can I switch plans later?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. You can upgrade or downgrade at any time. If you upgrade mid-term, we prorate the difference. Downgrading takes effect at your next renewal date. Contact your advisor to make any plan changes.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Are there any hidden fees or per-employee charges?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">None. Unlike QuickBooks ($6.50–$12 per employee per month for payroll), IEBC charges one flat subscription fee regardless of how many employees you have. All features — payroll, bank linking, HR, reports, tax center — are included at every price tier.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">What's the cancellation policy?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Month-to-month: cancel with 7 days notice before your next billing date. Annual or 2-year: cancel with 7 days notice before your renewal date. A prorated refund is available on unused time for annual and 2-year plans. We never lock you in with hidden exit fees.</div></div>
+      </div>
+    </div>
+
+    <div class="faq-cat-hd">🏦 Bank Linking &amp; Security</div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Can IEBC move or access my money?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">No. Bank linking uses read-only credentials — we can see and import your transactions, but we have zero ability to move, transfer, or touch your funds. This is enforced at the API level and is a hard technical limitation, not just a policy.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Which banks can I link?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">IEBC supports linking for all major U.S. banks including Chase, Wells Fargo, Bank of America, Citibank, US Bank, Capital One, TD Bank, PNC, Regions, and thousands of smaller banks and credit unions. You can also manually enter accounts or upload CSV statements for any bank not on the list.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Is my financial data encrypted?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. All data in transit is encrypted with 256-bit SSL/TLS. All stored data — transactions, payroll records, documents — is encrypted at rest using AES-256. We are PCI DSS compliant, SOC 2 Type II audited, and store your data on geo-redundant servers with daily backups.</div></div>
+      </div>
+    </div>
+
+    <div class="faq-cat-hd">💵 Payroll &amp; HR</div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Is payroll really included — no add-on?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes, full payroll is included in your flat subscription. This includes automated payroll runs, direct deposit, federal and state tax withholding, W-2 generation for employees, and 1099-NEC generation for contractors. There is no per-employee fee — ever.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">How does direct deposit work?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Payroll processes via ACH. Funds are deposited to employee accounts 1–2 business days before your specified pay date. You set the pay schedule (weekly, bi-weekly, semi-monthly, or monthly) and IEBC handles the rest automatically.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Can I handle both employees and 1099 contractors?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. IEBC tracks salaried and hourly employees (W-2) and independent contractors (1099-NEC) in the same system. At year-end, W-2s and 1099s are generated automatically based on payment history. The system alerts you when a contractor crosses the $600 filing threshold.</div></div>
+      </div>
+    </div>
+
+    <div class="faq-cat-hd">⚙️ Features &amp; Setup</div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">How long does setup take?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Most clients are fully set up in under 30 minutes. Your advisor walks you through linking your bank accounts, importing historical data, and configuring payroll on your first onboarding call — which happens within 1 business day of signing up.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Can I migrate from QuickBooks or Zoho Books?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. IEBC imports QuickBooks .QBO and .IIF exports, Zoho Books CSV exports, FreshBooks CSV exports, and standard bank statement CSVs. Your advisor handles the migration for you — just export your data from the old system and share it with us.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">What is the AI receipt scanning accuracy?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">IEBC's AI (powered by Claude) achieves 99%+ accuracy on standard receipts — vendor name, amount, date, and category. For ambiguous documents, the system flags the item for your review rather than auto-filing with an error. You can also set custom rules to improve accuracy for your specific vendors.</div></div>
+      </div>
+      <div class="faq-item" onclick="faqToggle(this)">
+        <div class="faq-q"><span class="faq-q-text">Is there a mobile app?</span><span class="faq-icon">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes. The IEBC mobile app (iOS and Android) lets you snap receipts from your camera, check balances, approve payroll, and message your advisor. Employee self-service is also available on mobile for pay stubs, PTO requests, and onboarding documents.</div></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px">
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:18px">Still have questions? Chat with an advisor right now — it's free.</p>
+      <button class="cta-btn" style="background:linear-gradient(135deg,var(--navy),var(--navy3));color:var(--gold2)" onclick="showPage('consultants')">Chat with an Advisor →</button>
+    </div>
+  </div>
+  <div class="footer">
+    <span>IEBC — INTEGRATED EFFICIENCY BUSINESS CONSULTANTS · 2026</span>
+    <span>This page does not process real payments</span>
+  </div>
+</div>
+
 <!-- CHAT PANEL (slide-in) -->
 <div class="chat-overlay" id="chat-overlay" onclick="closeChat()"></div>
 <div class="chat-panel" id="chat-panel">
@@ -1087,7 +1619,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 </div>
 
 <script>
-const pages = ['home','features','pricing','compare','automation','security','consultants'];
+const pages = ['home','features','pricing','compare','automation','security','consultants','demo','testimonials','faq'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -1507,6 +2039,20 @@ Login at: IEBC MasterHub > Accounting Suite`;
   navigator.clipboard.writeText(text).then(()=>alert('Credentials copied to clipboard!')).catch(()=>{
     const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('Credentials copied!');
   });
+}
+
+
+function demoSwitch(panel, el) {
+  document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.demo-sidebar-item').forEach(s => s.classList.remove('active'));
+  const p = document.getElementById('dp-' + panel);
+  if (p) p.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function faqToggle(item) {
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
 }
 
 function launchHub(){
