@@ -3513,6 +3513,18 @@ function setupRealtimeSync(){
   window._hubPresence = presence;
 }
 
+function showToast(msg, type){
+  const el=document.createElement('div');
+  const bg=type==='t-success'?'#047857':type==='t-error'?'#DC2626':'#0B2140';
+  el.style.cssText=`position:fixed;bottom:24px;right:22px;background:${bg};color:#F5C842;padding:10px 18px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;box-shadow:0 8px 32px rgba(11,33,64,.3);z-index:99999;animation:showToastIn .2s ease;pointer-events:none;max-width:320px;line-height:1.4`;
+  el.textContent=msg;
+  const style=document.createElement('style');
+  style.textContent='@keyframes showToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
 function showRealtimeToast(table, record, action) {
   const labels = {hub_clients:'Client',hub_prospects:'Lead',hub_builds:'Build',hub_tasks:'Task',hub_invoices:'Invoice'};
   const label = labels[table]||'Record';
@@ -3578,6 +3590,11 @@ async function dbInsert(table, row){
     await logActivity(table.replace('hub_',''), row.name||row.client_name||'item');
     return data?.[0];
   }catch(e){ console.error(e); return null; }
+}
+
+async function dbUpdate(table, id, updates){
+  if(!DB) return;
+  try{ await DB.from(table).update(updates).eq('id',id); }catch(e){ console.error(e); }
 }
 
 async function dbDelete(table, id){
@@ -4549,9 +4566,59 @@ function renderPipeline(){
           <div style="font-size:.65rem;color:var(--text2)">${p.contact||''} ${p.est_value?'· $'+Number(p.est_value).toLocaleString():''}</div>
           ${p.follow_up_date?`<div style="font-size:.62rem;color:var(--orange);margin-top:3px">📅 Follow-up: ${p.follow_up_date}</div>`:''}
           <button class="btn btn-ghost btn-xs" style="position:absolute;top:6px;right:6px;padding:2px 6px" onclick="deleteItem('prospects','hub_prospects','${p.id}')">✕</button>
+          <div style="display:flex;gap:4px;margin-top:7px;flex-wrap:wrap">
+            ${stage!=='closing'?`<button style="font-size:.6rem;padding:2px 7px;background:var(--border2);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2)" onclick="pipelineMoveNext('${p.id}','${stage}')">→ Next Stage</button>`:''}
+            ${stage==='closing'?`<button style="font-size:.6rem;padding:2px 7px;background:var(--green);color:#fff;border:none;border-radius:4px;cursor:pointer" onclick="pipelineConvert('${p.id}')">🎉 Convert to Client</button>`:''}
+          </div>
         </div>`).join('')}
     </div>`;
   }).join('');
+}
+
+async function pipelineMoveNext(id, currentStage){
+  const idx=STAGES.indexOf(currentStage);
+  if(idx<0||idx>=STAGES.length-1){ showToast('Already at final stage'); return; }
+  const nextStage=STAGES[idx+1];
+  const p=DATA.prospects.find(p=>p.id===id); if(!p) return;
+  p.stage=nextStage;
+  await dbUpdate('hub_prospects',id,{stage:nextStage});
+  saveLocal(); renderPipeline();
+  showToast(`Moved to ${STAGE_LABELS[nextStage]}`);
+}
+
+async function pipelineConvert(id){
+  const p=DATA.prospects.find(pr=>pr.id===id); if(!p) return;
+  if(!confirm(`Convert "${p.name}" to an active client?`)) return;
+  const clientNum=iebcNextId('clients','C');
+  const c={
+    name:p.name, contact:p.contact||'', email:p.email||'', phone:p.phone||'',
+    industry:p.industry||'General', status:'active', monthly:p.est_value||0,
+    setup_fee:0, notes:`Converted from pipeline on ${new Date().toLocaleDateString()}`,
+    client_id:clientNum, created_at:new Date().toISOString(), id:'local-'+Date.now()
+  };
+  const saved=await dbInsert('hub_clients',{...c,id:undefined});
+  if(saved) c.id=saved.id;
+  DATA.clients.unshift(c);
+  // Remove from pipeline
+  DATA.prospects=DATA.prospects.filter(pr=>pr.id!==id);
+  await dbUpdate('hub_prospects',id,{stage:'closed-won'});
+  saveLocal(); renderPipeline(); renderClients(); renderDashboard(); updateBadges();
+  showToast(`🎉 ${p.name} converted to client!`);
+}
+
+async function buildQuickUpdate(id){
+  const b=DATA.builds.find(b=>b.id===id); if(!b) return;
+  const progress=prompt(`Update progress for "${b.client_name}" build\n\nCurrent: ${b.progress||0}%\n\nEnter new progress (0-100):`, b.progress||0);
+  if(progress===null) return;
+  const pct=Math.min(100,Math.max(0,parseInt(progress)||0));
+  const statusOptions=['on-track','at-risk','delayed'];
+  const statusInput=prompt(`Status:\n1 = On Track\n2 = At Risk\n3 = Delayed\n\nCurrent: ${b.status||'on-track'}\nEnter 1, 2 or 3 (or press OK to keep current):`,'1');
+  const statusMap={'1':'on-track','2':'at-risk','3':'delayed'};
+  const newStatus=statusMap[statusInput]||b.status||'on-track';
+  b.progress=pct; b.status=newStatus;
+  await dbUpdate('hub_builds',id,{progress:pct,status:newStatus});
+  saveLocal(); renderBuilds(); renderDashboard();
+  showToast(`Build updated: ${pct}% — ${newStatus}`);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -4610,7 +4677,10 @@ function renderBuilds(){
       </td>
       <td class="td-mono" style="font-size:.68rem;color:${isOverdue(b.due_date)?'var(--red)':'var(--text3)'}">${b.due_date||'—'}</td>
       <td>${statusBadge(b.status||'on-track')}</td>
-      <td><button class="btn btn-ghost btn-xs" onclick="deleteItem('builds','hub_builds','${b.id}')">✕</button></td>
+      <td style="display:flex;gap:4px;align-items:center">
+        <button class="btn btn-xs" style="background:var(--blue);color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;font-size:.65rem" onclick="buildQuickUpdate('${b.id}')">✏️</button>
+        <button class="btn btn-ghost btn-xs" onclick="deleteItem('builds','hub_builds','${b.id}')">✕</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -4653,7 +4723,11 @@ function renderInvoices(){
     <td class="td-mono" style="font-size:.68rem;color:var(--text2)">${(inv.created_at||'').substring(0,10)}</td>
     <td class="td-mono" style="font-size:.68rem;color:${isOverdue(inv.due_date)&&inv.status!=='paid'?'var(--red)':'var(--text3)'}">${inv.due_date||'—'}</td>
     <td>${statusBadge(inv.status)}</td>
-    <td><button class="btn btn-ghost btn-xs" onclick="deleteItem('invoices','hub_invoices','${inv.id}')">✕</button></td>
+    <td style="display:flex;gap:4px;align-items:center;flex-wrap:nowrap">
+      ${inv.status!=='paid'?`<button class="btn btn-xs" style="background:var(--green);color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;font-size:.68rem" onclick="markInvoicePaid('${inv.id}')">✓ Paid</button>`:''}
+      <button class="btn btn-xs" style="background:var(--blue);color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;font-size:.68rem" onclick="sendInvoiceEmail('${inv.id}')">📧 Send</button>
+      <button class="btn btn-ghost btn-xs" onclick="deleteItem('invoices','hub_invoices','${inv.id}')">✕</button>
+    </td>
   </tr>`).join('');
 }
 
@@ -8709,6 +8783,24 @@ async function markInvoicePaid(invId){
   acctAutoLogFromInvoice(inv, 'paid');
 
   showToast('✅ Invoice marked paid — logged to Accounting');
+}
+
+function sendInvoiceEmail(invId){
+  const inv = DATA.invoices.find(i=>i.id===invId);
+  if(!inv){ showToast('Invoice not found'); return; }
+  const client = DATA.clients.find(c=>c.name===inv.client_name)||{};
+  const email = client.email||'';
+  const subject = encodeURIComponent(`Invoice INV-${String(DATA.invoices.indexOf(inv)+1).padStart(3,'0')} — $${Number(inv.amount||0).toLocaleString()}`);
+  const body = encodeURIComponent(
+    `Hi ${inv.client_name},\n\nPlease find your invoice details below:\n\nAmount: $${Number(inv.amount||0).toLocaleString()}\nDue Date: ${inv.due_date||'Upon receipt'}\nType: ${inv.type||'Service'}\n\nStatus: ${inv.status||'Pending'}\n\nThank you for your business!\n\nIEBC Digital Solutions`
+  );
+  if(email){
+    window.open(`mailto:${email}?subject=${subject}&body=${body}`,'_blank');
+  } else {
+    window.open(`mailto:?subject=${subject}&body=${body}`,'_blank');
+    showToast('⚠️ No email on file — compose window opened');
+  }
+  showToast('📧 Invoice email composed');
 }
 
 function acctAutoLogFromInvoice(inv, trigger){
