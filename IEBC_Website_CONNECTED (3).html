@@ -5586,14 +5586,33 @@ document.addEventListener('contextmenu',function(e){e.preventDefault();});
         </div>
       </div>
 
-      <!-- Bundle upsell bar -->
-      <div style="background:linear-gradient(135deg,var(--navy),var(--navy3));border-radius:14px;padding:22px 28px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;max-width:960px;margin:0 auto">
-        <span style="font-size:1.6rem">🎁</span>
-        <div style="flex:1;min-width:220px">
-          <div style="font-family:var(--ff-h);font-size:1rem;font-weight:800;color:#fff;margin-bottom:3px">Already getting a website or hub?</div>
-          <div style="font-size:.8rem;color:rgba(255,255,255,.72);line-height:1.6">The full Business-tier Accounting Suite is included free in all IEBC bundles — Starter, Growth, and Pro. Standalone subscription starts at $19/mo.</div>
+      <!-- Bundle Deal Card -->
+      <div style="max-width:960px;margin:0 auto 16px;background:linear-gradient(135deg,var(--navy),var(--navy3));border:2px solid var(--gold);border-radius:16px;padding:28px 32px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-m);font-size:.56rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:6px 18px;border-radius:0 0 0 12px">⚡ Best Deal</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div style="font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:6px">⚡ Bundle Special — $599 One-Time</div>
+            <div style="font-size:.82rem;color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:14px">Get everything: Professional website build + 12-month hosting, MasterHub CRM setup, and Accounting Suite Pro (1 year free). All connected, all managed by IEBC.</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--gold3)"><span>✓</span>Professional website</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--gold3)"><span>✓</span>CRM + Hub setup</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--gold3)"><span>✓</span>Accounting Suite Pro — 1 year</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--gold3)"><span>✓</span>Dedicated consultant</div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--gold3)"><span>✓</span>Full onboarding</div>
+            </div>
+          </div>
+          <div style="text-align:center;flex-shrink:0">
+            <div style="font-family:var(--ff-h);font-size:2.6rem;font-weight:900;color:var(--gold3);line-height:1">$599</div>
+            <div style="font-family:var(--ff-m);font-size:.6rem;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px">one-time</div>
+            <button onclick="openAcctSuite('bundle')" style="padding:13px 28px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:10px;font-family:var(--ff-h);font-size:.95rem;font-weight:800;cursor:pointer;white-space:nowrap;font-style:italic">🛒 Get the Bundle →</button>
+            <div style="font-size:.64rem;color:rgba(255,255,255,.4);margin-top:6px">Secure checkout · Full access immediately</div>
+          </div>
         </div>
-        <button onclick="showPage('pricing')" style="flex-shrink:0;padding:11px 22px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:9px;font-family:var(--ff-h);font-size:.88rem;font-weight:800;cursor:pointer;white-space:nowrap">See Bundles →</button>
+      </div>
+
+      <!-- Client Login link -->
+      <div style="max-width:960px;margin:0 auto;text-align:right;padding-bottom:4px">
+        <button onclick="openAcctSuite()" style="background:none;border:none;color:var(--text3);font-size:.74rem;cursor:pointer;text-decoration:underline">Already a client? Log in to your accounting dashboard →</button>
       </div>
     </div>
   </section>
@@ -5918,16 +5937,20 @@ document.addEventListener('contextmenu',function(e){e.preventDefault();});
 <script>
 var _acctSuiteFile = 'IEBC_Accounting_Suite_CONNECTED__1_.html';
 
-function openAcctSuite() {
+function openAcctSuite(plan) {
   var overlay = document.getElementById('acct-overlay');
   var iframe  = document.getElementById('acct-iframe');
   if (!overlay || !iframe) return;
-  // Load iframe only once
-  if (!iframe.src || iframe.src === window.location.href) {
-    iframe.src = _acctSuiteFile;
+  // Load iframe (reload if plan specified so it can pre-select)
+  var src = _acctSuiteFile + (plan ? '?plan=' + plan : '');
+  if (!iframe.src || iframe.src === window.location.href || plan) {
+    iframe.src = src;
   }
   overlay.style.display = 'flex';
   document.body.style.overflow = 'hidden';
+  // Update overlay header badge for bundle
+  var badge = overlay.querySelector('span span');
+  if(badge && plan==='bundle') badge.textContent = '⚡ Bundle Deal — $599 One-Time';
 }
 
 function closeAcctSuite() {
@@ -5942,14 +5965,23 @@ document.addEventListener('keydown', function(e) {
 
 // Listen for messages from the iframe (e.g. after successful purchase)
 window.addEventListener('message', function(e) {
-  if (e.data && e.data.type === 'acct_suite_purchased') {
+  if (!e.data) return;
+
+  if (e.data.type === 'acct_suite_purchased') {
     closeAcctSuite();
-    // surface a success toast on the website
     var t = document.createElement('div');
-    t.textContent = '✅ Accounting Suite activated — credentials saved!';
-    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#047857;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+    t.innerHTML = '✅ <strong>Account created!</strong> Your credentials have been saved.<br><small>Click "Client Login" to access your dashboard.</small>';
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:#047857;color:#fff;padding:14px 22px;border-radius:12px;font-size:.84rem;line-height:1.6;box-shadow:0 6px 24px rgba(0,0,0,.3);cursor:pointer;max-width:320px';
+    t.onclick = function(){ t.remove(); openAcctSuite(); };
     document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); }, 5000);
+    setTimeout(function(){ if(t.parentNode) t.remove(); }, 8000);
+  }
+
+  if (e.data.type === 'open_client_portal') {
+    // Customer clicked "Launch Dashboard" — close iframe and open standalone portal
+    closeAcctSuite();
+    // Open accounting suite as a standalone page so customer can log in
+    window.open(_acctSuiteFile, '_blank');
   }
 });
 </script>

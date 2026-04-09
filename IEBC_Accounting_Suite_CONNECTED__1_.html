@@ -619,6 +619,45 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .pr-run-stat-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--gold3)}
 .pr-run-stat-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
 .pr-history-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
+
+/* ══ CLIENT PORTAL ══ */
+.portal-wrap{display:flex;min-height:calc(100vh - var(--nav-h));background:var(--off)}
+.portal-sidebar{width:220px;flex-shrink:0;background:var(--navy);padding:20px 0;display:flex;flex-direction:column;gap:2px;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto}
+.portal-sid-brand{padding:12px 18px 18px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.portal-sid-biz{font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.portal-sid-sub{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:2px}
+.portal-nav-btn{display:flex;align-items:center;gap:10px;padding:10px 18px;font-family:var(--ff-m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:transparent;text-align:left;width:100%;transition:all .15s}
+.portal-nav-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
+.portal-nav-btn.active{color:var(--gold3);background:rgba(200,144,42,.15);border-right:2px solid var(--gold)}
+.portal-nav-ico{font-size:.95rem;width:20px;text-align:center}
+.portal-main{flex:1;padding:28px;overflow:auto}
+.cp-panel{display:none}.cp-panel.active{display:block}
+.cp-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.cp-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.cp-kpi{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px}
+.cp-kpi-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--navy)}
+.cp-kpi-lbl{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.cp-section-title{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:14px}
+.cp-table{width:100%;border-collapse:collapse;font-size:.76rem}
+.cp-table th{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--border);text-align:left}
+.cp-table td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.cp-table tr:hover td{background:var(--off)}
+.cp-badge-green{background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;font-family:var(--ff-m)}
+.cp-badge-red{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;font-family:var(--ff-m)}
+.cp-badge-gray{background:var(--off2);color:var(--muted);border:1px solid var(--border2);padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;font-family:var(--ff-m)}
+/* Login page */
+.login-outer{min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;justify-content:center;padding:24px}
+.login-box{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:36px 40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg)}
+.login-logo{width:48px;height:48px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:1rem;font-weight:900;color:var(--navy);margin:0 auto 20px}
+.login-title{font-family:var(--ff-h);font-size:1.4rem;font-weight:800;color:var(--navy);text-align:center;margin-bottom:6px}
+.login-sub{font-size:.78rem;color:var(--muted);text-align:center;margin-bottom:24px}
+.login-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:700}
+.login-fi{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--ff-b);font-size:.85rem;color:var(--text);background:var(--off);margin-bottom:14px;outline:none;transition:border-color .15s}
+.login-fi:focus{border-color:var(--gold);background:#fff}
+.login-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-h);font-size:.95rem;font-weight:800;border:none;border-radius:10px;cursor:pointer;font-style:italic;margin-top:4px;transition:all .2s}
+.login-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 4px 14px rgba(200,144,42,.4)}
+.login-err{background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:.76rem;margin-bottom:14px;display:none}
+@media(max-width:700px){.portal-sidebar{width:60px}.portal-sid-brand,.portal-nav-btn span:not(.portal-nav-ico){display:none}.cp-kpi-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -644,6 +683,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-invoices" onclick="showPage('invoices')" style="color:var(--gold3)">🧾 Invoices</button>
     <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')" style="color:var(--gold3)">📊 Live Demo</button>
   </div>
+  <button class="nav-link" id="nl-portal" onclick="cpCheckAndShow()" style="color:var(--gold3);border:1px solid rgba(200,144,42,.4);margin-right:4px">🔑 Client Login</button>
   <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -663,6 +703,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-payroll" onclick="showPage('payroll');toggleMenu()" style="color:var(--gold3)">💵 Payroll</button>
   <button class="nav-mobile-link" id="mnl-invoices" onclick="showPage('invoices');toggleMenu()" style="color:var(--gold3)">🧾 Invoices</button>
   <button class="nav-mobile-link" id="mnl-dashboard" onclick="showPage('dashboard');toggleMenu()" style="color:var(--gold3)">📊 Live Demo</button>
+  <button class="nav-mobile-link" onclick="cpCheckAndShow();toggleMenu()" style="color:var(--gold3)">🔑 Client Login / My Account</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
 </div>
 
@@ -694,6 +735,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
           <option value="6m">6 Months — $19/mo (Save 14%)</option>
           <option value="1y" selected>1 Year — $17/mo ⭐ Most Popular</option>
           <option value="2y">2 Years — $14/mo (Best Value)</option>
+          <option value="bundle">⚡ Bundle Deal — $599 one-time (Website + Hub + Accounting)</option>
         </select>
       </div>
       <div id="modal-plan-detail" style="background:var(--off2);border:1px solid var(--border2);border-radius:9px;padding:14px 16px;margin-bottom:10px">
@@ -2436,9 +2478,10 @@ function _genPassword(){
   const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
   let p=''; for(let i=0;i<10;i++) p+=c[Math.floor(Math.random()*c.length)]; return p;
 }
-function _planLabel(v){ return {mm:'Month-to-Month','6m':'6 Months','1y':'1 Year','2y':'2 Years'}[v]||v; }
-function _planMonthly(v){ return {mm:22,'6m':19,'1y':17,'2y':14}[v]||22; }
-function _planMonths(v){ return {mm:1,'6m':6,'1y':12,'2y':24}[v]||1; }
+function _planLabel(v){ return {mm:'Month-to-Month','6m':'6 Months','1y':'1 Year','2y':'2 Years',bundle:'Bundle Deal'}[v]||v; }
+function _planMonthly(v){ return {mm:22,'6m':19,'1y':17,'2y':14,bundle:0}[v]||22; }
+function _planMonths(v){ return {mm:1,'6m':6,'1y':12,'2y':24,bundle:12}[v]||1; }
+function _planTotal(v){ return v==='bundle'?599:_planMonthly(v)*_planMonths(v); }
 function _addMonths(date,n){ const d=new Date(date); d.setMonth(d.getMonth()+n); return d.toISOString().split('T')[0]; }
 function _conName(){
   const sel=[1,2,3].find(i=>document.getElementById('cc'+i)?.classList.contains('sel'));
@@ -2465,16 +2508,18 @@ function submitAll(){
   if(!email){ goStep(3); setTimeout(()=>alert('Please enter your business email in Step 3.'),100); return; }
 
   const planVal    = _selectedPlan();
+  const isBundle   = planVal === 'bundle';
   const clientId   = _genClientId();
   const tempPass   = _genPassword();
   const consultant = _conName();
   const now        = new Date();
-  const trialEndStr= new Date(Date.now()+29*864e5).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const subStart   = _addMonths(now,1);
+  const trialEndStr= isBundle ? 'N/A (Bundle — full access immediately)' : new Date(Date.now()+29*864e5).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const subStart   = now.toISOString().split('T')[0];
   const subMonths  = _planMonths(planVal);
-  const subEnd     = _addMonths(subStart,subMonths);
+  const subEnd     = _addMonths(subStart, subMonths);
   const monthly    = _planMonthly(planVal);
   const planName   = _planLabel(planVal);
+  const totalBilled= _planTotal(planVal);
   const banks=[];
   if(document.getElementById('bt-chk')?.classList.contains('sel')) banks.push('Checking');
   if(document.getElementById('bt-sav')?.classList.contains('sel')) banks.push('Savings');
@@ -2487,14 +2532,18 @@ function submitAll(){
     email, phone, business_name:bizName||`${firstName} ${lastName}`.trim(),
     business_type:bizType, employee_count:empCnt, billing_zip:billingZip,
     plan:planVal, plan_name:planName, monthly_rate:monthly,
-    total_billed:monthly*subMonths, sub_months:subMonths,
+    is_bundle:isBundle, bundle_price:isBundle?599:0,
+    total_billed:totalBilled, sub_months:subMonths,
     trial_start:now.toISOString().split('T')[0],
-    trial_end:new Date(Date.now()+29*864e5).toISOString().split('T')[0],
-    sub_start:subStart, sub_end:subEnd, status:'trial', payment_status:'trial_active',
+    trial_end:isBundle?null:new Date(Date.now()+29*864e5).toISOString().split('T')[0],
+    sub_start:subStart, sub_end:subEnd,
+    status:isBundle?'active':'trial',
+    payment_status:isBundle?'paid':'trial_active',
     card_last4:cardNum.replace(/\s/g,'').slice(-4), card_name:cardName, card_exp:cardExp,
     username:email, temp_password:tempPass, credentials_issued:now.toISOString(),
     password_changed:false, consultant, connected_banks:banks,
-    source:'accounting_suite_purchase', created_at:now.toISOString(),
+    source:isBundle?'bundle_purchase':'accounting_suite_purchase',
+    created_at:now.toISOString(),
     hub_imported:false, hub_import_ts:null,
   };
 
@@ -2535,10 +2584,10 @@ function submitAll(){
   document.getElementById('sw-client-id').textContent  = clientId;
   document.getElementById('sw-username').textContent   = email;
   document.getElementById('sw-password').textContent   = tempPass;
-  document.getElementById('sw-plan').textContent       = `${planName} · $${monthly}/mo`;
+  document.getElementById('sw-plan').textContent       = isBundle ? 'Bundle Deal — $599 one-time' : `${planName} · $${monthly}/mo`;
   document.getElementById('sw-trial-end').textContent  = trialEndStr;
   document.getElementById('sw-consultant').textContent = consultant;
-  document.getElementById('sw-total').textContent      = subMonths===1?`$${monthly}/mo billed monthly`:`$${monthly*subMonths} billed every ${subMonths} months`;
+  document.getElementById('sw-total').textContent      = isBundle ? '$599 one-time (Website + Hub + Accounting Suite — 1 year)' : subMonths===1 ? `$${monthly}/mo billed monthly` : `$${monthly*subMonths} billed every ${subMonths} months`;
 
   document.querySelectorAll('.mscreen').forEach(s=>s.classList.remove('show'));
   document.getElementById('msteps').style.display='none';
@@ -2776,12 +2825,20 @@ function faqToggle(item) {
 }
 
 function launchHub(){
-  // Write a flag so MasterHub knows to open accounting page
   try{ localStorage.setItem('iebc-open-page','accounting'); }catch(e){}
-  // If MasterHub is open in another tab, it will pick this up on focus
-  // Otherwise navigate — user can update this URL to their actual MasterHub path
-  const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
-  window.open(hubUrl,'_blank');
+  const me = cpGetSession();
+  if(me){
+    // Already logged in — go straight to portal
+    showClientPortal(me);
+  } else if(window.parent !== window){
+    // Running inside an iframe on the website — tell parent to open standalone
+    try{ window.parent.postMessage({type:'open_client_portal'}, '*'); }catch(e){}
+    // Also show login page within iframe as fallback
+    showPage('login');
+  } else {
+    // Already standalone — show login
+    showPage('login');
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -3896,6 +3953,545 @@ function showImpSuccess(msg){
   setTimeout(()=>t.classList.remove('show'),5500);
 }
 
+// ══════════════════════════════════════════════════════════════
+// CLIENT PORTAL — Login + Accounting App for customers
+// ══════════════════════════════════════════════════════════════
+const CP_KEY = id => 'iebc-cp-'+id+'-records';
+const CP_INV_KEY = id => 'iebc-cp-'+id+'-invoices';
+
+function cpGetSession(){
+  try{ const m=JSON.parse(localStorage.getItem('iebc_me')||'null'); return (m&&m.role==='accounting_client')?m:null; }catch(e){ return null; }
+}
+function cpGetClientRecord(clientId){
+  try{ return JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]').find(c=>c.client_id===clientId)||null; }catch(e){ return null; }
+}
+function cpGetRecords(clientId){
+  try{ return JSON.parse(localStorage.getItem(CP_KEY(clientId))||'[]'); }catch(e){ return []; }
+}
+function cpSaveRecords(clientId, recs){
+  localStorage.setItem(CP_KEY(clientId), JSON.stringify(recs));
+}
+function cpGetInvoices(clientId){
+  try{ return JSON.parse(localStorage.getItem(CP_INV_KEY(clientId))||'[]'); }catch(e){ return []; }
+}
+
+function cpCheckAndShow(){
+  const me = cpGetSession();
+  if(me){ showClientPortal(me); }
+  else { showPage('login'); }
+}
+
+function showClientPortal(me){
+  const cr = cpGetClientRecord(me.client_id) || {};
+  // Update sidebar brand
+  const bizEl = document.getElementById('cp-biz-name');
+  const planEl = document.getElementById('cp-plan-name');
+  if(bizEl) bizEl.textContent = me.org || cr.business_name || 'My Business';
+  if(planEl) planEl.textContent = (cr.plan_name||'Accounting Suite') + ' · $'+(cr.monthly_rate||0)+'/mo';
+  // Update nav: show logout, hide login
+  const loginBtn = document.getElementById('nl-portal');
+  if(loginBtn){ loginBtn.textContent = '👤 My Account'; loginBtn.onclick = ()=>showPage('portal'); }
+  showPage('portal');
+  cpNav('dashboard');
+}
+
+function clientPortalLogin(){
+  const email    = (document.getElementById('cp-login-email')?.value||'').trim().toLowerCase();
+  const password = (document.getElementById('cp-login-pass')?.value||'').trim();
+  const errEl    = document.getElementById('cp-login-err');
+  if(!email||!password){ if(errEl){errEl.textContent='Enter your email and password.';errEl.style.display='block';} return; }
+
+  const clients = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]');
+  const match = clients.find(c=>(c.username||c.email||'').toLowerCase()===email && (c.temp_password===password||c.password===password));
+
+  if(!match){
+    if(errEl){errEl.textContent='Incorrect email or password. Check your credentials email or contact your consultant.';errEl.style.display='block';}
+    return;
+  }
+  // Save session
+  const me = {name:match.full_name, email:match.email, role:'accounting_client', org:match.business_name, client_id:match.client_id, source:'accounting_suite', ts:Date.now()};
+  localStorage.setItem('iebc_me', JSON.stringify(me));
+  if(errEl) errEl.style.display='none';
+  document.getElementById('cp-login-email').value='';
+  document.getElementById('cp-login-pass').value='';
+  showClientPortal(me);
+}
+
+function clientPortalLogout(){
+  if(!confirm('Sign out of your account?')) return;
+  localStorage.removeItem('iebc_me');
+  const loginBtn = document.getElementById('nl-portal');
+  if(loginBtn){ loginBtn.textContent='🔑 Client Login'; loginBtn.onclick=()=>cpCheckAndShow(); }
+  showPage('home');
+}
+
+function cpNav(panel){
+  document.querySelectorAll('.cp-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.portal-nav-btn').forEach(b=>b.classList.remove('active'));
+  const panelEl = document.getElementById('cp-panel-'+panel);
+  const btnEl   = document.getElementById('cp-nav-'+panel);
+  if(panelEl) panelEl.classList.add('active');
+  if(btnEl)   btnEl.classList.add('active');
+
+  const me = cpGetSession(); if(!me) return;
+  if(panel==='dashboard') cpRenderDashboard(me.client_id);
+  if(panel==='records'){
+    const dateEl=document.getElementById('cp-rec-date');
+    if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
+    cpRenderRecords(me.client_id);
+  }
+  if(panel==='invoices')  cpRenderInvoices(me.client_id);
+  if(panel==='reports')   cpRenderReports(me.client_id);
+  if(panel==='tax')       cpRenderTax(me.client_id);
+  if(panel==='account'){
+    cpRenderAccount(me.client_id);
+    const conEl=document.getElementById('cp-consultant-note');
+    const cr=cpGetClientRecord(me.client_id)||{};
+    if(conEl) conEl.textContent=cr.consultant?'Your assigned consultant is '+cr.consultant+'. Reach out via email or the Hub portal.':'Contact IEBC for consultant assignment.';
+  }
+}
+
+function cpRenderDashboard(clientId){
+  const recs = cpGetRecords(clientId);
+  const now  = new Date();
+  const thisMonth = now.toISOString().substring(0,7);
+  const income   = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expenses = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const mIncome  = recs.filter(r=>r.type==='income'&&(r.date||'').startsWith(thisMonth)).reduce((s,r)=>s+(+r.amount||0),0);
+  const mExp     = recs.filter(r=>r.type==='expense'&&(r.date||'').startsWith(thisMonth)).reduce((s,r)=>s+(+r.amount||0),0);
+  const profit   = income - expenses;
+
+  const fmt = n=>'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const kpiEl = document.getElementById('cp-kpi-grid');
+  if(kpiEl) kpiEl.innerHTML = [
+    {lbl:'Total Income',   val:fmt(income),   color:'var(--green)'},
+    {lbl:'Total Expenses', val:fmt(expenses), color:'var(--red)'},
+    {lbl:'Net Profit',     val:fmt(profit),   color:profit>=0?'var(--green)':'var(--red)'},
+    {lbl:'This Month Net', val:fmt(mIncome-mExp), color:(mIncome-mExp)>=0?'var(--green)':'var(--red)'},
+  ].map(k=>`<div class="cp-kpi"><div class="cp-kpi-val" style="color:${k.color}">${k.val}</div><div class="cp-kpi-lbl">${k.lbl}</div></div>`).join('');
+
+  // Recent records
+  const recentEl = document.getElementById('cp-recent-list');
+  if(recentEl){
+    const recent = [...recs].sort((a,b)=>new Date(b.date||b.created_at||0)-new Date(a.date||a.created_at||0)).slice(0,8);
+    recentEl.innerHTML = recent.length ? recent.map(r=>`
+      <tr>
+        <td style="color:var(--muted)">${(r.date||'').substring(0,10)||'—'}</td>
+        <td style="font-weight:600">${r.vendor||r.description||'—'}</td>
+        <td>${r.category||'—'}</td>
+        <td style="color:${r.type==='income'?'var(--green)':'var(--red)'}; font-weight:700">${r.type==='income'?'+':'-'}${fmt(r.amount)}</td>
+      </tr>`).join('')
+    : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">No records yet — add your first receipt or transaction</td></tr>';
+  }
+}
+
+function cpAddRecord(){
+  const me = cpGetSession(); if(!me) return;
+  const type     = document.getElementById('cp-rec-type')?.value||'expense';
+  const vendor   = document.getElementById('cp-rec-vendor')?.value?.trim()||'';
+  const amount   = parseFloat(document.getElementById('cp-rec-amount')?.value)||0;
+  const date     = document.getElementById('cp-rec-date')?.value||new Date().toISOString().split('T')[0];
+  const category = document.getElementById('cp-rec-cat')?.value||'';
+  const notes    = document.getElementById('cp-rec-notes')?.value?.trim()||'';
+  if(!vendor||!amount){ alert('Enter vendor/description and amount'); return; }
+
+  const recs = cpGetRecords(me.client_id);
+  recs.unshift({id:'cp-'+Date.now(), type, vendor, amount, date, category, notes, created_at:new Date().toISOString()});
+  cpSaveRecords(me.client_id, recs);
+  ['cp-rec-vendor','cp-rec-amount','cp-rec-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderRecords(me.client_id);
+  cpRenderDashboard(me.client_id);
+  cpShowToast('✅ Record saved');
+}
+
+function cpDeleteRecord(recId){
+  const me = cpGetSession(); if(!me) return;
+  const recs = cpGetRecords(me.client_id).filter(r=>r.id!==recId);
+  cpSaveRecords(me.client_id, recs);
+  cpRenderRecords(me.client_id);
+  cpRenderDashboard(me.client_id);
+}
+
+function cpRenderRecords(clientId){
+  const tbody = document.getElementById('cp-records-tbody');
+  if(!tbody) return;
+  const recs = cpGetRecords(clientId);
+  if(!recs.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px">No records yet. Add your first expense or income above.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = recs.map(r=>`<tr>
+    <td>${(r.date||'').substring(0,10)||'—'}</td>
+    <td style="font-weight:600">${r.vendor||'—'}</td>
+    <td>${r.category||'—'}</td>
+    <td><span class="cp-badge-${r.type==='income'?'green':'red'}">${r.type}</span></td>
+    <td style="font-weight:700;color:${r.type==='income'?'var(--green)':'var(--red)'}">${r.type==='income'?'+':'-'}$${(+r.amount||0).toFixed(2)}</td>
+    <td><button onclick="cpDeleteRecord('${r.id}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.8rem">✕</button></td>
+  </tr>`).join('');
+}
+
+function cpRenderReports(clientId){
+  const recs = cpGetRecords(clientId);
+  const income   = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expenses = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const profit   = income - expenses;
+  const margin   = income>0?(profit/income*100).toFixed(1):0;
+
+  const pnlEl = document.getElementById('cp-pnl-body');
+  if(pnlEl) pnlEl.innerHTML = [
+    {lbl:'Total Revenue',   val:income,   color:'var(--green)', divider:false},
+    {lbl:'Total Expenses',  val:-expenses, color:'var(--red)',   divider:false},
+    {lbl:'Net Profit',      val:profit,   color:profit>=0?'var(--green)':'var(--red)', divider:true},
+    {lbl:'Profit Margin',   val:margin+'%', isText:true, color:profit>=0?'var(--green)':'var(--red)', divider:false},
+  ].map(row=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;${row.divider?'border-top:2px solid rgba(255,255,255,.15);margin-top:4px':'border-bottom:1px solid rgba(255,255,255,.06)'}">
+      <span style="font-size:.78rem;color:rgba(255,255,255,.7)">${row.lbl}</span>
+      <span style="font-family:var(--ff-m);font-weight:800;font-size:.88rem;color:${row.color}">${row.isText?row.val:('$'+Math.abs(row.val).toFixed(2))}</span>
+    </div>`).join('');
+
+  // Category breakdown
+  const catEl = document.getElementById('cp-cat-body');
+  if(catEl){
+    const cats = {};
+    recs.filter(r=>r.type==='expense').forEach(r=>{ cats[r.category||'Other']=(cats[r.category||'Other']||0)+(+r.amount||0); });
+    const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+    catEl.innerHTML = sorted.length ? sorted.slice(0,8).map(([cat,amt])=>`
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.76rem">
+        <span>${cat}</span><span style="font-weight:700;color:var(--red)">$${amt.toFixed(2)}</span>
+      </div>`).join('') : '<div style="color:var(--muted);font-size:.76rem;padding:12px 0">No expense records yet</div>';
+  }
+}
+
+function cpRenderTax(clientId){
+  const recs     = cpGetRecords(clientId);
+  const income   = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expenses = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const netProfit= income - expenses;
+  const seTax    = Math.max(0, netProfit * 0.9235 * 0.153);
+  const statusEl = document.getElementById('cp-tax-status');
+  const fedRate  = statusEl ? parseFloat(statusEl.value||'0.22') : 0.22;
+  const fedTax   = Math.max(0, netProfit * fedRate);
+  const qtrPmt   = (seTax + fedTax) / 4;
+
+  const taxEl = document.getElementById('cp-tax-breakdown');
+  if(taxEl) taxEl.innerHTML = [
+    {lbl:'Net Profit (taxable)',    val:'$'+netProfit.toFixed(2)},
+    {lbl:'Self-Employment Tax (15.3%)', val:'$'+seTax.toFixed(2), highlight:true},
+    {lbl:'Est. Federal Income Tax', val:'$'+fedTax.toFixed(2), highlight:true},
+    {lbl:'Quarterly Payment (÷4)',  val:'$'+qtrPmt.toFixed(2), big:true},
+  ].map(row=>`
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)">
+      <span style="font-size:.76rem;color:rgba(255,255,255,.65)">${row.lbl}</span>
+      <span style="font-family:var(--ff-m);font-weight:800;font-size:${row.big?'.95':'0.82'}rem;color:${row.highlight||row.big?'var(--gold3)':'#fff'}">${row.val}</span>
+    </div>`).join('');
+}
+
+function cpRenderInvoices(clientId){
+  const tbody = document.getElementById('cp-inv-tbody');
+  if(!tbody) return;
+  // Merge invoices from iebc-cp-clientId-invoices + any from iebc_orders with matching clientId
+  const invs = cpGetInvoices(clientId);
+  try{
+    const orders = JSON.parse(localStorage.getItem('iebc_orders')||'[]');
+    orders.filter(o=>o.order_id===clientId||o.client_email===(cpGetClientRecord(clientId)||{}).email).forEach(o=>{
+      if(!invs.find(i=>i.id===o.order_id)){
+        invs.push({id:o.order_id, description:o.plan_name+' Subscription', amount:o.monthly_fee, date:o.contract_start, status:'pending', type:'subscription'});
+      }
+    });
+  }catch(e){}
+  if(!invs.length){
+    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px">No invoices yet. Your subscription invoice will appear here.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = invs.map(inv=>`<tr>
+    <td style="font-family:var(--ff-m);font-size:.68rem;color:var(--muted)">${inv.id||'—'}</td>
+    <td>${inv.description||'Service'}</td>
+    <td style="color:var(--muted)">${(inv.date||'').substring(0,10)||'—'}</td>
+    <td style="font-weight:700">$${(+inv.amount||0).toFixed(2)}</td>
+    <td><span class="cp-badge-${inv.status==='paid'?'green':inv.status==='overdue'?'red':'gray'}">${inv.status||'pending'}</span></td>
+  </tr>`).join('');
+}
+
+function cpRenderAccount(clientId){
+  const cr  = cpGetClientRecord(clientId)||{};
+  const me  = cpGetSession()||{};
+  const el  = document.getElementById('cp-account-body');
+  if(!el) return;
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      ${[
+        ['Client ID',       cr.client_id||'—'],
+        ['Business',        cr.business_name||me.org||'—'],
+        ['Email / Username',cr.email||'—'],
+        ['Plan',            (cr.plan_name||'—')+' · $'+(cr.monthly_rate||0)+'/mo'],
+        ['Trial Ends',      cr.trial_end||'—'],
+        ['Subscription End',cr.sub_end||'—'],
+        ['Status',          cr.status||'trial'],
+        ['Consultant',      cr.consultant||'—'],
+      ].map(([lbl,val])=>`<div style="background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">${lbl}</div>
+        <div style="font-weight:600;font-size:.82rem;color:var(--navy)">${val}</div>
+      </div>`).join('')}
+    </div>
+    <div style="background:var(--off);border:1.5px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Change Password</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px">
+        <div>
+          <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">New Password</div>
+          <input id="cp-new-pass" type="password" class="login-fi" style="margin-bottom:0" placeholder="New password">
+        </div>
+        <div>
+          <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Confirm Password</div>
+          <input id="cp-conf-pass" type="password" class="login-fi" style="margin-bottom:0" placeholder="Confirm">
+        </div>
+      </div>
+      <button onclick="cpChangePassword()" style="margin-top:12px;padding:9px 20px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">Update Password</button>
+    </div>
+    <button onclick="clientPortalLogout()" style="margin-top:14px;padding:9px 20px;background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2);border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">🚪 Sign Out</button>
+  `;
+}
+
+function cpChangePassword(){
+  const np = document.getElementById('cp-new-pass')?.value||'';
+  const cp2= document.getElementById('cp-conf-pass')?.value||'';
+  if(np.length<6){ alert('Password must be at least 6 characters'); return; }
+  if(np!==cp2){ alert('Passwords do not match'); return; }
+  const me = cpGetSession(); if(!me) return;
+  try{
+    const list = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]').map(c=>
+      c.client_id===me.client_id ? {...c, password:np, password_changed:true} : c
+    );
+    localStorage.setItem('iebc_accounting_clients', JSON.stringify(list));
+  }catch(e){}
+  cpShowToast('✅ Password updated');
+  cpRenderAccount(me.client_id);
+}
+
+function cpShowToast(msg){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;bottom:24px;right:22px;background:#0B2140;color:#F5C842;padding:10px 18px;border-radius:10px;font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:600;box-shadow:0 8px 32px rgba(11,33,64,.3);z-index:99999;pointer-events:none;max-width:320px';
+  el.textContent=msg; document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+
+// Auto-check session on load + pre-select plan from URL param
+(function cpAutoLogin(){
+  try{
+    // Pre-select plan from ?plan=bundle URL param
+    const params = new URLSearchParams(window.location.search);
+    const planParam = params.get('plan');
+    if(planParam){
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const picker = document.getElementById('modal-plan-picker');
+        if(picker){
+          picker.value = planParam;
+          if(typeof pickPlanFromSelect==='function') pickPlanFromSelect(planParam);
+        }
+      });
+    }
+
+    const me = cpGetSession();
+    if(me && me.client_id){
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const btn = document.getElementById('nl-portal');
+        if(btn){ btn.textContent='👤 My Account'; btn.onclick=()=>showPage('portal'); }
+        // If returning directly to the suite standalone, auto-show portal
+        if(window.parent === window){
+          showClientPortal(me);
+        }
+      });
+    }
+  }catch(e){}
+})();
+
 </script>
+
+<!-- PAGE: CLIENT LOGIN -->
+<div class="page" id="page-login">
+  <div class="login-outer">
+    <div class="login-box">
+      <div class="login-logo">IB</div>
+      <div class="login-title">Client Login</div>
+      <div class="login-sub">Sign in to your IEBC Accounting Suite</div>
+      <div id="cp-login-err" class="login-err"></div>
+      <div class="login-lbl">Email Address</div>
+      <input id="cp-login-email" type="email" class="login-fi" placeholder="your@email.com" autocomplete="email">
+      <div class="login-lbl">Password</div>
+      <input id="cp-login-pass" type="password" class="login-fi" placeholder="Temporary or updated password" autocomplete="current-password" onkeydown="if(event.key==='Enter')clientPortalLogin()">
+      <button class="login-btn" onclick="clientPortalLogin()">Sign In →</button>
+      <div style="text-align:center;margin-top:16px;font-size:.75rem;color:var(--muted)">
+        Don't have an account?
+        <button onclick="openModal()" style="background:none;border:none;color:var(--gold);font-weight:700;cursor:pointer;font-size:.75rem;text-decoration:underline">Start your 30-day free trial →</button>
+      </div>
+      <div style="text-align:center;margin-top:8px;font-size:.7rem;color:var(--muted)">Your username and temporary password were emailed to you when you signed up.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: CLIENT PORTAL -->
+<div class="page" id="page-portal">
+  <div class="portal-wrap">
+    <!-- Sidebar -->
+    <div class="portal-sidebar">
+      <div class="portal-sid-brand">
+        <div class="portal-sid-biz" id="cp-biz-name">My Business</div>
+        <div class="portal-sid-sub" id="cp-plan-name">Accounting Suite</div>
+      </div>
+      <button id="cp-nav-dashboard" class="portal-nav-btn active" onclick="cpNav('dashboard')"><span class="portal-nav-ico">⚡</span><span>Dashboard</span></button>
+      <button id="cp-nav-records"   class="portal-nav-btn" onclick="cpNav('records')"><span class="portal-nav-ico">📝</span><span>Records</span></button>
+      <button id="cp-nav-invoices"  class="portal-nav-btn" onclick="cpNav('invoices')"><span class="portal-nav-ico">🧾</span><span>Invoices</span></button>
+      <button id="cp-nav-reports"   class="portal-nav-btn" onclick="cpNav('reports')"><span class="portal-nav-ico">📊</span><span>Reports</span></button>
+      <button id="cp-nav-tax"       class="portal-nav-btn" onclick="cpNav('tax')"><span class="portal-nav-ico">🏛️</span><span>Tax Center</span></button>
+      <button id="cp-nav-account"   class="portal-nav-btn" onclick="cpNav('account')"><span class="portal-nav-ico">⚙️</span><span>My Account</span></button>
+      <div style="flex:1"></div>
+      <button class="portal-nav-btn" onclick="clientPortalLogout()" style="border-top:1px solid rgba(255,255,255,.08);margin-top:8px"><span class="portal-nav-ico">🚪</span><span>Sign Out</span></button>
+    </div>
+    <!-- Main content -->
+    <div class="portal-main">
+
+      <!-- DASHBOARD -->
+      <div class="cp-panel active" id="cp-panel-dashboard">
+        <div class="cp-section-title">📊 Dashboard</div>
+        <div class="cp-kpi-grid" id="cp-kpi-grid"></div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Recent Transactions</div>
+          <table class="cp-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th></tr></thead>
+            <tbody id="cp-recent-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RECORDS -->
+      <div class="cp-panel" id="cp-panel-records">
+        <div class="cp-section-title">📝 Add Record</div>
+        <div class="cp-card">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr) 1fr;gap:12px;align-items:end">
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Type</div>
+              <select id="cp-rec-type" class="login-fi" style="margin-bottom:0">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Vendor / Description</div>
+              <input id="cp-rec-vendor" class="login-fi" style="margin-bottom:0" placeholder="e.g. Office Depot">
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Amount ($)</div>
+              <input id="cp-rec-amount" type="number" step="0.01" class="login-fi" style="margin-bottom:0" placeholder="0.00">
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Date</div>
+              <input id="cp-rec-date" type="date" class="login-fi" style="margin-bottom:0">
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Category</div>
+              <select id="cp-rec-cat" class="login-fi" style="margin-bottom:0">
+                <option value="">Select...</option>
+                <optgroup label="Expenses">
+                  <option>Advertising</option><option>Meals & Entertainment</option><option>Travel</option>
+                  <option>Office Supplies</option><option>Software & Tech</option><option>Professional Services</option>
+                  <option>Utilities</option><option>Rent & Facilities</option><option>Insurance</option>
+                  <option>Payroll & Contractors</option><option>Equipment</option><option>Vehicle</option>
+                  <option>Bank Fees</option><option>Other Expense</option>
+                </optgroup>
+                <optgroup label="Income">
+                  <option>Sales Revenue</option><option>Service Revenue</option>
+                  <option>Retainer Income</option><option>Other Income</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Notes</div>
+              <input id="cp-rec-notes" class="login-fi" style="margin-bottom:0" placeholder="Optional">
+            </div>
+            <div style="grid-column:1/-1">
+              <button onclick="cpAddRecord()" style="padding:11px 24px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;font-style:italic">✅ Save Record</button>
+            </div>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">All Records</div>
+          <table class="cp-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th></th></tr></thead>
+            <tbody id="cp-records-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INVOICES -->
+      <div class="cp-panel" id="cp-panel-invoices">
+        <div class="cp-section-title">🧾 My Invoices</div>
+        <div class="cp-card">
+          <table class="cp-table">
+            <thead><tr><th>Invoice ID</th><th>Description</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="cp-inv-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="cp-panel" id="cp-panel-reports">
+        <div class="cp-section-title">📊 Financial Reports</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:var(--navy);border-radius:12px;padding:20px">
+            <div style="font-family:var(--ff-h);font-weight:800;color:#fff;margin-bottom:14px">Profit &amp; Loss</div>
+            <div id="cp-pnl-body"></div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Top Expense Categories</div>
+            <div id="cp-cat-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAX CENTER -->
+      <div class="cp-panel" id="cp-panel-tax">
+        <div class="cp-section-title">🏛️ Tax Center</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div class="cp-card">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Quarterly Estimator</div>
+              <div style="margin-bottom:12px">
+                <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Filing Status</div>
+                <select id="cp-tax-status" class="login-fi" style="margin-bottom:0" onchange="cpRenderTax(cpGetSession()?.client_id)">
+                  <option value="0.22">Single (22%)</option>
+                  <option value="0.12">Single — lower income (12%)</option>
+                  <option value="0.22">Married Filing Jointly (22%)</option>
+                  <option value="0.24">Higher income (24%)</option>
+                </select>
+              </div>
+              <div style="background:var(--navy);border-radius:12px;padding:16px">
+                <div id="cp-tax-breakdown"></div>
+              </div>
+              <div style="font-size:.7rem;color:var(--muted);margin-top:10px;line-height:1.6">⚠️ Estimates only. Consult a CPA for your actual tax liability. Includes self-employment tax (15.3%).</div>
+            </div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">📅 IRS Quarterly Deadlines</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.78rem">
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q1 (Jan–Mar)</span><strong>April 15</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q2 (Apr–May)</span><strong>June 15</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q3 (Jun–Aug)</span><strong>September 15</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q4 (Sep–Dec)</span><strong>January 15</strong></div>
+            </div>
+            <div style="margin-top:16px;font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:8px">Your Consultant</div>
+            <div style="font-size:.78rem;color:var(--muted)" id="cp-consultant-note">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT SETTINGS -->
+      <div class="cp-panel" id="cp-panel-account">
+        <div class="cp-section-title">⚙️ My Account</div>
+        <div id="cp-account-body"></div>
+      </div>
+
+    </div><!-- /portal-main -->
+  </div><!-- /portal-wrap -->
+</div>
+
 </body>
 </html>

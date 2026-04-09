@@ -2989,9 +2989,12 @@ function acClientsRender(){
       <td style="padding:9px 10px;font-size:.72rem;color:var(--text2)">${c.consultant||'—'}</td>
       <td style="padding:9px 10px;font-family:var(--ff-m);font-size:.62rem;color:var(--text3)">****${c.card_last4||'—'}</td>
       <td style="padding:9px 10px;font-size:.62rem;color:var(--text2)">${(c.connected_banks||[]).join(', ')||'—'}</td>
-      <td style="padding:9px 10px;text-align:right">
-        <button onclick="accShowCreds('${c.client_id}')" style="padding:4px 10px;background:var(--navy);color:var(--gold2);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;white-space:nowrap">🔑 Creds</button>
-        <button onclick="accActivate('${c.client_id}')" style="padding:4px 10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.22);border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;margin-left:4px;white-space:nowrap">${c.status==='trial'?'Activate':'✓ Active'}</button>
+      <td style="padding:9px 10px;text-align:right;white-space:nowrap">
+        <button onclick="accShowCreds('${c.client_id}')" style="padding:4px 10px;background:var(--navy);color:var(--gold2);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer">🔑 Creds</button>
+        ${!c.hub_imported
+          ? `<button onclick="accImportToHub('${c.client_id}')" style="padding:4px 10px;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;margin-left:4px">📥 Import to Hub</button>`
+          : `<span style="font-size:.62rem;color:var(--green);font-weight:700;margin-left:6px">✓ In Hub</span>`}
+        <button onclick="accActivate('${c.client_id}')" style="padding:4px 10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.22);border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;margin-left:4px">${c.status==='active'?'✓ Active':'Activate'}</button>
       </td>
     </tr>
   `).join('');
@@ -3088,6 +3091,97 @@ window.addEventListener('focus', ()=>{
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════
+//  IMPORT ACCOUNTING CLIENT TO HUB — auto-creates client, invoice, pipeline
+// ══════════════════════════════════════════════════════════════
+async function accImportToHub(clientId){
+  const c = acGetClients().find(x=>x.client_id===clientId);
+  if(!c){ showToast('Client not found'); return; }
+  if(c.hub_imported){ showToast('Already imported'); return; }
+
+  // ── 1. CLIENT RECORD ──────────────────────────────────────
+  const clientNum = iebcNextId('clients','C');
+  const clientRec = {
+    name: c.business_name||c.full_name, contact: c.full_name,
+    email: c.email, phone: c.phone||'',
+    industry: c.business_type||'General', status:'active',
+    monthly: c.is_bundle ? 0 : (c.monthly_rate||0),
+    setup_fee: c.is_bundle ? 599 : 0,
+    tier: c.is_bundle ? 'Bundle' : (c.plan_name||'Accounting'),
+    notes: `${c.is_bundle?'Bundle Deal $599':'Accounting Suite'} · ${c.plan_name} · ${c.is_bundle?'Full access':'Trial ends '+c.trial_end} · ID: ${c.client_id}\nConsultant: ${c.consultant||'TBD'}\nUsername: ${c.username||c.email}`,
+    client_id: c.client_id, lead_consultant: c.consultant||'',
+    created_at: c.created_at||new Date().toISOString(), id:'local-'+Date.now(),
+    website_status:'', hub_status:'in-progress',
+  };
+  const savedC = await dbInsert('hub_clients',{...clientRec,id:undefined});
+  if(savedC) clientRec.id = savedC.id;
+  DATA.clients.unshift(clientRec);
+
+  // ── 2. INVOICE RECORD ─────────────────────────────────────
+  const invType   = c.is_bundle ? 'setup-final' : 'retainer';
+  const invAmount = c.is_bundle ? 599 : (c.monthly_rate||0);
+  const inv = {
+    client_name: clientRec.name, type: invType,
+    amount: invAmount,
+    due_date: c.sub_start||new Date(Date.now()+30*864e5).toISOString().split('T')[0],
+    status: c.is_bundle ? 'paid' : 'pending',
+    notes: `${c.is_bundle?'Bundle Deal — $599 one-time':'Accounting Suite subscription'} · ${c.plan_name} · ${c.client_id}`,
+    created_at: new Date().toISOString(), id:'local-'+Date.now()+1,
+  };
+  const savedI = await dbInsert('hub_invoices',{...inv,id:undefined});
+  if(savedI) inv.id = savedI.id;
+  DATA.invoices.unshift(inv);
+  // Auto-log bundle to accounting revenue
+  if(c.is_bundle) { try{ acctAutoLogFromInvoice({...inv, status:'paid', paid_at:new Date().toISOString()}, 'paid'); }catch(e){} }
+
+  // ── 3. PIPELINE PROSPECT (if not already present) ─────────
+  const alreadyIn = DATA.prospects.some(p=>(p.email||'').toLowerCase()===(c.email||'').toLowerCase());
+  if(!alreadyIn){
+    const prospect = {
+      name: clientRec.name, contact: c.full_name, email: c.email,
+      phone: c.phone||'', stage:'closing', heat:'hot',
+      est_value: c.is_bundle ? 599 : (c.monthly_rate||0)*12,
+      notes:`Signed up via ${c.is_bundle?'Bundle Deal':'Accounting Suite checkout'} · ${c.plan_name}`,
+      created_at: new Date().toISOString(), id:'local-'+Date.now()+2,
+    };
+    const savedP = await dbInsert('hub_prospects',{...prospect,id:undefined});
+    if(savedP) prospect.id = savedP.id;
+    DATA.prospects.unshift(prospect);
+  }
+
+  // ── 4. BUILD — start Accounting Setup project ──────────────
+  const alreadyBuild = DATA.builds.some(b=>b.client_name===clientRec.name);
+  if(!alreadyBuild){
+    const buildNum = iebcNextId('builds','B');
+    const build = {
+      client_name: clientRec.name, contact: c.full_name,
+      industry: c.business_type||'General', phase:'Discovery',
+      progress: 10, budget: c.is_bundle ? 599 : (c.monthly_rate||0),
+      due_date: new Date(Date.now()+14*864e5).toISOString().split('T')[0],
+      status:'on-track',
+      team:[{name:c.consultant||ME.name, role:'Lead Consultant'}],
+      notes:`Accounting Suite setup for ${clientRec.name}\nPlan: ${c.plan_name}\nBanks to connect: ${(c.connected_banks||[]).join(', ')||'TBD'}`,
+      build_id: buildNum, created_at:new Date().toISOString(), id:'local-'+Date.now()+3,
+    };
+    const savedB = await dbInsert('hub_builds',{...build,id:undefined,team:JSON.stringify(build.team)});
+    if(savedB) build.id = savedB.id;
+    DATA.builds.unshift(build);
+  }
+
+  // ── 5. MARK IMPORTED ──────────────────────────────────────
+  try{
+    const list = acGetClients().map(x=>x.client_id===clientId?{...x,hub_imported:true,hub_import_ts:new Date().toISOString()}:x);
+    localStorage.setItem('iebc_accounting_clients',JSON.stringify(list));
+    const s=IEBC_BRIDGE.get(); s.accounting_clients=list; s._ts=Date.now();
+    localStorage.setItem('iebc_shared',JSON.stringify(s));
+  }catch(e){}
+
+  saveLocal();
+  renderClients(); renderInvoices(); renderPipeline(); renderBuilds(); renderDashboard(); updateBadges();
+  acClientsRender(); acClientsUpdateStats();
+  showToast('✅ '+clientRec.name+' imported — Client, Invoice, Pipeline & Build created');
+}
 
 // ══════════════════════════════════════════════════════════
 //  SUPABASE SQL SETUP SCRIPT
@@ -3720,6 +3814,23 @@ function initApp(){
   if (typeof iebcSeedMarkOdom === 'function') iebcSeedMarkOdom();
 
   renderAll();
+
+  // ── Auto-import new Accounting Suite clients from checkout ──
+  setTimeout(function(){
+    try{
+      const unimported = acGetClients().filter(c=>!c.hub_imported);
+      if(unimported.length){
+        unimported.forEach(c => accImportToHub(c.client_id));
+        acClientsCheckNew();
+      }
+    }catch(e){}
+  }, 800);
+
+  // ── If Accounting Suite sent us here, navigate to accounting ──
+  try{
+    const openPage = localStorage.getItem('iebc-open-page');
+    if(openPage){ localStorage.removeItem('iebc-open-page'); setTimeout(()=>nav(openPage), 400); }
+  }catch(e){}
 }
 
 function updateClock(){
