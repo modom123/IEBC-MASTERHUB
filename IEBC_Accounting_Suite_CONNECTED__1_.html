@@ -27,6 +27,7 @@
   --ff-h:'Playfair Display',Georgia,serif;
   --ff-b:'Inter',system-ui,sans-serif;
   --ff-m:'JetBrains Mono','Courier New',monospace;
+  --ff-n:Arial,'Helvetica Neue',Helvetica,sans-serif;
   --qb:#166534;--zoho:#991B1B;--ns:#4C1D95;
   --nav-h:64px;
 }
@@ -196,7 +197,7 @@ body{font-family:var(--ff-b);color:var(--text);background:var(--off);-webkit-fon
 .tc-plan-select{width:100%;background:var(--off);border:1.5px solid var(--border2);border-radius:9px;padding:12px 16px;font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);font-style:italic;outline:none;cursor:pointer;transition:border-color .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6A82' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 .tc-plan-select:focus{border-color:var(--gold);background-color:var(--white)}
 .tc-price-row{display:flex;align-items:flex-end;gap:14px;margin-bottom:6px}
-.tc-price{font-family:var(--ff-h);font-size:3.2rem;font-weight:900;color:var(--navy);line-height:1}
+.tc-price{font-family:var(--ff-n);font-size:3.2rem;font-weight:700;color:var(--navy);line-height:1}
 .tc-price sub{font-size:.8rem;font-family:var(--ff-b);font-weight:400;color:var(--muted);vertical-align:baseline}
 .tc-billed{font-family:var(--ff-m);font-size:.64rem;color:var(--muted);margin-top:4px}
 .tc-save{display:inline-block;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2);font-family:var(--ff-m);font-size:.57rem;font-weight:700;padding:3px 10px;border-radius:20px;margin:10px 0 4px}
@@ -430,7 +431,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .demo-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
 .demo-kpi{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
 .demo-kpi-lbl{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
-.demo-kpi-val{font-family:var(--ff-h);font-size:1.25rem;font-weight:900;color:var(--navy);line-height:1.1}
+.demo-kpi-val{font-family:var(--ff-n);font-size:1.25rem;font-weight:700;color:var(--navy);line-height:1.1}
 .demo-kpi-chg{font-family:var(--ff-m);font-size:.52rem;margin-top:3px;font-weight:700}
 .demo-kpi-chg.up{color:var(--green)}.demo-kpi-chg.down{color:var(--red)}
 .demo-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
@@ -447,7 +448,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .demo-tx-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
 .demo-tx-name{font-size:.76rem;font-weight:600;color:var(--navy);line-height:1.2}
 .demo-tx-cat{font-family:var(--ff-m);font-size:.48rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
-.demo-tx-amt{margin-left:auto;font-family:var(--ff-h);font-size:.88rem;font-weight:800}
+.demo-tx-amt{margin-left:auto;font-family:var(--ff-n);font-size:.88rem;font-weight:700}
 .demo-tx-amt.cr{color:var(--green)}.demo-tx-amt.db{color:var(--red)}
 .demo-inv-list{display:flex;flex-direction:column;gap:8px}
 .demo-inv{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
@@ -462,7 +463,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .demo-report-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
 .demo-report-row:last-child{border-bottom:none;padding-top:12px;font-weight:700}
 .demo-report-lbl{font-size:.78rem;color:var(--text2)}
-.demo-report-val{font-family:var(--ff-h);font-size:.9rem;font-weight:800;color:var(--navy)}
+.demo-report-val{font-family:var(--ff-n);font-size:.9rem;font-weight:700;color:var(--navy)}
 .demo-report-val.pos{color:var(--green)}.demo-report-val.neg{color:var(--red)}
 .demo-section-btn{font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:5px 12px;border:1.5px solid var(--border2);border-radius:6px;background:var(--off);cursor:pointer;color:var(--navy);transition:all .15s;margin-left:auto;display:block;margin-bottom:10px}
 .demo-section-btn:hover{border-color:var(--navy);background:var(--navy);color:var(--gold2)}
@@ -639,7 +640,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .cp-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
 .cp-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
 .cp-kpi{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px}
-.cp-kpi-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--navy)}
+.cp-kpi-val{font-family:var(--ff-n);font-size:1.4rem;font-weight:700;color:var(--navy)}
 .cp-kpi-lbl{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
 .cp-section-title{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:14px}
 .cp-table{width:100%;border-collapse:collapse;font-size:.76rem}
@@ -749,7 +750,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
             <div id="mpd-billed" style="font-family:var(--ff-m);font-size:.58rem;color:var(--muted);margin-top:2px">$204 billed annually</div>
           </div>
           <div style="text-align:right">
-            <div id="mpd-price" style="font-family:var(--ff-h);font-size:1.5rem;font-weight:900;color:var(--navy);line-height:1">$17<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></div>
+            <div id="mpd-price" style="font-family:var(--ff-n);font-size:1.5rem;font-weight:700;color:var(--navy);line-height:1">$17<span style="font-size:.65rem;font-family:var(--ff-b);font-weight:400;color:var(--muted)">/mo</span></div>
             <div id="mpd-save" style="display:inline-block;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2);font-family:var(--ff-m);font-size:.52rem;font-weight:700;padding:2px 7px;border-radius:20px;margin-top:3px">Save $60 vs monthly</div>
           </div>
         </div>
@@ -760,13 +761,33 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     </div>
     <!-- Screen 2: Consultant -->
     <div class="mbody mscreen" id="ms2">
-      <span class="mslabel">Choose Your Dedicated Consultant</span>
-      <div class="con-sel-row">
-        <div class="con-chip sel" id="cc1" onclick="pickCon(1)"><div class="con-av av1">MR</div><div class="con-n">Marcus R.</div><div class="con-sp">Tax · Freelance</div></div>
-        <div class="con-chip" id="cc2" onclick="pickCon(2)"><div class="con-av av2">TP</div><div class="con-n">Tanya P.</div><div class="con-sp">Small Biz · LLC</div></div>
-        <div class="con-chip" id="cc3" onclick="pickCon(3)"><div class="con-av av3" style="color:var(--navy)">DK</div><div class="con-n">Derek K.</div><div class="con-sp">Agencies · Tech</div></div>
+      <span class="mslabel">Your Dedicated Consultant Team</span>
+      <div style="background:var(--green-lt);border:1px solid var(--green-md);border-radius:8px;padding:9px 12px;font-size:.74rem;color:var(--green);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+        ✅ All 3 consultants are included with every Efficient subscription — no extra charge.
       </div>
-      <div id="con-detail" style="background:var(--off2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.76rem;color:var(--text2);line-height:1.65;margin-top:8px;margin-bottom:14px"></div>
+      <div class="con-sel-row">
+        <div class="con-chip sel" style="cursor:default;opacity:1">
+          <div class="con-av av1">MR</div>
+          <div class="con-n">Marcus R.</div>
+          <div class="con-sp">Tax · Freelance · 1099</div>
+          <div style="margin-top:4px;font-size:.54rem;background:var(--green-lt);color:var(--green);padding:2px 6px;border-radius:10px;font-family:var(--ff-m);font-weight:700">✓ INCLUDED</div>
+        </div>
+        <div class="con-chip sel" style="cursor:default;opacity:1">
+          <div class="con-av av2">TP</div>
+          <div class="con-n">Tanya P.</div>
+          <div class="con-sp">Small Biz · LLC · HR</div>
+          <div style="margin-top:4px;font-size:.54rem;background:var(--green-lt);color:var(--green);padding:2px 6px;border-radius:10px;font-family:var(--ff-m);font-weight:700">✓ INCLUDED</div>
+        </div>
+        <div class="con-chip sel" style="cursor:default;opacity:1">
+          <div class="con-av av3" style="color:var(--navy)">DK</div>
+          <div class="con-n">Derek K.</div>
+          <div class="con-sp">Agencies · Tech · Payroll</div>
+          <div style="margin-top:4px;font-size:.54rem;background:var(--green-lt);color:var(--green);padding:2px 6px;border-radius:10px;font-family:var(--ff-m);font-weight:700">✓ INCLUDED</div>
+        </div>
+      </div>
+      <div style="background:var(--off2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.76rem;color:var(--text2);line-height:1.65;margin-top:8px;margin-bottom:14px">
+        Your subscription gives you access to the full IEBC consultant team. Marcus handles tax strategy and 1099s, Tanya manages HR, LLCs, and compliance, and Derek covers payroll, tech, and agency workflows. You can message any of them inside the app.
+      </div>
       <button class="mbtn" onclick="goStep(3)">Continue →</button>
       <button class="mbtn-ghost" onclick="goStep(1)">← Back</button>
     </div>
@@ -1404,8 +1425,12 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <div class="page" id="page-demo">
   <div class="page-hero">
     <span class="page-hero-eyebrow">Live Preview</span>
-    <div class="page-hero-title">See the <em>Dashboard</em> in Action</div>
-    <div class="page-hero-desc">An interactive preview of the IEBC accounting dashboard — the interface your clients use from day one.</div>
+    <div class="page-hero-title">Try the <em>Real Dashboard</em> — No Signup</div>
+    <div class="page-hero-desc">Click below to open the actual Efficient portal with pre-loaded demo data. Add transactions, run reports, create invoices — the full experience.</div>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+      <button onclick="launchLiveDemo()" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-h);font-size:.95rem;font-weight:800;padding:13px 32px;border-radius:10px;border:none;cursor:pointer;font-style:italic;box-shadow:0 4px 20px rgba(200,144,42,.4)">🚀 Launch Live Demo Portal</button>
+      <button onclick="openModal()" style="background:rgba(255,255,255,.12);color:#fff;font-family:var(--ff-h);font-size:.88rem;font-weight:700;padding:13px 24px;border-radius:10px;border:2px solid rgba(255,255,255,.3);cursor:pointer;font-style:italic">Start Free Trial →</button>
+    </div>
   </div>
   <div class="wrap">
     <div class="demo-app">
@@ -1557,9 +1582,10 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         </div><!-- end demo-main -->
       </div><!-- end demo-body -->
     </div><!-- end demo-app -->
-    <div style="text-align:center;margin-top:32px">
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:18px">This is a preview of the real dashboard your clients log into from day one.</p>
+    <div style="text-align:center;margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:14px">
+      <button onclick="launchLiveDemo()" class="cta-btn" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy)">🚀 Open Live Demo Portal</button>
       <button class="cta-btn" style="background:linear-gradient(135deg,var(--navy),var(--navy3));color:var(--gold2)" onclick="openModal()">Start My Free 30-Day Trial →</button>
+      <p style="font-size:.76rem;color:var(--muted)">Demo data is pre-loaded. Nothing is saved. Start a trial to keep your real data.</p>
     </div>
   </div>
   <div class="footer">
@@ -1789,15 +1815,15 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
       </div>
       <div class="dash-card" style="padding:14px 16px;text-align:center">
         <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Gross This Period</div>
-        <div id="pr-stat-gross" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--navy)">$0</div>
+        <div id="pr-stat-gross" style="font-family:var(--ff-n);font-size:1.6rem;font-weight:700;color:var(--navy)">$0</div>
       </div>
       <div class="dash-card" style="padding:14px 16px;text-align:center">
         <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Net Payout</div>
-        <div id="pr-stat-net" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--green)">$0</div>
+        <div id="pr-stat-net" style="font-family:var(--ff-n);font-size:1.6rem;font-weight:700;color:var(--green)">$0</div>
       </div>
       <div class="dash-card" style="padding:14px 16px;text-align:center">
         <div style="font-family:var(--ff-m);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Employer Taxes</div>
-        <div id="pr-stat-employer" style="font-family:var(--ff-h);font-size:1.6rem;font-weight:900;color:var(--amber)">$0</div>
+        <div id="pr-stat-employer" style="font-family:var(--ff-n);font-size:1.6rem;font-weight:700;color:var(--amber)">$0</div>
       </div>
     </div>
 
@@ -1979,7 +2005,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
             <div style="text-align:right">
               <div style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3)">SUBTOTAL: <span id="inv-subtotal">$0.00</span></div>
               <div style="font-family:var(--ff-m);font-size:.6rem;color:var(--text3)">TAX: <span id="inv-tax-amt">$0.00</span></div>
-              <div style="font-family:var(--ff-h);font-size:1.3rem;font-weight:800;color:var(--navy)">TOTAL: <span id="inv-total">$0.00</span></div>
+              <div style="font-family:var(--ff-n);font-size:1.3rem;font-weight:700;color:var(--navy)">TOTAL: <span id="inv-total">$0.00</span></div>
             </div>
           </div>
         </div>
@@ -2679,10 +2705,7 @@ function _planMonthly(v){ return {mm:22,'6m':19,'1y':17,'2y':14,bundle:0}[v]||22
 function _planMonths(v){ return {mm:1,'6m':6,'1y':12,'2y':24,bundle:12}[v]||1; }
 function _planTotal(v){ return v==='bundle'?599:_planMonthly(v)*_planMonths(v); }
 function _addMonths(date,n){ const d=new Date(date); d.setMonth(d.getMonth()+n); return d.toISOString().split('T')[0]; }
-function _conName(){
-  const sel=[1,2,3].find(i=>document.getElementById('cc'+i)?.classList.contains('sel'));
-  return {1:'Marcus Reynolds',2:'Tanya Patel',3:'Derek Kim'}[sel]||'Victoria Chen';
-}
+function _conName(){ return 'IEBC Consultant Team (Marcus, Tanya & Derek)'; }
 function _selectedPlan(){ return document.getElementById('modal-plan-picker')?.value||'mm'; }
 
 function submitAll(){
@@ -3032,6 +3055,83 @@ function demoSwitch(panel, el) {
   const p = document.getElementById('dp-' + panel);
   if (p) p.classList.add('active');
   if (el) el.classList.add('active');
+}
+
+function launchLiveDemo() {
+  const demoId   = 'DEMO-CLIENT';
+  const demoEmail= 'demo@efficient.app';
+  // Seed demo client record
+  const demoClient = {
+    client_id:demoId, first_name:'Alex', last_name:'Rivera',
+    full_name:'Alex Rivera', email:demoEmail, phone:'(555) 000-1234',
+    business_name:'Acme Design Co.', business_type:'LLC (Single Member)',
+    plan:'1y', plan_name:'1 Year', monthly_rate:17,
+    is_bundle:false, status:'active', payment_status:'active',
+    trial_end:null, sub_start:'2026-01-01', sub_end:'2026-12-31',
+    username:demoEmail, temp_password:'Demo2026!',
+    password_changed:true, consultant:'IEBC Consultant Team',
+    created_at:new Date().toISOString(), is_demo:true,
+  };
+  // Seed demo transactions
+  const now = new Date();
+  const d = (daysAgo) => { const dt=new Date(now); dt.setDate(dt.getDate()-daysAgo); return dt.toISOString().split('T')[0]; };
+  const demoRecords = [
+    {id:'dr1',  date:d(1),  type:'income',  category:'Service Revenue',        description:'Client Payment — Northgate LLC',        amount:6800},
+    {id:'dr2',  date:d(2),  type:'expense', category:'Software & Tech',         description:'Adobe Creative Cloud',                  amount:89},
+    {id:'dr3',  date:d(3),  type:'income',  category:'Retainer Income',         description:'Monthly Retainer — Bright Media',       amount:2500},
+    {id:'dr4',  date:d(4),  type:'expense', category:'Advertising',             description:'Google Ads — April Campaign',           amount:840},
+    {id:'dr5',  date:d(5),  type:'expense', category:'Meals & Entertainment',   description:'Client Lunch — The Capital Grille',     amount:127},
+    {id:'dr6',  date:7,     type:'income',  category:'Service Revenue',         description:'Client Payment — Apex Co.',             amount:4200},
+    {id:'dr7',  date:d(8),  type:'expense', category:'Software & Tech',         description:'AWS Cloud Services',                    amount:284},
+    {id:'dr8',  date:d(10), type:'income',  category:'Consulting Fee',          description:'Strategy Session — Summit Ventures',   amount:1800},
+    {id:'dr9',  date:d(12), type:'expense', category:'Office Supplies',         description:'FedEx Shipping',                        amount:43},
+    {id:'dr10', date:d(14), type:'expense', category:'Advertising',             description:'LinkedIn Ads',                          amount:620},
+    {id:'dr11', date:d(15), type:'income',  category:'Service Revenue',         description:'Website Redesign — Cascade Group',     amount:5400},
+    {id:'dr12', date:d(18), type:'expense', category:'Contractor',              description:'Freelance Designer — Jordan Lee',       amount:1200},
+    {id:'dr13', date:d(20), type:'expense', category:'Meals & Entertainment',   description:'Team Lunch',                            amount:94},
+    {id:'dr14', date:d(21), type:'income',  category:'Retainer Income',         description:'Monthly Retainer — Apex Co.',          amount:2500},
+    {id:'dr15', date:d(24), type:'expense', category:'Insurance',               description:'Business Liability Insurance',          amount:210},
+    {id:'dr16', date:d(25), type:'income',  category:'Service Revenue',         description:'SEO Audit — Cascade Group',            amount:900},
+    {id:'dr17', date:d(28), type:'expense', category:'Software & Tech',         description:'QuickBooks (cancelled) → Efficient',   amount:55},
+    {id:'dr18', date:d(30), type:'expense', category:'Office & Rent',           description:'Co-working Space — April',             amount:380},
+  ].map(r => ({...r, created_at: new Date().toISOString()}));
+
+  const demoInvoices = [
+    {id:'di1', client_name:'Northgate LLC',   amount:6800, date:d(1),  due_date:d(-14), status:'paid',      number:'INV-0044', notes:'Website Redesign Phase 2', stripe_link:''},
+    {id:'di2', client_name:'Bright Media',    amount:2500, date:d(3),  due_date:d(-17), status:'paid',      number:'INV-0043', notes:'Monthly Retainer April', stripe_link:''},
+    {id:'di3', client_name:'Apex Co.',        amount:4200, date:d(6),  due_date:d(9),   status:'sent',      number:'INV-0042', notes:'Brand Identity Package', stripe_link:''},
+    {id:'di4', client_name:'Summit Ventures', amount:1800, date:d(10), due_date:d(-2),  status:'overdue',   number:'INV-0041', notes:'Strategy Session', stripe_link:''},
+    {id:'di5', client_name:'Cascade Group',   amount:900,  date:d(14), due_date:d(16),  status:'draft',     number:'INV-0040', notes:'SEO Audit Report', stripe_link:''},
+  ].map(r => ({...r, created_at: new Date().toISOString()}));
+
+  try {
+    // Save demo client + session
+    const existingClients = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]').filter(c=>!c.is_demo);
+    existingClients.unshift(demoClient);
+    localStorage.setItem('iebc_accounting_clients', JSON.stringify(existingClients));
+    localStorage.setItem('iebc_me', JSON.stringify({
+      name:'Alex Rivera', email:demoEmail, role:'accounting_client',
+      org:'Acme Design Co.', client_id:demoId, source:'accounting_suite', ts:Date.now(), is_demo:true
+    }));
+    localStorage.setItem('iebc-cp-'+demoId+'-records',  JSON.stringify(demoRecords));
+    localStorage.setItem('iebc-cp-'+demoId+'-invoices', JSON.stringify(demoInvoices));
+  } catch(e) {}
+
+  showClientPortal({
+    name:'Alex Rivera', email:demoEmail, role:'accounting_client',
+    org:'Acme Design Co.', client_id:demoId, source:'accounting_suite', ts:Date.now(), is_demo:true
+  });
+
+  // Show demo mode banner after portal opens
+  setTimeout(()=>{
+    const existing = document.getElementById('demo-mode-banner');
+    if(existing) return;
+    const banner = document.createElement('div');
+    banner.id = 'demo-mode-banner';
+    banner.style.cssText = 'position:fixed;top:var(--nav-h);left:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);text-align:center;padding:8px 16px;font-family:var(--ff-m);font-size:.62rem;font-weight:700;letter-spacing:.1em;z-index:998;display:flex;align-items:center;justify-content:center;gap:16px';
+    banner.innerHTML = '🎯 DEMO MODE — Data is pre-loaded and not saved. <button onclick="openModal();document.getElementById(\'demo-mode-banner\').remove()" style="background:var(--navy);color:var(--gold2);border:none;border-radius:6px;padding:4px 12px;font-family:var(--ff-m);font-size:.6rem;font-weight:700;cursor:pointer">Start Real Free Trial →</button> <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:.9rem;color:var(--navy)">✕</button>';
+    document.body.appendChild(banner);
+  }, 300);
 }
 
 function faqToggle(item) {
@@ -4169,7 +4269,7 @@ function renderPayrollHistory() {
       <div style="font-family:var(--ff-m);font-size:.56rem;color:var(--text3)">${r.employeeCount} employees · Period ${r.start} – ${r.end}</div>
     </div>
     <div style="text-align:right;flex-shrink:0">
-      <div style="font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:var(--navy)">$${r.totalNet.toFixed(2)}</div>
+      <div style="font-family:var(--ff-n);font-size:.88rem;font-weight:700;color:var(--navy)">$${r.totalNet.toFixed(2)}</div>
       <div style="font-family:var(--ff-m);font-size:.54rem;color:var(--text3)">Gross $${r.totalGross.toFixed(2)}</div>
     </div>
     <span class="pr-badge pr-badge-green" style="flex-shrink:0">Paid</span>
