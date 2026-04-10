@@ -4040,11 +4040,15 @@ function cpNav(panel){
     if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
     cpRenderRecords(me.client_id);
   }
-  if(panel==='invoices')  cpRenderInvoices(me.client_id);
-  if(panel==='reports')   cpRenderReports(me.client_id);
-  if(panel==='tax')       cpRenderTax(me.client_id);
+  if(panel==='invoices')    cpRenderInvoices(me.client_id);
+  if(panel==='reports'){    cpRenderReports(me.client_id); cpReportTab('pnl'); }
+  if(panel==='tax'){        cpRenderTax(me.client_id); cpRender1099(me.client_id); }
+  if(panel==='budget')      cpRenderBudget(me.client_id);
+  if(panel==='deductions'){  cpRenderMileage(me.client_id); cpRenderMeals(me.client_id); cpDeductTab('mileage'); }
+  if(panel==='recurring'){   cpRenderRecurring(me.client_id); const nd=document.getElementById('rec-next'); if(nd&&!nd.value) nd.value=new Date().toISOString().split('T')[0]; }
   if(panel==='account'){
     cpRenderAccount(me.client_id);
+    cpRenderAuditLog(me.client_id);
     const conEl=document.getElementById('cp-consultant-note');
     const cr=cpGetClientRecord(me.client_id)||{};
     if(conEl) conEl.textContent=cr.consultant?'Your assigned consultant is '+cr.consultant+'. Reach out via email or the Hub portal.':'Contact IEBC for consultant assignment.';
@@ -4096,8 +4100,10 @@ function cpAddRecord(){
   if(!vendor||!amount){ alert('Enter vendor/description and amount'); return; }
 
   const recs = cpGetRecords(me.client_id);
-  recs.unshift({id:'cp-'+Date.now(), type, vendor, amount, date, category, notes, created_at:new Date().toISOString()});
+  const rec = {id:'cp-'+Date.now(), type, vendor, amount, date, category, notes, created_at:new Date().toISOString()};
+  recs.unshift(rec);
   cpSaveRecords(me.client_id, recs);
+  cpLogAudit(me.client_id, 'Add Record', `${type} · ${vendor} · $${amount} · ${category}`);
   ['cp-rec-vendor','cp-rec-amount','cp-rec-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   cpRenderRecords(me.client_id);
   cpRenderDashboard(me.client_id);
@@ -4106,8 +4112,10 @@ function cpAddRecord(){
 
 function cpDeleteRecord(recId){
   const me = cpGetSession(); if(!me) return;
-  const recs = cpGetRecords(me.client_id).filter(r=>r.id!==recId);
-  cpSaveRecords(me.client_id, recs);
+  const all = cpGetRecords(me.client_id);
+  const rec = all.find(r=>r.id===recId);
+  cpSaveRecords(me.client_id, all.filter(r=>r.id!==recId));
+  if(rec) cpLogAudit(me.client_id, 'Delete Record', `${rec.vendor} · $${rec.amount}`);
   cpRenderRecords(me.client_id);
   cpRenderDashboard(me.client_id);
 }
@@ -4274,6 +4282,439 @@ function cpShowToast(msg){
   setTimeout(()=>el.remove(),3200);
 }
 
+// ══════════════════════════════════════════════════════════
+// STORAGE HELPERS — new feature keys
+// ══════════════════════════════════════════════════════════
+const CP_LIAB_KEY   = id=>'iebc-cp-'+id+'-liabilities';
+const CP_BUDGET_KEY = id=>'iebc-cp-'+id+'-budgets';
+const CP_MILE_KEY   = id=>'iebc-cp-'+id+'-mileage';
+const CP_MEAL_KEY   = id=>'iebc-cp-'+id+'-meals';
+const CP_1099_KEY   = id=>'iebc-cp-'+id+'-1099';
+const CP_RECUR_KEY  = id=>'iebc-cp-'+id+'-recurring';
+const CP_AUDIT_KEY  = id=>'iebc-cp-'+id+'-audit';
+const cpGet = (key,def=[])=>{ try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;} };
+const cpSet = (key,val)=>{ try{localStorage.setItem(key,JSON.stringify(val));}catch(e){} };
+const cpFmt = n=>'$'+Math.abs(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+// ══ REPORT TABS ══
+function cpReportTab(tab){
+  ['pnl','bs','cf','export'].forEach(t=>{
+    const el=document.getElementById('rpt-'+t); if(el) el.style.display=t===tab?'block':'none';
+    const btn=document.getElementById('rpt-tab-'+t);
+    if(btn){ btn.style.background=t===tab?'var(--navy)':'var(--off)'; btn.style.color=t===tab?'var(--gold2)':'var(--navy)'; btn.style.fontWeight=t===tab?'700':'600'; }
+  });
+  if(tab==='bs'){   const me=cpGetSession(); if(me) cpRenderBalanceSheet(me.client_id); }
+  if(tab==='cf'){   const me=cpGetSession(); if(me) cpRenderCashFlow(me.client_id); }
+}
+
+// ══ BALANCE SHEET ══
+function cpRenderBalanceSheet(clientId){
+  const recs    = cpGetRecords(clientId);
+  const invs    = cpGetInvoices(clientId);
+  const liabs   = cpGet(CP_LIAB_KEY(clientId));
+  const income  = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expense = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const ar      = invs.filter(i=>i.status!=='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  const cash    = Math.max(0, income - expense);
+  const totalAssets = cash + ar;
+  const totalLiab   = liabs.reduce((s,l)=>s+(+l.amount||0),0);
+  const equity      = totalAssets - totalLiab;
+  const row=(lbl,val,bold)=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem${bold?';font-weight:700;border-top:2px solid var(--border);margin-top:4px':''}"><span>${lbl}</span><span style="font-family:var(--ff-m)">${cpFmt(val)}</span></div>`;
+  const ae=document.getElementById('cp-bs-assets');
+  if(ae) ae.innerHTML=row('Cash / Net Revenue',cash)+row('Accounts Receivable (unpaid invoices)',ar)+`<div style="display:flex;justify-content:space-between;padding:9px 0;font-weight:700;font-size:.82rem;color:var(--green)"><span>TOTAL ASSETS</span><span>${cpFmt(totalAssets)}</span></div>`;
+  const le=document.getElementById('cp-bs-liabilities');
+  if(le) le.innerHTML=(liabs.length?liabs.map(l=>row(l.desc,l.amount)).join(''):'<div style="font-size:.76rem;color:var(--muted);padding:8px 0">No liabilities added</div>')+`<div style="display:flex;justify-content:space-between;padding:9px 0;font-weight:700;font-size:.82rem;color:var(--red)"><span>TOTAL LIABILITIES</span><span>${cpFmt(totalLiab)}</span></div>`;
+  const ee=document.getElementById('cp-bs-equity');
+  if(ee) ee.innerHTML=`<div style="display:flex;justify-content:space-between;padding:9px 0;font-weight:700;font-size:.88rem;color:${equity>=0?'var(--green)':'var(--red)'}"><span>Owner's Equity</span><span>${cpFmt(equity)}</span></div><div style="font-size:.7rem;color:var(--muted);margin-top:4px">Assets − Liabilities = ${equity>=0?'Positive':'Negative'} equity</div>`;
+}
+
+function cpAddLiability(){
+  const me=cpGetSession(); if(!me) return;
+  const desc=(document.getElementById('bs-liab-desc')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('bs-liab-amt')?.value||0);
+  if(!desc||!amt){ alert('Enter description and amount'); return; }
+  const liabs=cpGet(CP_LIAB_KEY(me.client_id));
+  liabs.push({id:'liab-'+Date.now(),desc,amount:amt});
+  cpSet(CP_LIAB_KEY(me.client_id),liabs);
+  cpLogAudit(me.client_id,'Add Liability',desc+' · '+cpFmt(amt));
+  document.getElementById('bs-liab-desc').value='';
+  document.getElementById('bs-liab-amt').value='';
+  cpRenderBalanceSheet(me.client_id);
+  cpShowToast('✅ Liability added');
+}
+
+// ══ CASH FLOW ══
+function cpRenderCashFlow(clientId){
+  const recs=cpGetRecords(clientId);
+  const months=[];
+  for(let i=5;i>=0;i--){ const d=new Date(); d.setMonth(d.getMonth()-i); months.push(d.toISOString().slice(0,7)); }
+  const data=months.map(m=>{
+    const mi=recs.filter(r=>r.type==='income'&&(r.date||'').startsWith(m)).reduce((s,r)=>s+(+r.amount||0),0);
+    const me=recs.filter(r=>r.type==='expense'&&(r.date||'').startsWith(m)).reduce((s,r)=>s+(+r.amount||0),0);
+    return {month:m,income:mi,expense:me,net:mi-me};
+  });
+  const el=document.getElementById('cp-cf-body');
+  if(el) el.innerHTML=data.map(d=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:4px">
+        <span style="font-weight:600">${d.month}</span>
+        <span style="color:${d.net>=0?'var(--green)':'var(--red)'};font-weight:700">${d.net>=0?'+':''}${cpFmt(d.net)}</span>
+      </div>
+      <div style="display:flex;gap:4px;height:8px;border-radius:4px;overflow:hidden">
+        <div style="flex:${d.income||0.01};background:var(--green);border-radius:4px;opacity:.7"></div>
+        <div style="flex:${d.expense||0.01};background:var(--red);border-radius:4px;opacity:.7"></div>
+      </div>
+      <div style="display:flex;gap:12px;font-size:.68rem;color:var(--muted);margin-top:3px">
+        <span>💚 In: ${cpFmt(d.income)}</span><span>🔴 Out: ${cpFmt(d.expense)}</span>
+      </div>
+    </div>`).join('');
+  let running=0;
+  const re=document.getElementById('cp-cf-running');
+  if(re) re.innerHTML=data.map(d=>{ running+=d.net; return `
+    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem">
+      <span>${d.month}</span>
+      <span style="font-family:var(--ff-m);font-weight:700;color:${running>=0?'var(--green)':'var(--red)'}">${cpFmt(running)}</span>
+    </div>`; }).join('');
+}
+
+// ══ BUDGET VS ACTUAL ══
+function cpRenderBudget(clientId){
+  const recs=cpGetRecords(clientId);
+  const budgets=cpGet(CP_BUDGET_KEY(clientId),{});
+  const thisMonth=new Date().toISOString().slice(0,7);
+  const actuals={};
+  recs.filter(r=>r.type==='expense'&&(r.date||'').startsWith(thisMonth)).forEach(r=>{ actuals[r.category||'Other']=(actuals[r.category||'Other']||0)+(+r.amount||0); });
+  const allCats=[...new Set([...Object.keys(budgets),...Object.keys(actuals)])];
+  const el=document.getElementById('cp-budget-body');
+  if(!el) return;
+  if(!allCats.length){ el.innerHTML='<div style="color:var(--muted);font-size:.78rem;padding:12px">Set a budget above to get started.</div>'; return; }
+  el.innerHTML=allCats.map(cat=>{
+    const budget=budgets[cat]||0; const actual=actuals[cat]||0;
+    const pct=budget>0?Math.min(100,(actual/budget*100)):0;
+    const over=actual>budget&&budget>0;
+    return `<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:5px">
+        <span style="font-weight:600">${cat}</span>
+        <span style="color:${over?'var(--red)':'var(--text)'}">${cpFmt(actual)} ${budget?'/ '+cpFmt(budget):''} ${over?'⚠️ OVER':''}</span>
+      </div>
+      ${budget?`<div style="background:var(--border);border-radius:4px;height:8px"><div style="width:${pct}%;height:8px;border-radius:4px;background:${over?'var(--red)':pct>75?'var(--amber)':'var(--green)'};transition:width .3s"></div></div>`:'<div style="font-size:.68rem;color:var(--muted)">No budget set</div>'}
+    </div>`;
+  }).join('');
+}
+
+function cpSaveBudgetEntry(){
+  const me=cpGetSession(); if(!me) return;
+  const cat=(document.getElementById('bgt-cat')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('bgt-amt')?.value||0);
+  if(!cat||!amt){ alert('Select category and enter amount'); return; }
+  const budgets=cpGet(CP_BUDGET_KEY(me.client_id),{});
+  budgets[cat]=amt;
+  cpSet(CP_BUDGET_KEY(me.client_id),budgets);
+  cpShowToast('✅ Budget saved for '+cat);
+  cpRenderBudget(me.client_id);
+}
+
+// ══ DEDUCTION TABS ══
+function cpDeductTab(tab){
+  ['mileage','homeoffice','meals'].forEach(t=>{
+    const el=document.getElementById('ded-'+t); if(el) el.style.display=t===tab?'block':'none';
+    const btn=document.getElementById('ded-tab-'+t);
+    if(btn){ btn.style.background=t===tab?'var(--navy)':'var(--off)'; btn.style.color=t===tab?'var(--gold2)':'var(--navy)'; btn.style.fontWeight=t===tab?'700':'600'; }
+  });
+}
+
+// ══ MILEAGE ══
+function cpAddMileage(){
+  const me=cpGetSession(); if(!me) return;
+  const date=(document.getElementById('mi-date')?.value||'').trim();
+  const from=(document.getElementById('mi-from')?.value||'').trim();
+  const to=(document.getElementById('mi-to')?.value||'').trim();
+  const miles=parseFloat(document.getElementById('mi-miles')?.value||0);
+  const purpose=(document.getElementById('mi-purpose')?.value||'').trim();
+  if(!date||!miles){ alert('Enter date and miles'); return; }
+  const IRS_RATE=0.67;
+  const log=cpGet(CP_MILE_KEY(me.client_id));
+  log.unshift({id:'mi-'+Date.now(),date,from,to,miles,purpose,deduction:+(miles*IRS_RATE).toFixed(2)});
+  cpSet(CP_MILE_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add Mileage',`${miles}mi — ${from} → ${to}`);
+  ['mi-from','mi-to','mi-miles','mi-purpose'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderMileage(me.client_id);
+  cpShowToast('✅ Trip logged');
+}
+
+function cpRenderMileage(clientId){
+  const log=cpGet(CP_MILE_KEY(clientId));
+  const total=log.reduce((s,l)=>s+(+l.deduction||0),0);
+  const sumEl=document.getElementById('cp-mileage-summary');
+  if(sumEl) sumEl.innerHTML=`Total Mileage Deduction: <span style="color:var(--green);font-weight:700">${cpFmt(total)}</span> (${log.reduce((s,l)=>s+(+l.miles||0),0).toFixed(1)} mi × $0.67)`;
+  const tbody=document.getElementById('cp-mileage-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=log.length?log.map(l=>`<tr>
+    <td>${l.date}</td><td>${l.from||'—'} → ${l.to||'—'}</td>
+    <td>${(+l.miles).toFixed(1)}</td><td>${l.purpose||'—'}</td>
+    <td style="color:var(--green);font-weight:700">${cpFmt(l.deduction)}</td>
+    <td><button onclick="cpDeleteMileage('${l.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px">No trips logged</td></tr>';
+}
+
+function cpDeleteMileage(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_MILE_KEY(me.client_id),cpGet(CP_MILE_KEY(me.client_id)).filter(l=>l.id!==id));
+  cpRenderMileage(me.client_id);
+}
+
+// ══ HOME OFFICE ══
+function cpCalcHomeOffice(){
+  const officeSqft=parseFloat(document.getElementById('ho-office-sqft')?.value||0);
+  const totalSqft =parseFloat(document.getElementById('ho-total-sqft')?.value||0);
+  const monthly   =parseFloat(document.getElementById('ho-monthly')?.value||0);
+  const utilities =parseFloat(document.getElementById('ho-utilities')?.value||0);
+  const el=document.getElementById('cp-ho-result');
+  if(!el||!officeSqft||!totalSqft) return;
+  const pct=officeSqft/totalSqft;
+  const simplifiedAnnual=Math.min(officeSqft,300)*5;
+  const regularMonthly=(monthly+utilities)*pct;
+  const regularAnnual=regularMonthly*12;
+  el.innerHTML=`
+    <div style="font-weight:700;margin-bottom:10px">Business Use: ${(pct*100).toFixed(1)}% of home</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <div style="background:var(--green-lt);border-radius:8px;padding:10px 14px">
+        <div style="font-size:.7rem;color:var(--muted)">Simplified Method</div>
+        <div style="font-weight:700;color:var(--green);font-size:.95rem">${cpFmt(simplifiedAnnual)}/yr</div>
+        <div style="font-size:.68rem;color:var(--muted)">$5 × ${Math.min(officeSqft,300)} sq ft</div>
+      </div>
+      <div style="background:var(--blue-lt);border-radius:8px;padding:10px 14px">
+        <div style="font-size:.7rem;color:var(--muted)">Regular Method</div>
+        <div style="font-weight:700;color:var(--blue);font-size:.95rem">${cpFmt(regularAnnual)}/yr</div>
+        <div style="font-size:.68rem;color:var(--muted)">${(pct*100).toFixed(1)}% × (${cpFmt(monthly+utilities)}/mo)</div>
+      </div>
+    </div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:10px">Use whichever gives you the larger deduction. Simplified is easier; Regular requires records of all home expenses.</div>`;
+}
+
+// ══ MEALS ══
+function cpAddMeal(){
+  const me=cpGetSession(); if(!me) return;
+  const date=(document.getElementById('ml-date')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('ml-amt')?.value||0);
+  const purpose=(document.getElementById('ml-purpose')?.value||'').trim();
+  if(!date||!amt){ alert('Enter date and amount'); return; }
+  const log=cpGet(CP_MEAL_KEY(me.client_id));
+  log.unshift({id:'ml-'+Date.now(),date,amount:amt,deductible:+(amt*0.5).toFixed(2),purpose});
+  cpSet(CP_MEAL_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add Meal',`${cpFmt(amt)} — ${purpose}`);
+  ['ml-amt','ml-purpose'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderMeals(me.client_id);
+  cpShowToast('✅ Meal logged');
+}
+
+function cpRenderMeals(clientId){
+  const log=cpGet(CP_MEAL_KEY(clientId));
+  const total=log.reduce((s,l)=>s+(+l.deductible||0),0);
+  const sumEl=document.getElementById('cp-meals-summary');
+  if(sumEl) sumEl.innerHTML=`Total Meals Deduction (50%): <span style="color:var(--green);font-weight:700">${cpFmt(total)}</span>`;
+  const tbody=document.getElementById('cp-meals-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=log.length?log.map(l=>`<tr>
+    <td>${l.date}</td><td>${l.purpose||'—'}</td>
+    <td>${cpFmt(l.amount)}</td>
+    <td style="color:var(--green);font-weight:700">${cpFmt(l.deductible)}</td>
+    <td><button onclick="cpDeleteMeal('${l.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">No meals logged</td></tr>';
+}
+
+function cpDeleteMeal(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_MEAL_KEY(me.client_id),cpGet(CP_MEAL_KEY(me.client_id)).filter(l=>l.id!==id));
+  cpRenderMeals(me.client_id);
+}
+
+// ══ 1099 CONTRACTOR TRACKER ══
+function cpAdd1099(){
+  const me=cpGetSession(); if(!me) return;
+  const name=(document.getElementById('c1099-name')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('c1099-amt')?.value||0);
+  const date=document.getElementById('c1099-date')?.value||new Date().toISOString().split('T')[0];
+  if(!name||!amt){ alert('Enter contractor name and amount'); return; }
+  const log=cpGet(CP_1099_KEY(me.client_id));
+  log.push({id:'c1099-'+Date.now(),name,amount:amt,date,ts:Date.now()});
+  cpSet(CP_1099_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add 1099 Payment',`${name} · ${cpFmt(amt)}`);
+  ['c1099-name','c1099-amt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRender1099(me.client_id);
+  cpShowToast('✅ Payment logged');
+}
+
+function cpRender1099(clientId){
+  const log=cpGet(CP_1099_KEY(clientId));
+  const tbody=document.getElementById('cp-1099-tbody');
+  if(!tbody) return;
+  // Aggregate by contractor name
+  const contractors={};
+  log.forEach(l=>{ if(!contractors[l.name]) contractors[l.name]={total:0,lastDate:''}; contractors[l.name].total+=(+l.amount||0); if(l.date>contractors[l.name].lastDate) contractors[l.name].lastDate=l.date; });
+  const entries=Object.entries(contractors).sort((a,b)=>b[1].total-a[1].total);
+  tbody.innerHTML=entries.length?entries.map(([name,data])=>{
+    const needs1099=data.total>=600;
+    const approaching=data.total>=400&&data.total<600;
+    return `<tr>
+      <td style="font-weight:600">${name}</td>
+      <td style="font-weight:700">${cpFmt(data.total)}</td>
+      <td>${needs1099?'<span style="background:var(--red-lt);color:var(--red);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">⚠️ NEEDS 1099-NEC</span>':approaching?'<span style="background:var(--amber-lt);color:var(--amber);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">🔔 Approaching $600</span>':'<span style="background:var(--green-lt);color:var(--green);padding:2px 8px;border-radius:10px;font-size:.7rem">Under $600</span>'}</td>
+      <td style="color:var(--muted)">${data.lastDate||'—'}</td>
+      <td><button onclick="cpDelete1099Name('${name}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.8rem">✕</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">No contractor payments logged</td></tr>';
+}
+
+function cpDelete1099Name(name){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_1099_KEY(me.client_id),cpGet(CP_1099_KEY(me.client_id)).filter(l=>l.name!==name));
+  cpRender1099(me.client_id);
+}
+
+// ══ RECURRING TRANSACTIONS ══
+function cpAddRecurring(){
+  const me=cpGetSession(); if(!me) return;
+  const type=document.getElementById('rec-type')?.value||'expense';
+  const cat=document.getElementById('rec-cat')?.value||'';
+  const desc=(document.getElementById('rec-desc')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('rec-amt')?.value||0);
+  const freq=document.getElementById('rec-freq')?.value||'monthly';
+  const next=document.getElementById('rec-next')?.value||'';
+  if(!desc||!amt||!next){ alert('Fill in description, amount, and next date'); return; }
+  const rules=cpGet(CP_RECUR_KEY(me.client_id));
+  rules.push({id:'rec-'+Date.now(),type,category:cat,description:desc,amount:amt,frequency:freq,next_date:next,last_run:null,active:true});
+  cpSet(CP_RECUR_KEY(me.client_id),rules);
+  cpLogAudit(me.client_id,'Add Recurring',`${desc} · ${cpFmt(amt)} · ${freq}`);
+  ['rec-desc','rec-amt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderRecurring(me.client_id);
+  cpShowToast('✅ Recurring rule added');
+}
+
+function cpNextDate(currentDate, freq){
+  const d=new Date(currentDate);
+  if(freq==='weekly')    d.setDate(d.getDate()+7);
+  else if(freq==='monthly')   d.setMonth(d.getMonth()+1);
+  else if(freq==='quarterly') d.setMonth(d.getMonth()+3);
+  else if(freq==='annually')  d.setFullYear(d.getFullYear()+1);
+  return d.toISOString().split('T')[0];
+}
+
+function cpProcessRecurring(){
+  const me=cpGetSession(); if(!me) return;
+  const today=new Date().toISOString().split('T')[0];
+  const rules=cpGet(CP_RECUR_KEY(me.client_id));
+  let count=0;
+  rules.forEach(rule=>{
+    if(!rule.active||!rule.next_date||rule.next_date>today) return;
+    // Create the transaction
+    const recs=cpGetRecords(me.client_id);
+    recs.unshift({id:'cp-'+Date.now()+'-rec',type:rule.type,vendor:rule.description,amount:rule.amount,date:rule.next_date,category:rule.category,notes:'Auto: '+rule.frequency,created_at:new Date().toISOString()});
+    cpSaveRecords(me.client_id,recs);
+    rule.last_run=rule.next_date;
+    rule.next_date=cpNextDate(rule.next_date,rule.frequency);
+    count++;
+  });
+  cpSet(CP_RECUR_KEY(me.client_id),rules);
+  cpRenderRecurring(me.client_id);
+  cpRenderDashboard(me.client_id);
+  cpShowToast(count?`✅ ${count} recurring transaction(s) processed`:'No transactions due today');
+}
+
+function cpRenderRecurring(clientId){
+  const rules=cpGet(CP_RECUR_KEY(clientId));
+  const tbody=document.getElementById('cp-recurring-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=rules.length?rules.map(r=>`<tr>
+    <td><span style="font-size:.7rem;padding:2px 7px;border-radius:8px;font-weight:700;background:${r.type==='income'?'var(--green-lt)':'var(--red-lt)'};color:${r.type==='income'?'var(--green)':'var(--red)'}">${r.type}</span></td>
+    <td>${r.description}</td>
+    <td style="font-weight:700">${cpFmt(r.amount)}</td>
+    <td style="color:var(--muted)">${r.frequency}</td>
+    <td style="color:${r.next_date<=new Date().toISOString().split('T')[0]?'var(--red)':'var(--text)'};font-weight:${r.next_date<=new Date().toISOString().split('T')[0]?'700':'400'}">${r.next_date||'—'}</td>
+    <td style="color:var(--muted)">${r.last_run||'Never'}</td>
+    <td><button onclick="cpDeleteRecurring('${r.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No recurring rules. Add one above.</td></tr>';
+}
+
+function cpDeleteRecurring(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_RECUR_KEY(me.client_id),cpGet(CP_RECUR_KEY(me.client_id)).filter(r=>r.id!==id));
+  cpRenderRecurring(me.client_id);
+}
+
+// ══ EXPORT ══
+function cpExportCSV(){
+  const me=cpGetSession(); if(!me) return;
+  const recs=cpGetRecords(me.client_id);
+  if(!recs.length){ alert('No transactions to export'); return; }
+  const header='Date,Type,Category,Vendor/Description,Amount,Notes';
+  const rows=recs.map(r=>`${r.date||''},${r.type},${r.category||''},\"${(r.vendor||r.description||'').replace(/"/g,'""')}\",${r.amount},\"${(r.notes||'').replace(/"/g,'""')}\"`);
+  const csv=[header,...rows].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`efficient-records-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  cpLogAudit(me.client_id,'Export','CSV export — '+recs.length+' records');
+  cpShowToast('✅ CSV downloaded');
+}
+
+function cpExportQBO(){
+  const me=cpGetSession(); if(!me) return;
+  const recs=cpGetRecords(me.client_id);
+  if(!recs.length){ alert('No transactions to export'); return; }
+  // IIF format for QuickBooks
+  const lines=['!TRNS\tTRNSTYPE\tDATE\tACCNT\tNAME\tAMOUNT\tMEMO','!SPL\tTRNSTYPE\tDATE\tACCNT\tAMOUNT\tMEMO','!ENDTRNS'];
+  recs.forEach(r=>{
+    const dt=r.date?r.date.split('-').join('/'):new Date().toLocaleDateString();
+    const amt=r.type==='income'?+(+r.amount).toFixed(2):-(+r.amount).toFixed(2);
+    const acct=r.type==='income'?'Sales Revenue':r.category||'Expense';
+    lines.push(`TRNS\t${r.type==='income'?'INVOICE':'CHECK'}\t${dt}\tChecking\t${r.vendor||'—'}\t${amt}\t${r.notes||r.category||''}`);
+    lines.push(`SPL\t${r.type==='income'?'INVOICE':'CHECK'}\t${dt}\t${acct}\t${-amt}\t${r.vendor||''}`);
+    lines.push('ENDTRNS');
+  });
+  const iif=lines.join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(iif);
+  a.download=`efficient-quickbooks-${new Date().toISOString().split('T')[0]}.iif`;
+  a.click();
+  cpLogAudit(me.client_id,'Export','QBO/IIF export — '+recs.length+' records');
+  cpShowToast('✅ QuickBooks IIF downloaded');
+}
+
+function cpPrintPL(){
+  const me=cpGetSession(); if(!me) return;
+  const recs=cpGetRecords(me.client_id);
+  const income=recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expense=recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const profit=income-expense;
+  const cats={};
+  recs.filter(r=>r.type==='expense').forEach(r=>{ cats[r.category||'Other']=(cats[r.category||'Other']||0)+(+r.amount||0); });
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>P&L — ${me.org||'My Business'}</title><style>body{font-family:Arial,sans-serif;padding:40px;color:#0B1D35}h1{color:#0B2140}table{width:100%;border-collapse:collapse;margin:16px 0}td,th{padding:8px 12px;border:1px solid #DDE4EF;font-size:13px}th{background:#F7F9FC;font-weight:700}</style></head><body>`);
+  w.document.write(`<h1>Profit & Loss Statement</h1><p><strong>${me.org||'My Business'}</strong> · Generated ${new Date().toLocaleDateString()}</p>`);
+  w.document.write(`<table><tr><th>Item</th><th style="text-align:right">Amount</th></tr><tr><td><strong>Total Revenue</strong></td><td style="text-align:right;color:green"><strong>$${income.toFixed(2)}</strong></td></tr>${Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<tr><td style="padding-left:24px">${c}</td><td style="text-align:right;color:red">($${v.toFixed(2)})</td></tr>`).join('')}<tr style="background:#F7F9FC"><td><strong>Total Expenses</strong></td><td style="text-align:right;color:red"><strong>($${expense.toFixed(2)})</strong></td></tr><tr><td><strong>Net Profit</strong></td><td style="text-align:right;color:${profit>=0?'green':'red'}"><strong>$${profit.toFixed(2)}</strong></td></tr></table>`);
+  w.document.write('</body></html>'); w.print();
+}
+
+// ══ AUDIT LOG ══
+function cpLogAudit(clientId, action, details){
+  const log=cpGet(CP_AUDIT_KEY(clientId));
+  log.unshift({id:'audit-'+Date.now(),action,details,ts:new Date().toISOString()});
+  if(log.length>200) log.splice(200);
+  cpSet(CP_AUDIT_KEY(clientId),log);
+}
+
+function cpRenderAuditLog(clientId){
+  const tbody=document.getElementById('cp-audit-tbody');
+  if(!tbody) return;
+  const log=cpGet(CP_AUDIT_KEY(clientId));
+  tbody.innerHTML=log.length?log.slice(0,50).map(l=>`<tr>
+    <td style="font-family:var(--ff-m);font-size:.65rem;color:var(--muted);white-space:nowrap">${new Date(l.ts).toLocaleString()}</td>
+    <td style="font-weight:600;font-size:.76rem">${l.action}</td>
+    <td style="font-size:.74rem;color:var(--text2)">${l.details||'—'}</td>
+  </tr>`).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:12px">No activity yet</td></tr>';
+}
+
 // Auto-check session on load + pre-select plan from URL param
 (function cpAutoLogin(){
   try{
@@ -4341,8 +4782,11 @@ function cpShowToast(msg){
       <button id="cp-nav-records"   class="portal-nav-btn" onclick="cpNav('records')"><span class="portal-nav-ico">📝</span><span>Records</span></button>
       <button id="cp-nav-invoices"  class="portal-nav-btn" onclick="cpNav('invoices')"><span class="portal-nav-ico">🧾</span><span>Invoices</span></button>
       <button id="cp-nav-reports"   class="portal-nav-btn" onclick="cpNav('reports')"><span class="portal-nav-ico">📊</span><span>Reports</span></button>
-      <button id="cp-nav-tax"       class="portal-nav-btn" onclick="cpNav('tax')"><span class="portal-nav-ico">🏛️</span><span>Tax Center</span></button>
-      <button id="cp-nav-account"   class="portal-nav-btn" onclick="cpNav('account')"><span class="portal-nav-ico">⚙️</span><span>My Account</span></button>
+      <button id="cp-nav-tax"         class="portal-nav-btn" onclick="cpNav('tax')"><span class="portal-nav-ico">🏛️</span><span>Tax + 1099</span></button>
+      <button id="cp-nav-budget"      class="portal-nav-btn" onclick="cpNav('budget')"><span class="portal-nav-ico">💰</span><span>Budget</span></button>
+      <button id="cp-nav-deductions"  class="portal-nav-btn" onclick="cpNav('deductions')"><span class="portal-nav-ico">🚗</span><span>Deductions</span></button>
+      <button id="cp-nav-recurring"   class="portal-nav-btn" onclick="cpNav('recurring')"><span class="portal-nav-ico">🔄</span><span>Recurring</span></button>
+      <button id="cp-nav-account"     class="portal-nav-btn" onclick="cpNav('account')"><span class="portal-nav-ico">⚙️</span><span>My Account</span></button>
       <div style="flex:1"></div>
       <button class="portal-nav-btn" onclick="clientPortalLogout()" style="border-top:1px solid rgba(255,255,255,.08);margin-top:8px"><span class="portal-nav-ico">🚪</span><span>Sign Out</span></button>
     </div>
@@ -4435,22 +4879,93 @@ function cpShowToast(msg){
       <!-- REPORTS -->
       <div class="cp-panel" id="cp-panel-reports">
         <div class="cp-section-title">📊 Financial Reports</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-          <div style="background:var(--navy);border-radius:12px;padding:20px">
-            <div style="font-family:var(--ff-h);font-weight:800;color:#fff;margin-bottom:14px">Profit &amp; Loss</div>
-            <div id="cp-pnl-body"></div>
+        <!-- Report Tabs -->
+        <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">
+          <button id="rpt-tab-pnl"     onclick="cpReportTab('pnl')"     style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;background:var(--navy);color:var(--gold2)">P&amp;L</button>
+          <button id="rpt-tab-bs"      onclick="cpReportTab('bs')"      style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">Balance Sheet</button>
+          <button id="rpt-tab-cf"      onclick="cpReportTab('cf')"      style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">Cash Flow</button>
+          <button id="rpt-tab-export"  onclick="cpReportTab('export')"  style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">⬇ Export</button>
+        </div>
+        <!-- P&L Tab -->
+        <div id="rpt-pnl" style="display:block">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div style="background:var(--navy);border-radius:12px;padding:20px">
+              <div style="font-family:var(--ff-h);font-weight:800;color:#fff;margin-bottom:14px">Profit &amp; Loss</div>
+              <div id="cp-pnl-body"></div>
+            </div>
+            <div class="cp-card">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Top Expense Categories</div>
+              <div id="cp-cat-body"></div>
+            </div>
           </div>
+        </div>
+        <!-- Balance Sheet Tab -->
+        <div id="rpt-bs" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="cp-card">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Assets</div>
+              <div id="cp-bs-assets"></div>
+            </div>
+            <div>
+              <div class="cp-card" style="margin-bottom:14px">
+                <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Liabilities</div>
+                <div id="cp-bs-liabilities"></div>
+              </div>
+              <div class="cp-card">
+                <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Equity</div>
+                <div id="cp-bs-equity"></div>
+              </div>
+            </div>
+          </div>
+          <div class="cp-card" style="margin-top:14px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Add Liability (Loans / AP)</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Description</div><input id="bs-liab-desc" class="login-fi" style="margin-bottom:0;width:180px" placeholder="e.g. Business Loan"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount ($)</div><input id="bs-liab-amt" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="0.00"></div>
+              <button onclick="cpAddLiability()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <!-- Cash Flow Tab -->
+        <div id="rpt-cf" style="display:none">
           <div class="cp-card">
-            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Top Expense Categories</div>
-            <div id="cp-cat-body"></div>
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">Cash Flow — Last 6 Months</div>
+            <div id="cp-cf-body"></div>
+          </div>
+          <div class="cp-card" style="margin-top:14px">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:10px">Running Balance</div>
+            <div id="cp-cf-running"></div>
+          </div>
+        </div>
+        <!-- Export Tab -->
+        <div id="rpt-export" style="display:none">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+            <div class="cp-card" style="text-align:center">
+              <div style="font-size:2rem;margin-bottom:10px">📄</div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:6px">CSV Export</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:14px">All transactions in a spreadsheet-ready CSV file</div>
+              <button onclick="cpExportCSV()" style="width:100%;padding:10px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">⬇ Download CSV</button>
+            </div>
+            <div class="cp-card" style="text-align:center">
+              <div style="font-size:2rem;margin-bottom:10px">📊</div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:6px">QuickBooks Export (QBO)</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:14px">IIF format — import directly into QuickBooks Desktop</div>
+              <button onclick="cpExportQBO()" style="width:100%;padding:10px;background:var(--green);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">⬇ Download QBO/IIF</button>
+            </div>
+            <div class="cp-card" style="text-align:center">
+              <div style="font-size:2rem;margin-bottom:10px">📋</div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:6px">P&amp;L PDF Summary</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:14px">Print-ready P&amp;L report for your CPA or tax filing</div>
+              <button onclick="cpPrintPL()" style="width:100%;padding:10px;background:var(--off);border:1.5px solid var(--border);color:var(--navy);border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">🖨 Print / Save PDF</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- TAX CENTER -->
+      <!-- TAX CENTER + 1099 -->
       <div class="cp-panel" id="cp-panel-tax">
-        <div class="cp-section-title">🏛️ Tax Center</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="cp-section-title">🏛️ Tax Center + 1099 Tracker</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
           <div>
             <div class="cp-card">
               <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Quarterly Estimator</div>
@@ -4481,12 +4996,161 @@ function cpShowToast(msg){
             <div style="font-size:.78rem;color:var(--muted)" id="cp-consultant-note">Loading…</div>
           </div>
         </div>
+        <!-- 1099 TRACKER -->
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:4px">📋 1099 Contractor Tracker</div>
+          <div style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Track payments to contractors. You must file a 1099-NEC for anyone paid $600+ in a calendar year.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Contractor Name</div><input id="c1099-name" class="login-fi" style="margin-bottom:0;width:160px" placeholder="Jane Smith"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount Paid ($)</div><input id="c1099-amt" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="0.00"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="c1099-date" type="date" class="login-fi" style="margin-bottom:0;width:140px"></div>
+            <button onclick="cpAdd1099()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add Payment</button>
+          </div>
+          <table class="cp-table">
+            <thead><tr><th>Contractor</th><th>YTD Total</th><th>Status</th><th>Last Payment</th><th></th></tr></thead>
+            <tbody id="cp-1099-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BUDGET VS ACTUAL -->
+      <div class="cp-panel" id="cp-panel-budget">
+        <div class="cp-section-title">💰 Budget vs Actual</div>
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Set Monthly Budget by Category</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Category</div>
+              <select id="bgt-cat" class="login-fi" style="margin-bottom:0;width:180px">
+                <option>Advertising</option><option>Meals &amp; Entertainment</option><option>Travel</option>
+                <option>Office Supplies</option><option>Software &amp; Tech</option><option>Professional Services</option>
+                <option>Utilities</option><option>Rent &amp; Facilities</option><option>Insurance</option>
+                <option>Payroll &amp; Contractors</option><option>Equipment</option><option>Vehicle</option>
+                <option>Bank Fees</option><option>Other Expense</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Monthly Budget ($)</div><input id="bgt-amt" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="500"></div>
+            <button onclick="cpSaveBudgetEntry()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">Save</button>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">This Month vs Budget</div>
+          <div id="cp-budget-body"></div>
+        </div>
+      </div>
+
+      <!-- DEDUCTIONS -->
+      <div class="cp-panel" id="cp-panel-deductions">
+        <div class="cp-section-title">🚗 Deductions Tracker</div>
+        <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+          <button onclick="cpDeductTab('mileage')" id="ded-tab-mileage" style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;background:var(--navy);color:var(--gold2)">🚗 Mileage</button>
+          <button onclick="cpDeductTab('homeoffice')" id="ded-tab-homeoffice" style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">🏠 Home Office</button>
+          <button onclick="cpDeductTab('meals')" id="ded-tab-meals" style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">🍽️ Meals</button>
+        </div>
+        <!-- Mileage -->
+        <div id="ded-mileage">
+          <div class="cp-card" style="margin-bottom:14px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Mileage Log <span style="font-size:.68rem;color:var(--green);font-weight:600">IRS rate: $0.67/mile (2024)</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:10px">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="mi-date" type="date" class="login-fi" style="margin-bottom:0;width:140px"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">From</div><input id="mi-from" class="login-fi" style="margin-bottom:0;width:150px" placeholder="Office"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">To</div><input id="mi-to" class="login-fi" style="margin-bottom:0;width:150px" placeholder="Client site"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Miles</div><input id="mi-miles" type="number" step="0.1" class="login-fi" style="margin-bottom:0;width:90px" placeholder="12.5"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Purpose</div><input id="mi-purpose" class="login-fi" style="margin-bottom:0;width:150px" placeholder="Client meeting"></div>
+              <button onclick="cpAddMileage()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Log Trip</button>
+            </div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:6px" id="cp-mileage-summary">Total Deduction: $0.00</div>
+            <table class="cp-table"><thead><tr><th>Date</th><th>From → To</th><th>Miles</th><th>Purpose</th><th>Deduction</th><th></th></tr></thead>
+            <tbody id="cp-mileage-tbody"></tbody></table>
+          </div>
+        </div>
+        <!-- Home Office -->
+        <div id="ded-homeoffice" style="display:none">
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Home Office Deduction <span style="font-size:.68rem;color:var(--muted)">(Simplified: $5/sq ft, max 300 sq ft = $1,500/yr)</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:12px">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Office Sq Ft</div><input id="ho-office-sqft" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="120" oninput="cpCalcHomeOffice()"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Total Home Sq Ft</div><input id="ho-total-sqft" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="1800" oninput="cpCalcHomeOffice()"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Monthly Rent/Mortgage ($)</div><input id="ho-monthly" type="number" class="login-fi" style="margin-bottom:0;width:130px" placeholder="2000" oninput="cpCalcHomeOffice()"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Monthly Utilities ($)</div><input id="ho-utilities" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="200" oninput="cpCalcHomeOffice()"></div>
+            </div>
+            <div id="cp-ho-result" style="margin-top:16px;background:var(--off);border-radius:10px;padding:14px;font-size:.82rem"></div>
+          </div>
+        </div>
+        <!-- Meals -->
+        <div id="ded-meals" style="display:none">
+          <div class="cp-card" style="margin-bottom:14px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Business Meals <span style="font-size:.68rem;color:var(--green);font-weight:600">50% deductible</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:10px">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="ml-date" type="date" class="login-fi" style="margin-bottom:0;width:140px"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount ($)</div><input id="ml-amt" type="number" step="0.01" class="login-fi" style="margin-bottom:0;width:110px" placeholder="85.00"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Who With / Purpose</div><input id="ml-purpose" class="login-fi" style="margin-bottom:0;width:200px" placeholder="Client meeting — John Doe"></div>
+              <button onclick="cpAddMeal()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Log Meal</button>
+            </div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:6px" id="cp-meals-summary">Total Deduction: $0.00</div>
+            <table class="cp-table"><thead><tr><th>Date</th><th>Purpose</th><th>Full Amount</th><th>Deductible (50%)</th><th></th></tr></thead>
+            <tbody id="cp-meals-tbody"></tbody>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECURRING TRANSACTIONS -->
+      <div class="cp-panel" id="cp-panel-recurring">
+        <div class="cp-section-title">🔄 Recurring Transactions</div>
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Add Recurring Rule</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Type</div>
+              <select id="rec-type" class="login-fi" style="margin-bottom:0">
+                <option value="expense">Expense</option><option value="income">Income</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Category</div>
+              <select id="rec-cat" class="login-fi" style="margin-bottom:0">
+                <option>Software &amp; Tech</option><option>Rent &amp; Facilities</option><option>Utilities</option>
+                <option>Insurance</option><option>Advertising</option><option>Payroll &amp; Contractors</option>
+                <option>Professional Services</option><option>Sales Revenue</option><option>Retainer Income</option><option>Other</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Description</div><input id="rec-desc" class="login-fi" style="margin-bottom:0" placeholder="e.g. Slack subscription"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount ($)</div><input id="rec-amt" type="number" step="0.01" class="login-fi" style="margin-bottom:0" placeholder="0.00"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Frequency</div>
+              <select id="rec-freq" class="login-fi" style="margin-bottom:0">
+                <option value="weekly">Weekly</option><option value="monthly" selected>Monthly</option>
+                <option value="quarterly">Quarterly</option><option value="annually">Annually</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Next Date</div><input id="rec-next" type="date" class="login-fi" style="margin-bottom:0"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">&nbsp;</div>
+              <button onclick="cpAddRecurring()" style="width:100%;padding:9px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add Rule</button>
+            </div>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy)">Active Rules</div>
+            <button onclick="cpProcessRecurring()" style="padding:6px 14px;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2);border-radius:7px;font-size:.72rem;font-weight:700;cursor:pointer">▶ Process Due Now</button>
+          </div>
+          <table class="cp-table">
+            <thead><tr><th>Type</th><th>Description</th><th>Amount</th><th>Frequency</th><th>Next Date</th><th>Last Run</th><th></th></tr></thead>
+            <tbody id="cp-recurring-tbody"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- ACCOUNT SETTINGS -->
       <div class="cp-panel" id="cp-panel-account">
         <div class="cp-section-title">⚙️ My Account</div>
         <div id="cp-account-body"></div>
+        <div class="cp-card" style="margin-top:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">🔍 Audit Log</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">All add/delete actions on your account</div>
+          <table class="cp-table"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead>
+          <tbody id="cp-audit-tbody"></tbody></table>
+        </div>
       </div>
 
     </div><!-- /portal-main -->
