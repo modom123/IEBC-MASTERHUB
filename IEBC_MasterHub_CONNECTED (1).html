@@ -447,8 +447,8 @@ body{font-family:var(--ff-b)!important;color:var(--text)!important;background:va
 
 /* ── Buttons ── */
 .btn{font-family:var(--ff-b)!important;border-radius:7px!important;font-size:.75rem!important;font-weight:600!important;transition:all .18s!important}
-.btn-blue,.btn-primary{background:var(--navy)!important;color:var(--gold2)!important;border:none!important}
-.btn-blue:hover,.btn-primary:hover{background:var(--navy2)!important;transform:translateY(-1px)!important;box-shadow:0 4px 16px rgba(11,33,64,.25)!important}
+.btn-blue,.btn-primary{background:var(--gold2)!important;color:var(--navy)!important;border:none!important;font-weight:700!important}
+.btn-blue:hover,.btn-primary:hover{background:var(--gold3)!important;color:var(--navy)!important;transform:translateY(-1px)!important;box-shadow:0 4px 16px rgba(200,144,42,.4)!important}
 .btn-ghost,.btn-secondary,.btn-outline{background:transparent!important;border:1.5px solid var(--border)!important;color:var(--navy)!important}
 .btn-ghost:hover,.btn-secondary:hover,.btn-outline:hover{border-color:var(--navy)!important;background:var(--slate)!important}
 .btn-green,.btn-success{background:var(--success)!important;color:#fff!important}
@@ -3204,21 +3204,23 @@ async function accImportToHub(clientId){
   DATA.clients.unshift(clientRec);
 
   // ── 2. INVOICE RECORD ─────────────────────────────────────
+  // Subscription invoices are marked paid — card was tokenized at checkout
   const invType   = c.is_bundle ? 'setup-final' : 'retainer';
   const invAmount = c.is_bundle ? 599 : (c.monthly_rate||0);
   const inv = {
     client_name: clientRec.name, type: invType,
     amount: invAmount,
-    due_date: c.sub_start||new Date(Date.now()+30*864e5).toISOString().split('T')[0],
-    status: c.is_bundle ? 'paid' : 'pending',
+    due_date: c.sub_start||new Date().toISOString().split('T')[0],
+    status: 'paid',
+    paid_at: c.sub_start||new Date().toISOString(),
     notes: `${c.is_bundle?'Bundle Deal — $599 one-time':'Accounting Suite subscription'} · ${c.plan_name} · ${c.client_id}`,
     created_at: new Date().toISOString(), id:'local-'+Date.now()+1,
   };
   const savedI = await dbInsert('hub_invoices',{...inv,id:undefined});
   if(savedI) inv.id = savedI.id;
   DATA.invoices.unshift(inv);
-  // Auto-log bundle to accounting revenue
-  if(c.is_bundle) { try{ acctAutoLogFromInvoice({...inv, status:'paid', paid_at:new Date().toISOString()}, 'paid'); }catch(e){} }
+  // Log to accounting revenue for all imports (subscription + bundle)
+  try{ acctAutoLogFromInvoice({...inv, status:'paid', paid_at:inv.paid_at}, 'paid'); }catch(e){}
 
   // ── 3. PIPELINE PROSPECT (if not already present) ─────────
   const alreadyIn = DATA.prospects.some(p=>(p.email||'').toLowerCase()===(c.email||'').toLowerCase());
@@ -3730,7 +3732,15 @@ async function syncAll(){
     const tables=['hub_clients','hub_prospects','hub_builds','hub_invoices','hub_tasks','hub_library','hub_activity'];
     const keys  =['clients','prospects','builds','invoices','tasks','library','activity'];
     const results = await Promise.all(tables.map(t=>DB.from(t).select('*').order('created_at',{ascending:false})));
-    results.forEach((r,i)=>{ if(r.data) DATA[keys[i]]=r.data; });
+    results.forEach((r,i)=>{
+      if(r.data && r.data.length>0){
+        // Merge: Supabase records + any local-only records not yet pushed to Supabase
+        const supaIds=new Set(r.data.map(x=>String(x.id)));
+        const localOnly=(DATA[keys[i]]||[]).filter(x=>String(x.id||'').startsWith('local-')&&!supaIds.has(String(x.id)));
+        DATA[keys[i]]=[...r.data,...localOnly];
+      }
+      // If Supabase returns 0 rows, keep existing local data unchanged
+    });
     saveLocal();
     renderAll();
     setDBConnected(true);
@@ -4008,12 +4018,12 @@ function renderDashboard(){
       <div><div class="daily-item-name">${t.name}</div><div class="daily-item-sub">${t.related||''} · due ${t.due_date}</div></div>
     </div>`).join('') : '<div class="daily-empty">All clear this week! 🎉</div>';
 
-  // Revenue snapshot
-  const mrr=DATA.clients.filter(c=>c.status==='active').reduce((s,c)=>s+(+c.monthly||0),0);
-  const setup=DATA.invoices.filter(i=>i.type?.includes('setup')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  // Revenue snapshot — include trial clients in MRR (card on file, subscription started)
+  const mrr=DATA.clients.filter(c=>c.status==='active'||c.status==='trial').reduce((s,c)=>s+(+c.monthly||0),0);
+  const setup=DATA.invoices.filter(i=>(i.type?.includes('setup')||i.type==='retainer')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
   document.getElementById('dash-mrr').textContent='$'+mrr.toLocaleString();
   document.getElementById('dash-setup').textContent='$'+setup.toLocaleString();
-  document.getElementById('dash-clients').textContent=DATA.clients.filter(c=>c.status==='active').length;
+  document.getElementById('dash-clients').textContent=DATA.clients.filter(c=>c.status==='active'||c.status==='trial').length;
 
   // Pills
   const hotLeads=DATA.prospects.filter(p=>p.heat==='hot').length;
@@ -4931,11 +4941,12 @@ function renderInvoices(){
 //  REVENUE
 // ══════════════════════════════════════════════════════════
 function renderRevenue(){
-  const mrr=DATA.clients.filter(c=>c.status==='active').reduce((s,c)=>s+(+c.monthly||0),0);
-  const setup=DATA.invoices.filter(i=>i.type?.includes('setup')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  const mrr=DATA.clients.filter(c=>c.status==='active'||c.status==='trial').reduce((s,c)=>s+(+c.monthly||0),0);
+  const setup=DATA.invoices.filter(i=>(i.type?.includes('setup')||i.type==='setup-final')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  const retainerPaid=DATA.invoices.filter(i=>i.type==='retainer'&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
   const addon=DATA.invoices.filter(i=>i.type==='addon'&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
   setText('rev-mrr','$'+mrr.toLocaleString());
-  setText('rev-setup','$'+setup.toLocaleString());
+  setText('rev-setup','$'+(setup+retainerPaid).toLocaleString());
   setText('rev-addon','$'+addon.toLocaleString());
   setText('rev-arr','$'+(mrr*12).toLocaleString());
 
