@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Efficient — AI Accounting & Payroll by IEBC | Start Free</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Stripe.js — PCI-compliant card tokenization -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- Supabase — persistent database -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -804,23 +808,25 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         <div class="sb-item">🛡 No charge for 30 days</div>
         <div class="sb-item">↩ Cancel anytime</div>
       </div>
-      <div class="frow"><label class="flbl">Cardholder Name</label><input class="fi" type="text" id="cname" placeholder="Jane Smith"></div>
+      <div class="frow"><label class="flbl">Cardholder Name</label><input class="fi" type="text" id="cname" placeholder="Jane Smith" autocomplete="cc-name"></div>
       <div class="frow">
-        <label class="flbl">Card Number</label>
-        <div class="card-wrap">
-          <input class="fi" type="text" id="cnum" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fmtCard(this)" style="padding-right:96px">
-          <div class="card-icons"><span class="ci-badge ci-v">VISA</span><span class="ci-badge ci-m">MC</span><span class="ci-badge ci-a">AMX</span></div>
+        <label class="flbl" style="display:flex;align-items:center;gap:8px">
+          Card Details
+          <span style="font-size:.57rem;background:var(--green-lt);color:var(--green);padding:2px 8px;border-radius:12px;font-family:var(--ff-m);font-weight:600">🔒 Powered by Stripe</span>
+        </label>
+        <!-- Stripe Elements mounts here — PCI DSS Level 1 compliant -->
+        <div id="stripe-card-element" style="padding:13px 14px;border:1.5px solid var(--border);border-radius:8px;background:#fff;min-height:44px;transition:border-color .2s"></div>
+        <div id="stripe-card-errors" style="color:var(--red);font-size:.72rem;margin-top:5px;font-family:var(--ff-m);min-height:18px"></div>
+        <!-- Fallback shown when Stripe not yet configured -->
+        <div id="stripe-not-configured" style="display:none;background:var(--amber-lt);border:1px solid rgba(146,64,14,.2);border-radius:8px;padding:9px 12px;font-size:.72rem;color:var(--amber);font-family:var(--ff-m);line-height:1.6;margin-top:6px">
+          ⚙ Stripe not configured yet. Enter your Stripe Publishable Key in <strong>My Account → System Config</strong> to enable card processing.
         </div>
       </div>
-      <div class="frow-2">
-        <div><label class="flbl">Expiry</label><input class="fi" type="text" id="cexp" placeholder="MM / YY" maxlength="7" oninput="fmtExp(this)"></div>
-        <div><label class="flbl">CVV</label><input class="fi" type="text" id="ccvv" placeholder="•••" maxlength="4"></div>
-      </div>
-      <div class="frow"><label class="flbl">Billing ZIP</label><input class="fi" type="text" id="czip" placeholder="90210" maxlength="5"></div>
+      <div class="frow"><label class="flbl">Billing ZIP</label><input class="fi" type="text" id="czip" placeholder="90210" maxlength="5" autocomplete="postal-code"></div>
       <div style="background:var(--blue-lt);border:1px solid rgba(29,78,216,.18);border-radius:8px;padding:9px 12px;font-size:.72rem;color:var(--blue);font-family:var(--ff-m);margin-bottom:14px;line-height:1.6">
-        ℹ Your card is securely tokenized and held. <strong>Zero dollars charged today.</strong> Billing begins after your 30-day trial. You'll receive an email reminder 7 days before your first charge.
+        ℹ Your card is securely tokenized via Stripe. <strong>Zero dollars charged today.</strong> Billing begins after your 30-day trial. You'll receive an email reminder 7 days before your first charge.
       </div>
-      <button class="mbtn" onclick="goStep(5)">Secure Card &amp; Continue →</button>
+      <button class="mbtn" id="stripe-submit-btn" onclick="effTokenizeCard()">Secure Card &amp; Continue →</button>
       <button class="mbtn-ghost" onclick="goStep(3)">← Back</button>
     </div>
     <!-- Screen 5: Connect -->
@@ -2381,8 +2387,194 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <div id="imp-toast"><span id="imp-toast-msg"></span></div>
 
 <script>
-const pages = ['home','features','pricing','compare','automation','security','consultants','demo','testimonials','faq'];
-const pages = ['home','features','pricing','compare','automation','security','consultants','payroll','invoices','dashboard'];
+// ══ PERSISTENT DB (Supabase) + PAYMENT (Stripe) GLOBALS ══
+let EFF_DB       = null;   // Supabase client for Efficient data
+let effStripe    = null;   // Stripe.js instance
+let effStripeCard = null;  // Stripe Card Element
+let _effPmId     = null;   // Stored PaymentMethod ID after tokenization
+let _effCardLast4 = '';    // Last 4 digits from Stripe PM
+let _effCardBrand = '';    // Card brand from Stripe PM
+
+// ── Supabase init ──────────────────────────────────────────
+function initEffDB(url, key){
+  try{
+    if(!window.supabase) return false;
+    EFF_DB = window.supabase.createClient(url, key);
+    try{ localStorage.setItem('eff-sb-url', url); localStorage.setItem('eff-sb-key', key); }catch(e){}
+    return true;
+  }catch(e){ console.warn('Supabase init failed', e); return false; }
+}
+function tryInitEffDB(){
+  try{
+    const url = localStorage.getItem('eff-sb-url');
+    const key = localStorage.getItem('eff-sb-key');
+    if(url && key) initEffDB(url, key);
+  }catch(e){}
+}
+
+// ── Supabase read/write helpers ────────────────────────────
+// All Efficient data lives in one table: efficient_data(client_id, table_name, data, updated_at)
+async function effDBSave(clientId, tableName, data){
+  if(!EFF_DB) return;
+  try{
+    await EFF_DB.from('efficient_data').upsert(
+      {client_id:clientId, table_name:tableName, data:data, updated_at:new Date().toISOString()},
+      {onConflict:'client_id,table_name'}
+    );
+  }catch(e){ console.warn('effDBSave error', e); }
+}
+async function effDBLoad(clientId, tableName){
+  if(!EFF_DB) return null;
+  try{
+    const {data,error} = await EFF_DB.from('efficient_data').select('data').eq('client_id',clientId).eq('table_name',tableName).maybeSingle();
+    if(error||!data) return null;
+    return data.data;
+  }catch(e){ return null; }
+}
+
+// Load ALL tables for a client from Supabase → hydrate localStorage
+async function effDBSyncAll(clientId){
+  if(!EFF_DB||!clientId) return;
+  try{
+    const {data,error} = await EFF_DB.from('efficient_data').select('table_name,data').eq('client_id',clientId);
+    if(error||!data) return;
+    const keyMap = {
+      records:    'iebc-cp-'+clientId+'-records',
+      invoices:   'iebc-cp-'+clientId+'-invoices',
+      liabilities:'iebc-cp-'+clientId+'-liabilities',
+      budgets:    'iebc-cp-'+clientId+'-budgets',
+      mileage:    'iebc-cp-'+clientId+'-mileage',
+      meals:      'iebc-cp-'+clientId+'-meals',
+      '1099':     'iebc-cp-'+clientId+'-1099',
+      recurring:  'iebc-cp-'+clientId+'-recurring',
+      time:       'iebc-cp-'+clientId+'-time',
+      assets:     'iebc-cp-'+clientId+'-assets',
+      referrals:  'iebc-cp-'+clientId+'-referrals',
+      audit:      'iebc-cp-'+clientId+'-audit',
+    };
+    data.forEach(row=>{
+      const lsKey = keyMap[row.table_name];
+      if(lsKey && row.data!=null){
+        try{ localStorage.setItem(lsKey, JSON.stringify(row.data)); }catch(e){}
+      }
+    });
+    // Also load client account record
+    const clientRow = data.find(r=>r.table_name==='client_record');
+    if(clientRow && clientRow.data){
+      try{
+        const list = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]');
+        const idx  = list.findIndex(c=>c.client_id===clientId);
+        if(idx>=0) list[idx]={...list[idx],...clientRow.data};
+        else       list.unshift(clientRow.data);
+        localStorage.setItem('iebc_accounting_clients',JSON.stringify(list));
+      }catch(e){}
+    }
+  }catch(e){ console.warn('effDBSyncAll error', e); }
+}
+
+// Save client record to Supabase efficient_clients table
+async function effDBSaveClient(clientRecord){
+  if(!EFF_DB) return;
+  try{
+    await EFF_DB.from('efficient_clients').upsert(
+      {...clientRecord, updated_at:new Date().toISOString()},
+      {onConflict:'client_id'}
+    );
+    // Also mirror into efficient_data for cross-device loading
+    await effDBSave(clientRecord.client_id, 'client_record', clientRecord);
+  }catch(e){ console.warn('effDBSaveClient error', e); }
+}
+
+// ── Stripe init ────────────────────────────────────────────
+function initEffStripe(pk){
+  try{
+    if(!window.Stripe){ showStripeNotConfigured(); return false; }
+    effStripe = Stripe(pk);
+    try{ localStorage.setItem('eff-stripe-pk', pk); }catch(e){}
+    const elements = effStripe.elements({
+      fonts:[{cssSrc:'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap'}]
+    });
+    effStripeCard = elements.create('card',{
+      style:{
+        base:{
+          fontSize:'14px', color:'#0B1D35',
+          fontFamily:"'Inter', system-ui, sans-serif",
+          fontWeight:'400',
+          '::placeholder':{color:'#9CA3AF'},
+          iconColor:'#5A6A82',
+        },
+        invalid:{color:'#DC2626', iconColor:'#DC2626'}
+      },
+      hidePostalCode:true
+    });
+    effStripeCard.on('change', e=>{
+      const errEl = document.getElementById('stripe-card-errors');
+      if(errEl) errEl.textContent = e.error ? e.error.message : '';
+    });
+    const mountEl = document.getElementById('stripe-card-element');
+    if(mountEl){
+      effStripeCard.mount('#stripe-card-element');
+      document.getElementById('stripe-not-configured')?.style.setProperty('display','none');
+    }
+    return true;
+  }catch(e){ console.warn('Stripe init failed', e); showStripeNotConfigured(); return false; }
+}
+function tryInitEffStripe(){
+  try{
+    const pk = localStorage.getItem('eff-stripe-pk');
+    if(pk) initEffStripe(pk);
+    else   showStripeNotConfigured();
+  }catch(e){}
+}
+function showStripeNotConfigured(){
+  const el = document.getElementById('stripe-not-configured');
+  if(el) el.style.display='block';
+}
+
+// ── Stripe card tokenization (called from Step 4 button) ──
+async function effTokenizeCard(){
+  const cname = document.getElementById('cname')?.value?.trim();
+  if(!cname){ alert('Please enter the cardholder name.'); return; }
+  const btn = document.getElementById('stripe-submit-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Processing…'; }
+  try{
+    if(!effStripe || !effStripeCard){
+      // Stripe not configured — proceed in demo mode (stores name only)
+      _effPmId = 'demo_'+Date.now();
+      _effCardLast4 = '0000';
+      _effCardBrand = 'demo';
+      goStep(5);
+      return;
+    }
+    const {paymentMethod, error} = await effStripe.createPaymentMethod({
+      type:'card', card:effStripeCard,
+      billing_details:{ name:cname }
+    });
+    if(error){
+      const errEl = document.getElementById('stripe-card-errors');
+      if(errEl) errEl.textContent = error.message;
+      return;
+    }
+    _effPmId      = paymentMethod.id;
+    _effCardLast4 = paymentMethod.card.last4;
+    _effCardBrand = paymentMethod.card.brand;
+    goStep(5);
+  }catch(e){
+    alert('Card processing error. Please try again.');
+    console.error(e);
+  }finally{
+    if(btn){ btn.disabled=false; btn.textContent='Secure Card & Continue →'; }
+  }
+}
+
+// ── cpSetSync — save to localStorage AND Supabase ─────────
+// Used for all portal data saves
+function cpSetSync(lsKey, val, sbTableName, clientId){
+  try{ localStorage.setItem(lsKey, JSON.stringify(val)); }catch(e){}
+  if(sbTableName && clientId) effDBSave(clientId, sbTableName, val);
+}
+
+const pages = ['home','features','pricing','compare','automation','security','consultants','payroll','invoices','dashboard','demo','testimonials','faq'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -2494,12 +2686,13 @@ function _conName(){
 function _selectedPlan(){ return document.getElementById('modal-plan-picker')?.value||'mm'; }
 
 function submitAll(){
-  const cardName=document.getElementById('cname')?.value?.trim();
-  const cardNum =document.getElementById('cnum')?.value?.trim();
-  const cardExp =document.getElementById('cexp')?.value?.trim();
-  const cardCvv =document.getElementById('ccvv')?.value?.trim();
-  if(!cardName||!cardNum||!cardExp||!cardCvv){
-    goStep(4); setTimeout(()=>alert('Please complete all payment fields before finishing.'),100); return;
+  const cardName = document.getElementById('cname')?.value?.trim();
+  // Require either a real Stripe PM or demo mode token
+  if(!cardName){
+    goStep(4); setTimeout(()=>alert('Please enter your cardholder name and complete the card fields.'),100); return;
+  }
+  if(!_effPmId){
+    goStep(4); setTimeout(()=>alert('Please complete the card information step before finishing.'),100); return;
   }
   const firstName= document.getElementById('fn')?.value?.trim()||'';
   const lastName = document.getElementById('ln')?.value?.trim()||'';
@@ -2543,7 +2736,8 @@ function submitAll(){
     sub_start:subStart, sub_end:subEnd,
     status:isBundle?'active':'trial',
     payment_status:isBundle?'paid':'trial_active',
-    card_last4:cardNum.replace(/\s/g,'').slice(-4), card_name:cardName, card_exp:cardExp,
+    card_last4:_effCardLast4||'****', card_brand:_effCardBrand||'card', card_name:cardName,
+    stripe_pm_id:_effPmId||null,
     username:email, temp_password:tempPass, credentials_issued:now.toISOString(),
     password_changed:false, consultant, connected_banks:banks,
     source:isBundle?'bundle_purchase':'accounting_suite_purchase',
@@ -2568,7 +2762,7 @@ function submitAll(){
     status:'trial_active', payment_status:'trial',
     contract_start:subStart, contract_end:subEnd, consultant,
     source:'accounting_suite_purchase', created_at:now.toISOString(),
-    notes:`30-day free trial. First charge ${subStart}. Card last 4: ${cardNum.replace(/\s/g,'').slice(-4)}.`,
+    notes:`30-day free trial. First charge ${subStart}. Card last 4: ${_effCardLast4||'****'}. Stripe PM: ${_effPmId||'demo'}.`,
   });
 
   try{
@@ -2584,6 +2778,9 @@ function submitAll(){
     localStorage.setItem('iebc-acct-consultant',  consultant);
     localStorage.setItem('iebc-acct-biz-name',    clientRecord.business_name);
   }catch(e){}
+
+  // Persist client record to Supabase (async — fire and forget)
+  effDBSaveClient(clientRecord);
 
   document.getElementById('sw-client-id').textContent  = clientId;
   document.getElementById('sw-username').textContent   = email;
@@ -4005,6 +4202,11 @@ function cpGetRecords(clientId){
 }
 function cpSaveRecords(clientId, recs){
   localStorage.setItem(CP_KEY(clientId), JSON.stringify(recs));
+  effDBSave(clientId, 'records', recs);  // async Supabase sync
+}
+function cpSaveInvoices(clientId, invs){
+  localStorage.setItem(CP_INV_KEY(clientId), JSON.stringify(invs));
+  effDBSave(clientId, 'invoices', invs);
 }
 function cpGetInvoices(clientId){
   try{ return JSON.parse(localStorage.getItem(CP_INV_KEY(clientId))||'[]'); }catch(e){ return []; }
@@ -4016,7 +4218,7 @@ function cpCheckAndShow(){
   else { showPage('login'); }
 }
 
-function showClientPortal(me){
+async function showClientPortal(me){
   const cr = cpGetClientRecord(me.client_id) || {};
   // Update sidebar brand
   const bizEl = document.getElementById('cp-biz-name');
@@ -4028,6 +4230,13 @@ function showClientPortal(me){
   if(loginBtn){ loginBtn.textContent = '👤 My Account'; loginBtn.onclick = ()=>showPage('portal'); }
   showPage('portal');
   cpNav('dashboard');
+  // Hydrate data from Supabase (async — updates views when ready)
+  if(EFF_DB){
+    cpShowToast('🔄 Syncing your data…');
+    await effDBSyncAll(me.client_id);
+    cpShowToast('✅ Data synced from cloud');
+    cpNav('dashboard'); // re-render dashboard with fresh data
+  }
 }
 
 function clientPortalLogin(){
@@ -4294,7 +4503,59 @@ function cpRenderAccount(clientId){
       <button onclick="cpChangePassword()" style="margin-top:12px;padding:9px 20px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">Update Password</button>
     </div>
     <button onclick="clientPortalLogout()" style="margin-top:14px;padding:9px 20px;background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2);border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">🚪 Sign Out</button>
+
+    <!-- ── System Config (IEBC Admin) ── -->
+    <div style="background:var(--off);border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-top:16px">
+      <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">🛠 System Config <span style="font-size:.65rem;font-family:var(--ff-m);color:var(--muted);font-weight:400">(IEBC Admin)</span></div>
+      <div style="font-size:.7rem;color:var(--muted);margin-bottom:12px">Configure Supabase database and Stripe payment processing. Set once — applies to all clients.</div>
+
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Supabase Project URL</div>
+      <input id="cfg-sb-url" class="login-fi" style="margin-bottom:8px;font-family:var(--ff-m);font-size:.72rem" placeholder="https://xxxx.supabase.co" value="${localStorage.getItem('eff-sb-url')||''}">
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Supabase Anon Key</div>
+      <input id="cfg-sb-key" class="login-fi" type="password" style="margin-bottom:8px;font-family:var(--ff-m);font-size:.72rem" placeholder="eyJhbGc..." value="${localStorage.getItem('eff-sb-key')||''}">
+
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;margin-top:4px">Stripe Publishable Key</div>
+      <input id="cfg-stripe-pk" class="login-fi" style="margin-bottom:12px;font-family:var(--ff-m);font-size:.72rem" placeholder="pk_live_..." value="${localStorage.getItem('eff-stripe-pk')||''}">
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="cpSaveSystemConfig()" style="padding:9px 20px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.76rem;cursor:pointer">💾 Save & Connect</button>
+        <button onclick="cpTestDBConnection()" style="padding:9px 16px;background:var(--green-lt);color:var(--green);border:1px solid var(--green-md);border-radius:8px;font-weight:700;font-size:.76rem;cursor:pointer">🔌 Test DB</button>
+      </div>
+      <div id="cfg-status" style="margin-top:10px;font-family:var(--ff-m);font-size:.7rem;color:var(--green)">
+        ${EFF_DB ? '✅ Database connected' : '⚪ Database not configured'}
+        ${effStripe ? ' · ✅ Stripe connected' : ' · ⚪ Stripe not configured'}
+      </div>
+    </div>
   `;
+}
+
+function cpSaveSystemConfig(){
+  const url = document.getElementById('cfg-sb-url')?.value?.trim();
+  const key = document.getElementById('cfg-sb-key')?.value?.trim();
+  const pk  = document.getElementById('cfg-stripe-pk')?.value?.trim();
+  const statusEl = document.getElementById('cfg-status');
+  let msgs = [];
+  if(url && key){
+    const ok = initEffDB(url, key);
+    msgs.push(ok ? '✅ Supabase connected' : '❌ Supabase failed — check URL/key');
+  }
+  if(pk){
+    const ok = initEffStripe(pk);
+    msgs.push(ok ? '✅ Stripe connected' : '❌ Stripe failed — check publishable key');
+  }
+  if(statusEl) statusEl.textContent = msgs.join(' · ') || 'No changes';
+  cpShowToast('💾 Config saved');
+}
+
+async function cpTestDBConnection(){
+  const statusEl = document.getElementById('cfg-status');
+  if(!EFF_DB){ if(statusEl) statusEl.textContent='❌ Database not initialized'; return; }
+  try{
+    const {error} = await EFF_DB.from('efficient_data').select('client_id').limit(1);
+    if(statusEl) statusEl.textContent = error
+      ? '❌ DB error: '+error.message+' — make sure to run the SQL setup below'
+      : '✅ Database connected and table exists';
+  }catch(e){ if(statusEl) statusEl.textContent='❌ Connection failed: '+e.message; }
 }
 
 function cpChangePassword(){
@@ -4331,7 +4592,20 @@ const CP_1099_KEY   = id=>'iebc-cp-'+id+'-1099';
 const CP_RECUR_KEY  = id=>'iebc-cp-'+id+'-recurring';
 const CP_AUDIT_KEY  = id=>'iebc-cp-'+id+'-audit';
 const cpGet = (key,def=[])=>{ try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;} };
-const cpSet = (key,val)=>{ try{localStorage.setItem(key,JSON.stringify(val));}catch(e){} };
+// cpSet auto-syncs to Supabase: keys "iebc-cp-{clientId}-{tableName}" are detected by suffix
+const _EFF_TABLES = ['records','invoices','liabilities','budgets','mileage','meals','1099','recurring','audit','time','assets','referrals'];
+const cpSet = (key,val)=>{
+  try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){}
+  if(!EFF_DB || !key.startsWith('iebc-cp-')) return;
+  const suffix = key.slice(8); // strip "iebc-cp-"
+  for(const t of _EFF_TABLES){
+    if(suffix.endsWith('-'+t)){
+      const clientId = suffix.slice(0, suffix.length - t.length - 1);
+      effDBSave(clientId, t, val);
+      break;
+    }
+  }
+};
 const cpFmt = n=>'$'+Math.abs(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
 // ══ REPORT TABS ══
@@ -4966,27 +5240,31 @@ function cpShareRefLink(){
     // Pre-select plan from ?plan=bundle URL param
     const params = new URLSearchParams(window.location.search);
     const planParam = params.get('plan');
-    if(planParam){
-      document.addEventListener('DOMContentLoaded', ()=>{
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // Init Supabase + Stripe from stored config
+      tryInitEffDB();
+      tryInitEffStripe();
+
+      // Pre-select plan from URL param
+      if(planParam){
         const picker = document.getElementById('modal-plan-picker');
         if(picker){
           picker.value = planParam;
           if(typeof pickPlanFromSelect==='function') pickPlanFromSelect(planParam);
         }
-      });
-    }
+      }
 
-    const me = cpGetSession();
-    if(me && me.client_id){
-      document.addEventListener('DOMContentLoaded', ()=>{
+      const me = cpGetSession();
+      if(me && me.client_id){
         const btn = document.getElementById('nl-portal');
         if(btn){ btn.textContent='👤 My Account'; btn.onclick=()=>showPage('portal'); }
         // If returning directly to the suite standalone, auto-show portal
         if(window.parent === window){
           showClientPortal(me);
         }
-      });
-    }
+      }
+    });
   }catch(e){}
 })();
 
