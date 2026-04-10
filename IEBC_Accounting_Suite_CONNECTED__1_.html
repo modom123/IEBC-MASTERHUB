@@ -663,6 +663,11 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .login-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 4px 14px rgba(200,144,42,.4)}
 .login-err{background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:.76rem;margin-bottom:14px;display:none}
 @media(max-width:700px){.portal-sidebar{width:60px}.portal-sid-brand,.portal-nav-btn span:not(.portal-nav-ico){display:none}.cp-kpi-grid{grid-template-columns:1fr 1fr}}
+/* ── Import panel ── */
+.cp-imp-tab{padding:7px 14px;border:none;border-bottom:2.5px solid transparent;background:none;color:var(--muted);font-weight:600;font-size:.74rem;cursor:pointer;margin-bottom:-2px;white-space:nowrap;transition:all .15s;border-radius:6px 6px 0 0}
+.cp-imp-tab:hover{color:var(--navy);background:var(--off2)}
+.cp-imp-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:var(--off)}
+.cp-imp-pane{display:none}.cp-imp-pane.active{display:block}
 </style>
 </head>
 <body>
@@ -4407,6 +4412,7 @@ function cpNav(panel){
   if(panel==='referrals')    cpRenderReferrals(me.client_id);
   if(panel==='time'){        cpRenderTime(me.client_id); const td=document.getElementById('tt-date'); if(td&&!td.value) td.value=new Date().toISOString().split('T')[0]; }
   if(panel==='assets')       cpRenderAssets(me.client_id);
+  if(panel==='import')       cpImportNav('csv');
   if(panel==='account'){
     cpRenderAccount(me.client_id);
     cpRenderAuditLog(me.client_id);
@@ -5357,6 +5363,253 @@ function cpShareRefLink(){
 }
 
 // Auto-check session on load + pre-select plan from URL param
+// ══════════════════════════════════════════════════════════════════
+//  IMPORT ENGINE — CSV / QuickBooks / Xero / Wave / Investments / Paste
+// ══════════════════════════════════════════════════════════════════
+
+// Column maps keyed by detected source
+const CP_IMP_MAPS = {
+  quickbooks:    { date:'Date',        desc:'Memo/Description', amount:'Amount',      cat:'Account' },
+  xero:          { date:'Date',        desc:'Description',      amount:'Unit Price',  cat:'Account' },
+  freshbooks:    { date:'Date',        desc:'Description',      amount:'Amount',      cat:'Category' },
+  wave:          { date:'Date',        desc:'Description',      credit:'Deposited',   debit:'Withdrawn' },
+  zoho:          { date:'Date',        desc:'Particulars',      amount:'Amount' },
+  paypal:        { date:'Date',        desc:'Name',             amount:'Net',         cat:'Type' },
+  stripe:        { date:'Created (UTC)',desc:'Description',     amount:'Amount',      cat:'Type' },
+  square:        { date:'Date',        desc:'Description',      amount:'Gross Sales' },
+  shopify:       { date:'Date',        desc:'Description',      amount:'Amount' },
+  fidelity:      { date:'Run Date',    desc:'Action',           amount:'Amount ($)',  sym:'Symbol' },
+  schwab:        { date:'Date',        desc:'Description',      amount:'Amount',      sym:'Symbol' },
+  vanguard:      { date:'Trade Date',  desc:'Transaction Description', amount:'Net Amount' },
+  robinhood:     { date:'Activity Date',desc:'Description',    amount:'Amount',      sym:'Instrument' },
+  etrade:        { date:'TransactionDate',desc:'Description',  amount:'Amount' },
+  td_ameritrade: { date:'DATE',        desc:'DESCRIPTION',      amount:'AMOUNT' },
+  coinbase:      { date:'Timestamp',   desc:'Transaction Type', amount:'Total (inclusive of fees and/or spread)', sym:'Asset' },
+  crypto_com:    { date:'Timestamp (UTC)',desc:'Transaction Description',amount:'Native Amount' },
+};
+
+// Auto-detect source from CSV header row
+function cpDetectImportSource(headers) {
+  const h = headers.map(s=>(s||'').toLowerCase().trim());
+  if(h.some(x=>x.includes('memo/description')))               return 'quickbooks';
+  if(h.some(x=>x==='tracking') || h.some(x=>x==='unit price')) return 'xero';
+  if(h.includes('deposited') && h.includes('withdrawn'))       return 'wave';
+  if(h.some(x=>x.includes('particulars')))                     return 'zoho';
+  if(h.some(x=>x==='net') && h.some(x=>x==='balance'))         return 'paypal';
+  if(h.some(x=>x.includes('created (utc)')))                   return 'stripe';
+  if(h.some(x=>x.includes('gross sales')))                     return 'square';
+  if(h.some(x=>x==='run date'))                                return 'fidelity';
+  if(h.some(x=>x==='transactiondate'))                         return 'etrade';
+  if(h.some(x=>x.includes('trade date') && x.includes('net amount'))) return 'vanguard';
+  if(h.some(x=>x==='activity date') && h.some(x=>x==='trans code'))   return 'robinhood';
+  if(h.some(x=>x==='timestamp') && h.some(x=>x.includes('spot price'))) return 'coinbase';
+  if(h.some(x=>x.includes('timestamp (utc)')))                return 'crypto_com';
+  if(h.some(x=>x.includes('native amount')))                   return 'crypto_com';
+  return 'generic';
+}
+
+// Smart auto-categorize from description
+function cpAutoCategory(desc) {
+  const d = (desc||'').toLowerCase();
+  if(/amazon|amzn|ebay|etsy|shopify|walmart|target|costco|best buy/.test(d))  return 'Shopping';
+  if(/aws|google cloud|azure|heroku|digital ocean|netlify|vercel/.test(d))    return 'Software & Tech';
+  if(/adobe|slack|zoom|notion|dropbox|github|figma|canva/.test(d))            return 'Software & Tech';
+  if(/netflix|spotify|hulu|apple|disney\+/.test(d))                           return 'Software & Tech';
+  if(/restaurant|cafe|coffee|starbucks|grubhub|doordash|uber eats|chipotle|mcdonalds/.test(d)) return 'Meals & Entertainment';
+  if(/airbnb|hotel|marriott|hilton|hyatt|holiday inn/.test(d))               return 'Travel';
+  if(/delta|united|american airlines|southwest|spirit|jetblue|frontier/.test(d)) return 'Travel';
+  if(/uber|lyft|taxi|doordash|instacart/.test(d))                            return 'Travel';
+  if(/office depot|staples|fedex|ups|usps/.test(d))                         return 'Office Supplies';
+  if(/insurance|geico|progressive|allstate/.test(d))                        return 'Insurance';
+  if(/payroll|salary|wages|direct deposit|gusto|adp|paychex/.test(d))       return 'Payroll';
+  if(/rent|lease|mortgage|utilities|electric|gas|water|internet|comcast|at&t|verizon/.test(d)) return 'Rent & Utilities';
+  if(/linkedin|facebook ads|google ads|instagram|twitter ads|meta/.test(d)) return 'Advertising';
+  if(/fidelity|schwab|vanguard|robinhood|etrade|td ameritrade|coinbase|dividend|capital gain/.test(d)) return 'Investment';
+  if(/client|invoice|payment|retainer|deposit|consulting|service/.test(d))  return 'Service Revenue';
+  return 'Other';
+}
+
+// Parse a single CSV line (handles quoted fields)
+function cpCSVRow(line) {
+  const res=[]; let f='', inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){ inQ=!inQ; }
+    else if(c===','&&!inQ){ res.push(f.trim()); f=''; }
+    else f+=c;
+  }
+  res.push(f.trim());
+  return res;
+}
+
+// Parse amount string → number (handles $(1,234.56) negatives, +/- prefixes)
+function cpParseAmt(s) {
+  if(!s) return 0;
+  s=String(s).trim();
+  const neg = s.startsWith('(') || s.startsWith('-') || s.startsWith('−');
+  const n = parseFloat(s.replace(/[^0-9.]/g,''));
+  return neg ? -n : n;
+}
+
+// Normalize date string → YYYY-MM-DD
+function cpNormalizeDate(s) {
+  if(!s) return '';
+  s=s.trim();
+  // Already YYYY-MM-DD
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0,10);
+  // M/D/YYYY or MM/DD/YYYY
+  const m1 = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+  if(m1){
+    const y = m1[3].length===2 ? '20'+m1[3] : m1[3];
+    return `${y}-${m1[1].padStart(2,'0')}-${m1[2].padStart(2,'0')}`;
+  }
+  // ISO with time
+  try{ return new Date(s).toISOString().split('T')[0]; }catch(e){ return s; }
+}
+
+// Core: parse CSV text into normalized record array
+function cpParseImportText(text, sourceName) {
+  const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim()&&!l.startsWith('!'));
+  if(lines.length < 2) return [];
+
+  const headers = cpCSVRow(lines[0]).map(h=>h.replace(/^"|"$/g,'').trim());
+  const src = sourceName==='auto' ? cpDetectImportSource(headers) : (sourceName||'generic');
+  const map = CP_IMP_MAPS[src] || {};
+  const isInvestment = ['fidelity','schwab','vanguard','robinhood','etrade','td_ameritrade','coinbase','crypto_com'].includes(src);
+
+  const colIdx = (name) => {
+    if(!name) return -1;
+    const i = headers.findIndex(h=>h.toLowerCase()===name.toLowerCase());
+    return i;
+  };
+
+  const records = [];
+  for(let i=1;i<lines.length;i++){
+    const cols = cpCSVRow(lines[i]).map(c=>c.replace(/^"|"$/g,'').trim());
+    if(cols.every(c=>!c)) continue;
+
+    let date='', desc='', amount=0, cat='';
+
+    if(src==='wave'){
+      date   = cols[colIdx(map.date)]||'';
+      desc   = cols[colIdx(map.desc)]||'';
+      const cr = cpParseAmt(cols[colIdx(map.credit)]);
+      const db = cpParseAmt(cols[colIdx(map.debit)]);
+      amount = cr>0 ? cr : -db;
+    } else if(map.date){
+      date   = cols[colIdx(map.date)]||'';
+      desc   = cols[colIdx(map.desc)]||'';
+      if(map.sym) desc = (cols[colIdx(map.sym)]||'')+' '+desc;
+      amount = cpParseAmt(cols[colIdx(map.amount)]);
+      cat    = map.cat ? (cols[colIdx(map.cat)]||'') : '';
+    } else {
+      // Positional fallback: date=0, desc=1, amount=2 (or debit=2, credit=3)
+      date   = cols[0]||'';
+      desc   = cols[1]||'';
+      // Handle separate debit/credit columns
+      if(cols.length>=4 && !isNaN(parseFloat(cols[3]))){
+        const db = cpParseAmt(cols[2]), cr = cpParseAmt(cols[3]);
+        amount = cr>0 ? cr : -db;
+      } else {
+        amount = cpParseAmt(cols[2]);
+      }
+      cat = cols[4]||'';
+    }
+
+    date = cpNormalizeDate(date);
+    if(!date || (isNaN(amount) || amount===0)) continue;
+
+    const type = (isInvestment
+      ? (desc.toLowerCase().includes('buy')||amount<0 ? 'expense' : 'income')
+      : amount>=0 ? 'income' : 'expense');
+
+    records.push({
+      id: 'imp-'+Date.now()+'-'+i,
+      date, vendor: desc.substring(0,80), description: desc.substring(0,80),
+      category: cat || cpAutoCategory(desc),
+      type, amount: Math.abs(amount),
+      notes: 'Imported · '+src,
+      created_at: new Date().toISOString(),
+    });
+  }
+  return records;
+}
+
+// Store parsed rows pending confirmation
+let _cpImportRows = [];
+
+function cpImportNav(tab) {
+  document.querySelectorAll('.cp-imp-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.cp-imp-pane').forEach(p=>p.classList.remove('active'));
+  const btn = document.getElementById('imptab-'+tab);
+  const pan = document.getElementById('cpimppane-'+tab);
+  if(btn) btn.classList.add('active');
+  if(pan) pan.classList.add('active');
+  document.getElementById('cp-import-preview').style.display='none';
+}
+
+function cpHandleImportDrop(e, source) {
+  e.preventDefault();
+  const file = e.dataTransfer?.files?.[0];
+  if(file) cpReadImportFile(file, source);
+}
+
+function cpHandleImportFile(input, source) {
+  const file = input.files?.[0];
+  if(file) cpReadImportFile(file, source);
+}
+
+function cpReadImportFile(file, source) {
+  const reader = new FileReader();
+  reader.onload = e => cpShowImportPreview(e.target.result, source==='csv'?'auto':source);
+  reader.readAsText(file);
+}
+
+function cpImportFromPaste() {
+  const text = document.getElementById('cp-paste-input')?.value||'';
+  if(!text.trim()){ cpShowToast('⚠ Please paste your transaction data first'); return; }
+  cpShowImportPreview(text, 'auto');
+}
+
+function cpShowImportPreview(text, source) {
+  _cpImportRows = cpParseImportText(text, source);
+  const tbody = document.getElementById('cp-import-tbody');
+  const preview = document.getElementById('cp-import-preview');
+  const countEl = document.getElementById('cp-import-count');
+
+  if(!_cpImportRows.length){
+    cpShowToast('⚠ Could not parse any transactions. Check the file format.');
+    return;
+  }
+  if(countEl) countEl.textContent = _cpImportRows.length;
+  if(tbody) tbody.innerHTML = _cpImportRows.map((r,i)=>`
+    <tr>
+      <td style="color:var(--muted);font-size:.72rem">${r.date}</td>
+      <td style="font-size:.74rem;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.description}</td>
+      <td><input value="${r.category}" onchange="_cpImportRows[${i}].category=this.value" style="border:1px solid var(--border);border-radius:5px;padding:2px 6px;font-size:.7rem;width:120px"></td>
+      <td><select onchange="_cpImportRows[${i}].type=this.value" style="border:1px solid var(--border);border-radius:5px;padding:2px 4px;font-size:.7rem">
+        <option value="income"  ${r.type==='income' ?'selected':''}>income</option>
+        <option value="expense" ${r.type==='expense'?'selected':''}>expense</option>
+      </select></td>
+      <td style="font-weight:700;color:${r.type==='income'?'var(--green)':'var(--red)'}">$${r.amount.toFixed(2)}</td>
+    </tr>`).join('');
+  if(preview) preview.style.display='block';
+  cpShowToast(`📋 ${_cpImportRows.length} rows ready — review & click Import All`);
+}
+
+function cpConfirmImport() {
+  const me = cpGetSession(); if(!me) return;
+  const existing = cpGetRecords(me.client_id);
+  const merged = [..._cpImportRows, ...existing];
+  cpSaveRecords(me.client_id, merged);
+  document.getElementById('cp-import-preview').style.display='none';
+  _cpImportRows=[];
+  cpLogAudit(me.client_id,'import',`Imported ${merged.length - existing.length} transactions`);
+  cpShowToast(`✅ ${merged.length - existing.length} transactions imported`);
+  // Refresh records view if currently on that panel
+  cpNav('records');
+}
+
 (function cpAutoLogin(){
   try{
     // Pre-select plan from ?plan=bundle URL param
@@ -5433,6 +5686,7 @@ function cpShareRefLink(){
       <button id="cp-nav-recurring"   class="portal-nav-btn" onclick="cpNav('recurring')"><span class="portal-nav-ico">🔄</span><span>Recurring</span></button>
       <button id="cp-nav-time"        class="portal-nav-btn" onclick="cpNav('time')"><span class="portal-nav-ico">⏱</span><span>Time Tracking</span></button>
       <button id="cp-nav-assets"      class="portal-nav-btn" onclick="cpNav('assets')"><span class="portal-nav-ico">🏗</span><span>Fixed Assets</span></button>
+      <button id="cp-nav-import"      class="portal-nav-btn" onclick="cpNav('import')"><span class="portal-nav-ico">📥</span><span>Import</span></button>
       <button id="cp-nav-referrals"   class="portal-nav-btn" onclick="cpNav('referrals')" style="color:var(--gold2)"><span class="portal-nav-ico">🎁</span><span>Referrals</span></button>
       <button id="cp-nav-account"     class="portal-nav-btn" onclick="cpNav('account')"><span class="portal-nav-ico">⚙️</span><span>My Account</span></button>
       <div style="flex:1"></div>
@@ -5914,6 +6168,94 @@ function cpShareRefLink(){
             <thead><tr><th>Date</th><th>Referred Business</th><th>Status</th><th>Your Credit</th></tr></thead>
             <tbody id="cp-ref-tbody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- IMPORT DATA -->
+      <div class="cp-panel" id="cp-panel-import">
+        <div class="cp-section-title">📥 Import Data</div>
+
+        <!-- Source tabs -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">
+          <button class="cp-imp-tab active" id="imptab-csv"         onclick="cpImportNav('csv')">📄 CSV / Excel</button>
+          <button class="cp-imp-tab"        id="imptab-qbo"         onclick="cpImportNav('qbo')">📊 QuickBooks</button>
+          <button class="cp-imp-tab"        id="imptab-apps"        onclick="cpImportNav('apps')">🔗 Xero / Wave / FreshBooks</button>
+          <button class="cp-imp-tab"        id="imptab-invest"      onclick="cpImportNav('invest')">📈 Investments & Brokerage</button>
+          <button class="cp-imp-tab"        id="imptab-paste"       onclick="cpImportNav('paste')">✂️ Paste Statement</button>
+        </div>
+
+        <!-- CSV Tab -->
+        <div class="cp-imp-pane active" id="cpimppane-csv">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:12px">Upload a CSV from any bank, credit card, or accounting app. We auto-detect the format.</div>
+          <label id="cp-csv-drop" style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--border2);border-radius:12px;padding:28px;cursor:pointer;background:var(--off);transition:all .2s;margin-bottom:12px" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor=''" ondrop="cpHandleImportDrop(event,'csv')">
+            <div style="font-size:2.5rem;margin-bottom:8px">📄</div>
+            <div style="font-weight:700;font-size:.86rem;color:var(--navy)">Drop CSV/Excel here or click to browse</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Chase · Wells Fargo · Citi · BofA · Amex · any bank export</div>
+            <input type="file" accept=".csv,.xls,.xlsx,.txt" style="display:none" onchange="cpHandleImportFile(this,'csv')">
+          </label>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Expected columns: <strong>Date, Description, Amount</strong> (or Debit/Credit). Any extra columns are ignored.</div>
+        </div>
+
+        <!-- QuickBooks Tab -->
+        <div class="cp-imp-pane" id="cpimppane-qbo">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:12px">Export from QuickBooks Desktop: <em>File → Export → Lists to IIF</em> or <em>Reports → Export to Excel/CSV</em>. From QuickBooks Online: <em>Reports → Transaction List → Export to CSV</em>.</div>
+          <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--border2);border-radius:12px;padding:28px;cursor:pointer;background:var(--off);transition:all .2s;margin-bottom:12px" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor=''" ondrop="cpHandleImportDrop(event,'quickbooks')">
+            <div style="font-size:2.5rem;margin-bottom:8px">📊</div>
+            <div style="font-weight:700;font-size:.86rem;color:var(--navy)">Drop QuickBooks CSV / IIF / QBO file</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:4px">.csv · .iif · .qbo — all formats supported</div>
+            <input type="file" accept=".csv,.iif,.qbo,.txt" style="display:none" onchange="cpHandleImportFile(this,'quickbooks')">
+          </label>
+        </div>
+
+        <!-- Other Apps Tab -->
+        <div class="cp-imp-pane" id="cpimppane-apps">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:12px">Select your app, then upload its CSV export:</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:14px">
+            ${['xero','wave','freshbooks','zoho','paypal','stripe','square','shopify'].map(app=>`
+            <label style="display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--border);border-radius:10px;padding:14px 8px;cursor:pointer;background:var(--off);font-size:.72rem;font-weight:700;color:var(--navy);text-align:center;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor=''">
+              <span style="font-size:1.6rem">${{xero:'🟦',wave:'🌊',freshbooks:'🟩',zoho:'🔵',paypal:'🅿️',stripe:'🟣',square:'⬛',shopify:'🛒'}[app]}</span>
+              ${app.charAt(0).toUpperCase()+app.slice(1)}
+              <input type="file" accept=".csv,.txt" style="display:none" onchange="cpHandleImportFile(this,'${app}')">
+            </label>`).join('')}
+          </div>
+        </div>
+
+        <!-- Investments Tab -->
+        <div class="cp-imp-pane" id="cpimppane-invest">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:12px">Import transaction history from any brokerage or crypto account. We handle column mapping automatically.</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:14px">
+            ${['fidelity','schwab','vanguard','robinhood','etrade','td_ameritrade','coinbase','crypto_com'].map(app=>`
+            <label style="display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--border);border-radius:10px;padding:14px 8px;cursor:pointer;background:var(--off);font-size:.72rem;font-weight:700;color:var(--navy);text-align:center;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor=''">
+              <span style="font-size:1.6rem">${{fidelity:'🟢',schwab:'🔵',vanguard:'🟥',robinhood:'🐦',etrade:'📈',td_ameritrade:'🟠',coinbase:'₿',crypto_com:'🔷'}[app]}</span>
+              ${{fidelity:'Fidelity',schwab:'Schwab',vanguard:'Vanguard',robinhood:'Robinhood',etrade:'E*Trade',td_ameritrade:'TD Ameritrade',coinbase:'Coinbase',crypto_com:'Crypto.com'}[app]}
+              <input type="file" accept=".csv,.txt" style="display:none" onchange="cpHandleImportFile(this,'${app}')">
+            </label>`).join('')}
+          </div>
+        </div>
+
+        <!-- Paste Tab -->
+        <div class="cp-imp-pane" id="cpimppane-paste">
+          <div style="font-size:.78rem;color:var(--text2);margin-bottom:10px">Copy and paste rows directly from a bank website, PDF, or spreadsheet:</div>
+          <textarea id="cp-paste-input" style="width:100%;height:160px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--ff-m);font-size:.72rem;color:var(--text);background:var(--off);resize:vertical" placeholder="Paste your transactions here. Accepted formats:&#10;&#10;Date, Description, Amount&#10;2026-04-01, Amazon Web Services, -284.00&#10;2026-04-02, Client Payment Apex Co, 4200.00&#10;&#10;Or paste directly from your bank's transaction page."></textarea>
+          <button onclick="cpImportFromPaste()" class="mbtn" style="margin-top:10px;font-size:.8rem;padding:10px 24px;width:auto">Parse & Preview →</button>
+        </div>
+
+        <!-- Preview / Results area -->
+        <div id="cp-import-preview" style="display:none;margin-top:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div style="font-weight:700;font-size:.86rem;color:var(--navy)">Preview — <span id="cp-import-count">0</span> transactions detected</div>
+            <div style="display:flex;gap:8px">
+              <button onclick="cpConfirmImport()" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-weight:700;font-size:.78rem;cursor:pointer">✅ Import All</button>
+              <button onclick="document.getElementById('cp-import-preview').style.display='none'" style="background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2);border-radius:8px;padding:8px 14px;font-weight:600;font-size:.76rem;cursor:pointer">✕ Cancel</button>
+            </div>
+          </div>
+          <div style="max-height:320px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px">
+            <table class="cp-table" id="cp-import-table">
+              <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr></thead>
+              <tbody id="cp-import-tbody"></tbody>
+            </table>
+          </div>
+          <div id="cp-import-status" style="margin-top:10px;font-size:.76rem;color:var(--muted)"></div>
         </div>
       </div>
 
