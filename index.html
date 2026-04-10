@@ -806,6 +806,7 @@ footer{background:var(--navy)!important}
     <button class="nb" onclick="nav('intakes')"><span class="ni">📥</span> New Intakes <span class="nb-badge badge-green" id="nb-intakes" style="display:none">0</span></button>
     <button class="nb" onclick="nav('builds')"><span class="ni">🛠️</span> Active Builds <span class="nb-badge badge-orange" id="nb-builds">0</span></button>
     <button class="nb" onclick="nav('invoices')"><span class="ni">🧾</span> Invoices</button>
+    <button class="nb" onclick="nav('efficient')"><span class="ni">📊</span> Efficient <span style="font-size:.46rem;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);padding:1px 5px;border-radius:8px;font-weight:700;vertical-align:middle;margin-left:2px">AI</span></button>
     <button class="nb" onclick="nav('outreach')"><span class="ni">📡</span> Outreach Engine <span class="nb-badge badge-orange" id="nb-outreach">AUTO</span></button>
     <button class="nb" onclick="nav('revenue')"><span class="ni">💰</span> Revenue & MRR</button>
 
@@ -1195,6 +1196,114 @@ footer{background:var(--navy)!important}
     <!-- ══════════ OUTREACH ENGINE ══════════ -->
     <div class="page" id="page-outreach">
       <div id="oe-root"></div>
+    </div>
+
+    <!-- ══════════ EFFICIENT — AI ACCOUNTING ══════════ -->
+    <div class="page" id="page-efficient">
+      <div class="sec-hdr" style="flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="sec-title">📊 Efficient <span style="font-size:.55rem;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:3px 9px;border-radius:20px;vertical-align:middle;font-weight:700">by IEBC</span></div>
+          <div class="sec-sub">AI-powered accounting · Income · Expenses · P&L · Tax</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select id="eff-filter-type" onchange="effRenderTable()" style="padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;background:var(--off);cursor:pointer">
+            <option value="">All Transactions</option>
+            <option value="income">Income Only</option>
+            <option value="expense">Expenses Only</option>
+          </select>
+          <button onclick="effExport()" style="padding:7px 14px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">⬇ Export CSV</button>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px">
+        <div class="stat s-green"><div class="stat-lbl">Total Revenue</div><div class="stat-val" id="eff-kpi-revenue">$0</div><div class="stat-sub">All time</div></div>
+        <div class="stat s-red"><div class="stat-lbl">Total Expenses</div><div class="stat-val" id="eff-kpi-expense">$0</div><div class="stat-sub">All time</div></div>
+        <div class="stat" style="background:var(--off2)"><div class="stat-lbl">Net Profit</div><div class="stat-val" id="eff-kpi-net">$0</div><div class="stat-sub">Revenue − Expenses</div></div>
+        <div class="stat s-orange"><div class="stat-lbl">Tax Estimate</div><div class="stat-val" id="eff-kpi-tax">$0</div><div class="stat-sub">~25% of net</div></div>
+        <div class="stat" style="background:var(--blue-lt)"><div class="stat-lbl">This Month</div><div class="stat-val" id="eff-kpi-month">$0</div><div class="stat-sub">Net this month</div></div>
+      </div>
+
+      <!-- Add Transaction -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end">
+          <div>
+            <label class="fl">Date</label>
+            <input type="date" id="eff-in-date" class="fi" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;width:100%">
+          </div>
+          <div>
+            <label class="fl">Type</label>
+            <select id="eff-in-type" class="fi" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;width:100%;background:var(--white)">
+              <option value="income">💚 Income</option>
+              <option value="expense">🔴 Expense</option>
+            </select>
+          </div>
+          <div>
+            <label class="fl">Category</label>
+            <select id="eff-in-cat" class="fi" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;width:100%;background:var(--white)">
+              <optgroup label="Income">
+                <option value="Sales">Sales / Services</option>
+                <option value="Consulting">Consulting</option>
+                <option value="Contract">Contract</option>
+                <option value="Other Income">Other Income</option>
+              </optgroup>
+              <optgroup label="Expenses">
+                <option value="Payroll">Payroll / Wages</option>
+                <option value="Rent">Rent / Office</option>
+                <option value="Software">Software / Tools</option>
+                <option value="Marketing">Marketing / Ads</option>
+                <option value="Travel">Travel / Mileage</option>
+                <option value="Supplies">Supplies</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Professional">Professional Fees</option>
+                <option value="COGS">Cost of Goods</option>
+                <option value="Other">Other</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label class="fl">Description</label>
+            <input type="text" id="eff-in-desc" class="fi" placeholder="What was this for?" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;width:100%">
+          </div>
+          <div>
+            <label class="fl">Amount ($)</label>
+            <input type="number" id="eff-in-amt" class="fi" placeholder="0.00" min="0" step="0.01" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;width:100%">
+          </div>
+          <div>
+            <label class="fl">&nbsp;</label>
+            <button onclick="effAddRecord()" style="width:100%;padding:8px 14px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transactions Table -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-body">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead>
+              <tbody id="eff-tbody"><tr><td colspan="6" class="empty-state">No transactions yet — add your first record above</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- P&L Summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+        <div class="card">
+          <div class="card-body">
+            <div style="font-weight:700;margin-bottom:12px;color:var(--navy)">📈 P&L by Category</div>
+            <div id="eff-pl-body" style="font-size:.8rem;color:var(--text2)">No data yet.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div style="font-weight:700;margin-bottom:12px;color:var(--navy)">🏛 Tax Estimator</div>
+            <div id="eff-tax-body" style="font-size:.8rem;color:var(--text2)">No data yet.</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="page" id="page-settings">
@@ -2633,6 +2742,7 @@ const PAGE_LABELS = {
   invoices:'Invoices', revenue:'Revenue & MRR', library:'Build Library',
   integrations:'Vendor Integrations', tasks:'All Tasks',
   team:'Team View', workforce:'AI Workforce — 50 Employees', outreach:'Outreach Engine — Automated Campaigns', demos:'Demo Gallery — Send to Prospects', settings:'Settings & Database',
+  efficient:'Efficient — AI Accounting & Payroll',
 };
 function nav(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -2652,6 +2762,7 @@ function nav(id){
   if(id==='demos') renderDemoGallery();
   if(id==='library') renderLibrary();
   if(id==='integrations') renderIntegrations();
+  if(id==='efficient') effInit();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -6301,6 +6412,127 @@ function loadBookingSettings(){
   if(el('hub-ejs-key')      && ejsKey) el('hub-ejs-key').value      = ejsKey;
 }
 
+// ══════════════════════════════════════════════════════════
+//  EFFICIENT — AI ACCOUNTING MODULE (Client Hub)
+// ══════════════════════════════════════════════════════════
+(function EfficientModule(){
+  const STORE = 'eff-records';
+
+  function effGetRecords(){ try{ return JSON.parse(localStorage.getItem(STORE)||'[]'); }catch(e){ return []; } }
+  function effSaveRecords(r){ try{ localStorage.setItem(STORE, JSON.stringify(r)); }catch(e){} }
+
+  function fmt(n){ return '$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+  function effRenderKPIs(){
+    const r = effGetRecords();
+    const income = r.filter(x=>x.type==='income').reduce((s,x)=>s+Number(x.amount||0),0);
+    const expense = r.filter(x=>x.type==='expense').reduce((s,x)=>s+Number(x.amount||0),0);
+    const net = income - expense;
+    const tax = Math.max(0, net * 0.25);
+    const thisMonth = (()=>{
+      const m = new Date().toISOString().slice(0,7);
+      const mi = r.filter(x=>x.type==='income'&&(x.date||'').startsWith(m)).reduce((s,x)=>s+Number(x.amount||0),0);
+      const me = r.filter(x=>x.type==='expense'&&(x.date||'').startsWith(m)).reduce((s,x)=>s+Number(x.amount||0),0);
+      return mi-me;
+    })();
+    const se = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+    se('eff-kpi-revenue',fmt(income));
+    se('eff-kpi-expense',fmt(expense));
+    const netEl=document.getElementById('eff-kpi-net');
+    if(netEl){ netEl.textContent=fmt(net); netEl.style.color=net>=0?'var(--green)':'var(--red)'; }
+    se('eff-kpi-tax',fmt(tax));
+    const mEl=document.getElementById('eff-kpi-month');
+    if(mEl){ mEl.textContent=fmt(thisMonth); mEl.style.color=thisMonth>=0?'var(--green)':'var(--red)'; }
+  }
+
+  function effRenderTable(){
+    const tbody=document.getElementById('eff-tbody'); if(!tbody) return;
+    const filter=(document.getElementById('eff-filter-type')||{}).value||'';
+    let r=effGetRecords();
+    if(filter) r=r.filter(x=>x.type===filter);
+    r.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    if(!r.length){ tbody.innerHTML='<tr><td colspan="6" class="empty-state">No transactions yet — add your first record above</td></tr>'; return; }
+    tbody.innerHTML=r.map(x=>`
+      <tr>
+        <td>${x.date||'—'}</td>
+        <td><span style="font-size:.7rem;padding:2px 7px;border-radius:10px;font-weight:700;background:${x.type==='income'?'var(--green-lt)':'var(--red-lt)'};color:${x.type==='income'?'var(--green)':'var(--red)'}">${x.type==='income'?'💚 Income':'🔴 Expense'}</span></td>
+        <td style="font-size:.78rem;color:var(--text2)">${x.category||'—'}</td>
+        <td style="font-size:.82rem">${x.description||'—'}</td>
+        <td style="font-weight:700;color:${x.type==='income'?'var(--green)':'var(--red)'}">${x.type==='income'?'+':'−'}${fmt(x.amount)}</td>
+        <td><button onclick="effDeleteRecord('${x.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:2px 6px" title="Delete">✕</button></td>
+      </tr>`).join('');
+  }
+
+  function effRenderPL(){
+    const body=document.getElementById('eff-pl-body'); if(!body) return;
+    const r=effGetRecords();
+    if(!r.length){ body.innerHTML='No transactions yet.'; return; }
+    const cats={};
+    r.forEach(x=>{
+      const key=(x.type==='income'?'💚 ':'🔴 ')+(x.category||'Other');
+      cats[key]=(cats[key]||0)+(x.type==='income'?1:-1)*Number(x.amount||0);
+    });
+    body.innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>
+      `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>${k}</span><span style="font-weight:700;color:${v>=0?'var(--green)':'var(--red)'}">${v>=0?'+':''}${fmt(Math.abs(v))}</span>
+      </div>`
+    ).join('');
+  }
+
+  function effRenderTax(){
+    const body=document.getElementById('eff-tax-body'); if(!body) return;
+    const r=effGetRecords();
+    const income=r.filter(x=>x.type==='income').reduce((s,x)=>s+Number(x.amount||0),0);
+    const expense=r.filter(x=>x.type==='expense').reduce((s,x)=>s+Number(x.amount||0),0);
+    const net=income-expense;
+    if(net<=0){ body.innerHTML='<div style="color:var(--green)">✓ No taxable income — net is $0 or negative.</div>'; return; }
+    const annual=net; const se=annual*0.153; const fed=annual>0?(annual<=10275?annual*.10:annual<=41775?1027.5+(annual-10275)*.12:4807.5+(annual-41775)*.22):0;
+    const total=se+fed; const quarterly=total/4;
+    body.innerHTML=`
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Net Profit</span><span style="font-weight:700">${fmt(net)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Self-Employment Tax (15.3%)</span><span style="color:var(--red)">${fmt(se)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Est. Federal Income Tax</span><span style="color:var(--red)">${fmt(fed)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;font-weight:700;font-size:1rem"><span>Total Est. Tax</span><span style="color:var(--red)">${fmt(total)}</span></div>
+      <div style="background:var(--amber-lt);border-radius:8px;padding:8px 10px;font-size:.76rem;color:var(--amber);margin-top:8px">⚠️ Quarterly est. payment: <strong>${fmt(quarterly)}</strong> — due Jan 15, Apr 15, Jun 15, Sep 15</div>
+      <div style="font-size:.68rem;color:var(--muted);margin-top:8px">Estimates only. Consult your IEBC advisor for exact figures.</div>`;
+  }
+
+  window.effAddRecord = function(){
+    const date=document.getElementById('eff-in-date').value;
+    const type=document.getElementById('eff-in-type').value;
+    const category=document.getElementById('eff-in-cat').value;
+    const description=document.getElementById('eff-in-desc').value.trim();
+    const amount=parseFloat(document.getElementById('eff-in-amt').value);
+    if(!date||!description||!amount||isNaN(amount)){ alert('Please fill in date, description, and amount.'); return; }
+    const r=effGetRecords();
+    r.push({id:'eff-'+Date.now(),date,type,category,description,amount,created_at:new Date().toISOString()});
+    effSaveRecords(r);
+    document.getElementById('eff-in-date').value='';
+    document.getElementById('eff-in-desc').value='';
+    document.getElementById('eff-in-amt').value='';
+    effRenderKPIs(); effRenderTable(); effRenderPL(); effRenderTax();
+  };
+
+  window.effDeleteRecord = function(id){
+    if(!confirm('Delete this transaction?')) return;
+    effSaveRecords(effGetRecords().filter(x=>x.id!==id));
+    effRenderKPIs(); effRenderTable(); effRenderPL(); effRenderTax();
+  };
+
+  window.effExport = function(){
+    const r=effGetRecords();
+    if(!r.length){ alert('No transactions to export.'); return; }
+    const csv=['Date,Type,Category,Description,Amount',...r.map(x=>`${x.date},${x.type},${x.category},"${(x.description||'').replace(/"/g,'""')}",${x.amount}`)].join('\n');
+    const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv); a.download='efficient-records.csv'; a.click();
+  };
+
+  window.effInit = function(){
+    // Set today's date in the form
+    const di=document.getElementById('eff-in-date');
+    if(di&&!di.value) di.value=new Date().toISOString().split('T')[0];
+    effRenderKPIs(); effRenderTable(); effRenderPL(); effRenderTax();
+  };
+})();
 
 
 </script>
