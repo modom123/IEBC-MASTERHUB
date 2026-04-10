@@ -2943,21 +2943,26 @@ async function sendChat() {
   const msg = input.value.trim();
   if (!msg || !currentAdvisor) return;
 
-  input.value = '';
-  document.getElementById('chat-suggestions').innerHTML = '';
+  const apiKey = localStorage.getItem('eff-ai-key') || localStorage.getItem('iebc-acct-ai-key') || localStorage.getItem('iebc-wf2-key') || '';
   const advisorKey = currentAdvisor;
   const a = advisors[advisorKey];
 
+  input.value = '';
+  document.getElementById('chat-suggestions').innerHTML = '';
   addUserMessage(advisorKey, msg);
+
+  if (!apiKey) {
+    addAdvisorMessage(advisorKey, '⚙️ AI advisors need a Claude API key. Ask your IEBC admin to add it in **My Account → System Config → Claude API Key**. Until then, all other Efficient features work normally.');
+    return;
+  }
+
   chatStreaming = true;
   document.getElementById('chat-send').disabled = true;
-
   showTyping();
 
   // Build messages array for API
   const messages = [];
   const history = chatHistory[advisorKey];
-  // All except the last user message (which we just added)
   for (let i = 0; i < history.length - 1; i++) {
     const h = history[i];
     messages.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.content });
@@ -2967,21 +2972,30 @@ async function sendChat() {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         system: a.system,
         messages: messages
       })
     });
+    if (!response.ok) {
+      const errData = await response.json().catch(()=>({}));
+      throw new Error(errData.error?.message || 'API error ' + response.status);
+    }
     const data = await response.json();
     hideTyping();
-    const reply = data.content?.[0]?.text || 'I\'m sorry, I had trouble responding. Please try again.';
+    const reply = data.content?.[0]?.text || 'I had trouble responding. Please try again.';
     addAdvisorMessage(advisorKey, reply);
   } catch (err) {
     hideTyping();
-    addAdvisorMessage(advisorKey, 'I\'m having a connection issue right now. Please try again in a moment.');
+    addAdvisorMessage(advisorKey, '⚠️ ' + (err.message || 'Connection issue — please try again in a moment.'));
   }
 
   chatStreaming = false;
@@ -4509,6 +4523,9 @@ function cpRenderAccount(clientId){
       <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">🛠 System Config <span style="font-size:.65rem;font-family:var(--ff-m);color:var(--muted);font-weight:400">(IEBC Admin)</span></div>
       <div style="font-size:.7rem;color:var(--muted);margin-bottom:12px">Configure Supabase database and Stripe payment processing. Set once — applies to all clients.</div>
 
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Claude API Key <span style="font-weight:400">(AI Chat Advisors + Receipt OCR + PDF Parsing)</span></div>
+      <input id="cfg-ai-key" class="login-fi" type="password" style="margin-bottom:12px;font-family:var(--ff-m);font-size:.72rem" placeholder="sk-ant-..." value="${localStorage.getItem('eff-ai-key')||''}">
+
       <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Supabase Project URL</div>
       <input id="cfg-sb-url" class="login-fi" style="margin-bottom:8px;font-family:var(--ff-m);font-size:.72rem" placeholder="https://xxxx.supabase.co" value="${localStorage.getItem('eff-sb-url')||''}">
       <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Supabase Anon Key</div>
@@ -4530,13 +4547,18 @@ function cpRenderAccount(clientId){
 }
 
 function cpSaveSystemConfig(){
-  const url = document.getElementById('cfg-sb-url')?.value?.trim();
-  const key = document.getElementById('cfg-sb-key')?.value?.trim();
-  const pk  = document.getElementById('cfg-stripe-pk')?.value?.trim();
+  const aiKey = document.getElementById('cfg-ai-key')?.value?.trim();
+  const url   = document.getElementById('cfg-sb-url')?.value?.trim();
+  const sbKey = document.getElementById('cfg-sb-key')?.value?.trim();
+  const pk    = document.getElementById('cfg-stripe-pk')?.value?.trim();
   const statusEl = document.getElementById('cfg-status');
   let msgs = [];
-  if(url && key){
-    const ok = initEffDB(url, key);
+  if(aiKey){
+    try{ localStorage.setItem('eff-ai-key', aiKey); localStorage.setItem('iebc-acct-ai-key', aiKey); }catch(e){}
+    msgs.push('✅ Claude API key saved');
+  }
+  if(url && sbKey){
+    const ok = initEffDB(url, sbKey);
     msgs.push(ok ? '✅ Supabase connected' : '❌ Supabase failed — check URL/key');
   }
   if(pk){
