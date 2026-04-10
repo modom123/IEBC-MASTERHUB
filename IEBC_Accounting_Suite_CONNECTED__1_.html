@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>IEBC Accounting & Payroll Suite — Start Free for 30 Days</title>
+<title>Efficient — AI Accounting & Payroll by IEBC | Start Free</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Stripe.js — PCI-compliant card tokenization -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- Supabase — persistent database -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -619,6 +623,45 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 .pr-run-stat-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--gold3)}
 .pr-run-stat-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
 .pr-history-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--off);border:1px solid var(--border);border-radius:8px}
+
+/* ══ CLIENT PORTAL ══ */
+.portal-wrap{display:flex;min-height:calc(100vh - var(--nav-h));background:var(--off)}
+.portal-sidebar{width:220px;flex-shrink:0;background:var(--navy);padding:20px 0;display:flex;flex-direction:column;gap:2px;position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));overflow-y:auto}
+.portal-sid-brand{padding:12px 18px 18px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.portal-sid-biz{font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.portal-sid-sub{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:2px}
+.portal-nav-btn{display:flex;align-items:center;gap:10px;padding:10px 18px;font-family:var(--ff-m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:transparent;text-align:left;width:100%;transition:all .15s}
+.portal-nav-btn:hover{color:#fff;background:rgba(255,255,255,.06)}
+.portal-nav-btn.active{color:var(--gold3);background:rgba(200,144,42,.15);border-right:2px solid var(--gold)}
+.portal-nav-ico{font-size:.95rem;width:20px;text-align:center}
+.portal-main{flex:1;padding:28px;overflow:auto}
+.cp-panel{display:none}.cp-panel.active{display:block}
+.cp-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.cp-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.cp-kpi{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:16px}
+.cp-kpi-val{font-family:var(--ff-h);font-size:1.4rem;font-weight:900;color:var(--navy)}
+.cp-kpi-lbl{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.cp-section-title{font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:14px}
+.cp-table{width:100%;border-collapse:collapse;font-size:.76rem}
+.cp-table th{font-family:var(--ff-m);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--border);text-align:left}
+.cp-table td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text2)}
+.cp-table tr:hover td{background:var(--off)}
+.cp-badge-green{background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;font-family:var(--ff-m)}
+.cp-badge-red{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;font-family:var(--ff-m)}
+.cp-badge-gray{background:var(--off2);color:var(--muted);border:1px solid var(--border2);padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:700;font-family:var(--ff-m)}
+/* Login page */
+.login-outer{min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;justify-content:center;padding:24px}
+.login-box{background:var(--white);border:1.5px solid var(--border);border-radius:18px;padding:36px 40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg)}
+.login-logo{width:48px;height:48px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--ff-h);font-size:1rem;font-weight:900;color:var(--navy);margin:0 auto 20px}
+.login-title{font-family:var(--ff-h);font-size:1.4rem;font-weight:800;color:var(--navy);text-align:center;margin-bottom:6px}
+.login-sub{font-size:.78rem;color:var(--muted);text-align:center;margin-bottom:24px}
+.login-lbl{font-family:var(--ff-m);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:700}
+.login-fi{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--ff-b);font-size:.85rem;color:var(--text);background:var(--off);margin-bottom:14px;outline:none;transition:border-color .15s}
+.login-fi:focus{border-color:var(--gold);background:#fff}
+.login-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:var(--ff-h);font-size:.95rem;font-weight:800;border:none;border-radius:10px;cursor:pointer;font-style:italic;margin-top:4px;transition:all .2s}
+.login-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 4px 14px rgba(200,144,42,.4)}
+.login-err{background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:.76rem;margin-bottom:14px;display:none}
+@media(max-width:700px){.portal-sidebar{width:60px}.portal-sid-brand,.portal-nav-btn span:not(.portal-nav-ico){display:none}.cp-kpi-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -627,7 +670,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <nav class="navbar">
   <div class="nav-brand" onclick="showPage('home')">
     <div class="nav-logo">IB</div>
-    <div class="nav-name">IEBC <em>Suite</em></div>
+    <div class="nav-name">Efficient <em>by IEBC</em></div>
   </div>
   <div class="nav-links">
     <button class="nav-link active" id="nl-home" onclick="showPage('home')">Home</button>
@@ -644,6 +687,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <button class="nav-link" id="nl-invoices" onclick="showPage('invoices')" style="color:var(--gold3)">🧾 Invoices</button>
     <button class="nav-link" id="nl-dashboard" onclick="showPage('dashboard')" style="color:var(--gold3)">📊 Live Demo</button>
   </div>
+  <button class="nav-link" id="nl-portal" onclick="cpCheckAndShow()" style="color:var(--gold3);border:1px solid rgba(200,144,42,.4);margin-right:4px">🔑 Client Login</button>
   <button class="nav-cta" onclick="openModal()">Start Free Trial</button>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -663,6 +707,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
   <button class="nav-mobile-link" id="mnl-payroll" onclick="showPage('payroll');toggleMenu()" style="color:var(--gold3)">💵 Payroll</button>
   <button class="nav-mobile-link" id="mnl-invoices" onclick="showPage('invoices');toggleMenu()" style="color:var(--gold3)">🧾 Invoices</button>
   <button class="nav-mobile-link" id="mnl-dashboard" onclick="showPage('dashboard');toggleMenu()" style="color:var(--gold3)">📊 Live Demo</button>
+  <button class="nav-mobile-link" onclick="cpCheckAndShow();toggleMenu()" style="color:var(--gold3)">🔑 Client Login / My Account</button>
   <button class="nav-cta" style="width:100%;margin-top:6px;border-radius:8px;padding:11px" onclick="openModal();toggleMenu()">Start Free Trial</button>
 </div>
 
@@ -694,6 +739,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
           <option value="6m">6 Months — $19/mo (Save 14%)</option>
           <option value="1y" selected>1 Year — $17/mo ⭐ Most Popular</option>
           <option value="2y">2 Years — $14/mo (Best Value)</option>
+          <option value="bundle">⚡ Bundle Deal — $599 one-time (Website + Hub + Accounting)</option>
         </select>
       </div>
       <div id="modal-plan-detail" style="background:var(--off2);border:1px solid var(--border2);border-radius:9px;padding:14px 16px;margin-bottom:10px">
@@ -762,23 +808,25 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         <div class="sb-item">🛡 No charge for 30 days</div>
         <div class="sb-item">↩ Cancel anytime</div>
       </div>
-      <div class="frow"><label class="flbl">Cardholder Name</label><input class="fi" type="text" id="cname" placeholder="Jane Smith"></div>
+      <div class="frow"><label class="flbl">Cardholder Name</label><input class="fi" type="text" id="cname" placeholder="Jane Smith" autocomplete="cc-name"></div>
       <div class="frow">
-        <label class="flbl">Card Number</label>
-        <div class="card-wrap">
-          <input class="fi" type="text" id="cnum" placeholder="1234  5678  9012  3456" maxlength="19" oninput="fmtCard(this)" style="padding-right:96px">
-          <div class="card-icons"><span class="ci-badge ci-v">VISA</span><span class="ci-badge ci-m">MC</span><span class="ci-badge ci-a">AMX</span></div>
+        <label class="flbl" style="display:flex;align-items:center;gap:8px">
+          Card Details
+          <span style="font-size:.57rem;background:var(--green-lt);color:var(--green);padding:2px 8px;border-radius:12px;font-family:var(--ff-m);font-weight:600">🔒 Powered by Stripe</span>
+        </label>
+        <!-- Stripe Elements mounts here — PCI DSS Level 1 compliant -->
+        <div id="stripe-card-element" style="padding:13px 14px;border:1.5px solid var(--border);border-radius:8px;background:#fff;min-height:44px;transition:border-color .2s"></div>
+        <div id="stripe-card-errors" style="color:var(--red);font-size:.72rem;margin-top:5px;font-family:var(--ff-m);min-height:18px"></div>
+        <!-- Fallback shown when Stripe not yet configured -->
+        <div id="stripe-not-configured" style="display:none;background:var(--amber-lt);border:1px solid rgba(146,64,14,.2);border-radius:8px;padding:9px 12px;font-size:.72rem;color:var(--amber);font-family:var(--ff-m);line-height:1.6;margin-top:6px">
+          ⚙ Stripe not configured yet. Enter your Stripe Publishable Key in <strong>My Account → System Config</strong> to enable card processing.
         </div>
       </div>
-      <div class="frow-2">
-        <div><label class="flbl">Expiry</label><input class="fi" type="text" id="cexp" placeholder="MM / YY" maxlength="7" oninput="fmtExp(this)"></div>
-        <div><label class="flbl">CVV</label><input class="fi" type="text" id="ccvv" placeholder="•••" maxlength="4"></div>
-      </div>
-      <div class="frow"><label class="flbl">Billing ZIP</label><input class="fi" type="text" id="czip" placeholder="90210" maxlength="5"></div>
+      <div class="frow"><label class="flbl">Billing ZIP</label><input class="fi" type="text" id="czip" placeholder="90210" maxlength="5" autocomplete="postal-code"></div>
       <div style="background:var(--blue-lt);border:1px solid rgba(29,78,216,.18);border-radius:8px;padding:9px 12px;font-size:.72rem;color:var(--blue);font-family:var(--ff-m);margin-bottom:14px;line-height:1.6">
-        ℹ Your card is securely tokenized and held. <strong>Zero dollars charged today.</strong> Billing begins after your 30-day trial. You'll receive an email reminder 7 days before your first charge.
+        ℹ Your card is securely tokenized via Stripe. <strong>Zero dollars charged today.</strong> Billing begins after your 30-day trial. You'll receive an email reminder 7 days before your first charge.
       </div>
-      <button class="mbtn" onclick="goStep(5)">Secure Card &amp; Continue →</button>
+      <button class="mbtn" id="stripe-submit-btn" onclick="effTokenizeCard()">Secure Card &amp; Continue →</button>
       <button class="mbtn-ghost" onclick="goStep(3)">← Back</button>
     </div>
     <!-- Screen 5: Connect -->
@@ -857,7 +905,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         <div class="sw-item"><span>✓</span> Confirmation email on its way</div>
       </div>
 
-      <button class="sw-btn" style="width:100%;margin-bottom:8px" onclick="launchHub()">🚀 Launch Accounting Suite in Hub</button>
+      <button class="sw-btn" style="width:100%;margin-bottom:8px" onclick="launchHub()">🚀 Launch Efficient in Hub</button>
       <button class="sw-btn" style="width:100%;background:transparent;color:var(--navy);border:1.5px solid var(--border2)" onclick="closeModal()">Close</button>
     </div>
   </div>
@@ -866,7 +914,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <!-- PAGE: HOME -->
 <div class="page active" id="page-home">
   <div class="hero">
-    <span class="hero-eyebrow">IEBC Accounting & Payroll Suite · 2026</span>
+    <span class="hero-eyebrow">Efficient by IEBC · 2026</span>
     <div class="hero-title">Accounting. Payroll. HR.<br><em>One Suite. One Consultant.</em></div>
     <div class="hero-desc">AI-powered financial management, full payroll & HR tools, bank account linking, and a real dedicated consultant — all from $14/month. Start free for 30 days.</div>
     <div class="hero-pills">
@@ -1116,7 +1164,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <div class="tbl-wrap"><table>
       <thead><tr>
         <th style="text-align:left">FEATURE</th>
-        <th class="ci"><span class="tl">IEBC Suite</span><span class="tp">From $14–$22/mo</span></th>
+        <th class="ci"><span class="tl">Efficient</span><span class="tp">From $14–$22/mo</span></th>
         <th class="cq"><span class="tl">QuickBooks</span><span class="tp">$38–$115/mo</span></th>
         <th class="cz"><span class="tl">Zoho Books</span><span class="tp">$10–$50/mo</span></th>
         <th class="cn"><span class="tl">NetSuite</span><span class="tp">$999+/mo</span></th>
@@ -1363,7 +1411,7 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
     <div class="demo-app">
       <div class="demo-topbar">
         <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-        <div class="demo-title">IEBC Accounting Suite — acme-design-co.iebc.app</div>
+        <div class="demo-title">Efficient — acme-design-co.iebc.app</div>
       </div>
       <div class="demo-body">
         <!-- Sidebar -->
@@ -1937,6 +1985,10 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
         </div>
 
         <textarea class="imp-fi" id="inv-notes" rows="2" placeholder="Payment terms, notes, or thank-you message..." style="margin-bottom:10px;resize:none"></textarea>
+        <div style="margin-bottom:10px">
+          <label class="imp-lbl">💳 Stripe Payment Link <span style="font-weight:400;color:var(--text3)">(paste your Stripe payment link — clients click "Pay Now" on the invoice)</span></label>
+          <input class="imp-fi" id="inv-stripe-link" type="url" placeholder="https://buy.stripe.com/..." oninput="renderInvPreview()">
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <button onclick="saveInvoice()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px">💾 Save Invoice</button>
           <button onclick="printInvoice()" class="mbtn" style="margin:0;font-size:.78rem;padding:10px;background:linear-gradient(135deg,var(--navy),var(--navy2))">🖨️ Download PDF</button>
@@ -2335,8 +2387,194 @@ tr.sep td{background:var(--navy)!important;padding:7px 15px;border:none}
 <div id="imp-toast"><span id="imp-toast-msg"></span></div>
 
 <script>
-const pages = ['home','features','pricing','compare','automation','security','consultants','demo','testimonials','faq'];
-const pages = ['home','features','pricing','compare','automation','security','consultants','payroll','invoices','dashboard'];
+// ══ PERSISTENT DB (Supabase) + PAYMENT (Stripe) GLOBALS ══
+let EFF_DB       = null;   // Supabase client for Efficient data
+let effStripe    = null;   // Stripe.js instance
+let effStripeCard = null;  // Stripe Card Element
+let _effPmId     = null;   // Stored PaymentMethod ID after tokenization
+let _effCardLast4 = '';    // Last 4 digits from Stripe PM
+let _effCardBrand = '';    // Card brand from Stripe PM
+
+// ── Supabase init ──────────────────────────────────────────
+function initEffDB(url, key){
+  try{
+    if(!window.supabase) return false;
+    EFF_DB = window.supabase.createClient(url, key);
+    try{ localStorage.setItem('eff-sb-url', url); localStorage.setItem('eff-sb-key', key); }catch(e){}
+    return true;
+  }catch(e){ console.warn('Supabase init failed', e); return false; }
+}
+function tryInitEffDB(){
+  try{
+    const url = localStorage.getItem('eff-sb-url');
+    const key = localStorage.getItem('eff-sb-key');
+    if(url && key) initEffDB(url, key);
+  }catch(e){}
+}
+
+// ── Supabase read/write helpers ────────────────────────────
+// All Efficient data lives in one table: efficient_data(client_id, table_name, data, updated_at)
+async function effDBSave(clientId, tableName, data){
+  if(!EFF_DB) return;
+  try{
+    await EFF_DB.from('efficient_data').upsert(
+      {client_id:clientId, table_name:tableName, data:data, updated_at:new Date().toISOString()},
+      {onConflict:'client_id,table_name'}
+    );
+  }catch(e){ console.warn('effDBSave error', e); }
+}
+async function effDBLoad(clientId, tableName){
+  if(!EFF_DB) return null;
+  try{
+    const {data,error} = await EFF_DB.from('efficient_data').select('data').eq('client_id',clientId).eq('table_name',tableName).maybeSingle();
+    if(error||!data) return null;
+    return data.data;
+  }catch(e){ return null; }
+}
+
+// Load ALL tables for a client from Supabase → hydrate localStorage
+async function effDBSyncAll(clientId){
+  if(!EFF_DB||!clientId) return;
+  try{
+    const {data,error} = await EFF_DB.from('efficient_data').select('table_name,data').eq('client_id',clientId);
+    if(error||!data) return;
+    const keyMap = {
+      records:    'iebc-cp-'+clientId+'-records',
+      invoices:   'iebc-cp-'+clientId+'-invoices',
+      liabilities:'iebc-cp-'+clientId+'-liabilities',
+      budgets:    'iebc-cp-'+clientId+'-budgets',
+      mileage:    'iebc-cp-'+clientId+'-mileage',
+      meals:      'iebc-cp-'+clientId+'-meals',
+      '1099':     'iebc-cp-'+clientId+'-1099',
+      recurring:  'iebc-cp-'+clientId+'-recurring',
+      time:       'iebc-cp-'+clientId+'-time',
+      assets:     'iebc-cp-'+clientId+'-assets',
+      referrals:  'iebc-cp-'+clientId+'-referrals',
+      audit:      'iebc-cp-'+clientId+'-audit',
+    };
+    data.forEach(row=>{
+      const lsKey = keyMap[row.table_name];
+      if(lsKey && row.data!=null){
+        try{ localStorage.setItem(lsKey, JSON.stringify(row.data)); }catch(e){}
+      }
+    });
+    // Also load client account record
+    const clientRow = data.find(r=>r.table_name==='client_record');
+    if(clientRow && clientRow.data){
+      try{
+        const list = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]');
+        const idx  = list.findIndex(c=>c.client_id===clientId);
+        if(idx>=0) list[idx]={...list[idx],...clientRow.data};
+        else       list.unshift(clientRow.data);
+        localStorage.setItem('iebc_accounting_clients',JSON.stringify(list));
+      }catch(e){}
+    }
+  }catch(e){ console.warn('effDBSyncAll error', e); }
+}
+
+// Save client record to Supabase efficient_clients table
+async function effDBSaveClient(clientRecord){
+  if(!EFF_DB) return;
+  try{
+    await EFF_DB.from('efficient_clients').upsert(
+      {...clientRecord, updated_at:new Date().toISOString()},
+      {onConflict:'client_id'}
+    );
+    // Also mirror into efficient_data for cross-device loading
+    await effDBSave(clientRecord.client_id, 'client_record', clientRecord);
+  }catch(e){ console.warn('effDBSaveClient error', e); }
+}
+
+// ── Stripe init ────────────────────────────────────────────
+function initEffStripe(pk){
+  try{
+    if(!window.Stripe){ showStripeNotConfigured(); return false; }
+    effStripe = Stripe(pk);
+    try{ localStorage.setItem('eff-stripe-pk', pk); }catch(e){}
+    const elements = effStripe.elements({
+      fonts:[{cssSrc:'https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap'}]
+    });
+    effStripeCard = elements.create('card',{
+      style:{
+        base:{
+          fontSize:'14px', color:'#0B1D35',
+          fontFamily:"'Inter', system-ui, sans-serif",
+          fontWeight:'400',
+          '::placeholder':{color:'#9CA3AF'},
+          iconColor:'#5A6A82',
+        },
+        invalid:{color:'#DC2626', iconColor:'#DC2626'}
+      },
+      hidePostalCode:true
+    });
+    effStripeCard.on('change', e=>{
+      const errEl = document.getElementById('stripe-card-errors');
+      if(errEl) errEl.textContent = e.error ? e.error.message : '';
+    });
+    const mountEl = document.getElementById('stripe-card-element');
+    if(mountEl){
+      effStripeCard.mount('#stripe-card-element');
+      document.getElementById('stripe-not-configured')?.style.setProperty('display','none');
+    }
+    return true;
+  }catch(e){ console.warn('Stripe init failed', e); showStripeNotConfigured(); return false; }
+}
+function tryInitEffStripe(){
+  try{
+    const pk = localStorage.getItem('eff-stripe-pk');
+    if(pk) initEffStripe(pk);
+    else   showStripeNotConfigured();
+  }catch(e){}
+}
+function showStripeNotConfigured(){
+  const el = document.getElementById('stripe-not-configured');
+  if(el) el.style.display='block';
+}
+
+// ── Stripe card tokenization (called from Step 4 button) ──
+async function effTokenizeCard(){
+  const cname = document.getElementById('cname')?.value?.trim();
+  if(!cname){ alert('Please enter the cardholder name.'); return; }
+  const btn = document.getElementById('stripe-submit-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Processing…'; }
+  try{
+    if(!effStripe || !effStripeCard){
+      // Stripe not configured — proceed in demo mode (stores name only)
+      _effPmId = 'demo_'+Date.now();
+      _effCardLast4 = '0000';
+      _effCardBrand = 'demo';
+      goStep(5);
+      return;
+    }
+    const {paymentMethod, error} = await effStripe.createPaymentMethod({
+      type:'card', card:effStripeCard,
+      billing_details:{ name:cname }
+    });
+    if(error){
+      const errEl = document.getElementById('stripe-card-errors');
+      if(errEl) errEl.textContent = error.message;
+      return;
+    }
+    _effPmId      = paymentMethod.id;
+    _effCardLast4 = paymentMethod.card.last4;
+    _effCardBrand = paymentMethod.card.brand;
+    goStep(5);
+  }catch(e){
+    alert('Card processing error. Please try again.');
+    console.error(e);
+  }finally{
+    if(btn){ btn.disabled=false; btn.textContent='Secure Card & Continue →'; }
+  }
+}
+
+// ── cpSetSync — save to localStorage AND Supabase ─────────
+// Used for all portal data saves
+function cpSetSync(lsKey, val, sbTableName, clientId){
+  try{ localStorage.setItem(lsKey, JSON.stringify(val)); }catch(e){}
+  if(sbTableName && clientId) effDBSave(clientId, sbTableName, val);
+}
+
+const pages = ['home','features','pricing','compare','automation','security','consultants','payroll','invoices','dashboard','demo','testimonials','faq'];
 function showPage(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p===id);
@@ -2436,9 +2674,10 @@ function _genPassword(){
   const c='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
   let p=''; for(let i=0;i<10;i++) p+=c[Math.floor(Math.random()*c.length)]; return p;
 }
-function _planLabel(v){ return {mm:'Month-to-Month','6m':'6 Months','1y':'1 Year','2y':'2 Years'}[v]||v; }
-function _planMonthly(v){ return {mm:22,'6m':19,'1y':17,'2y':14}[v]||22; }
-function _planMonths(v){ return {mm:1,'6m':6,'1y':12,'2y':24}[v]||1; }
+function _planLabel(v){ return {mm:'Month-to-Month','6m':'6 Months','1y':'1 Year','2y':'2 Years',bundle:'Bundle Deal'}[v]||v; }
+function _planMonthly(v){ return {mm:22,'6m':19,'1y':17,'2y':14,bundle:0}[v]||22; }
+function _planMonths(v){ return {mm:1,'6m':6,'1y':12,'2y':24,bundle:12}[v]||1; }
+function _planTotal(v){ return v==='bundle'?599:_planMonthly(v)*_planMonths(v); }
 function _addMonths(date,n){ const d=new Date(date); d.setMonth(d.getMonth()+n); return d.toISOString().split('T')[0]; }
 function _conName(){
   const sel=[1,2,3].find(i=>document.getElementById('cc'+i)?.classList.contains('sel'));
@@ -2447,12 +2686,13 @@ function _conName(){
 function _selectedPlan(){ return document.getElementById('modal-plan-picker')?.value||'mm'; }
 
 function submitAll(){
-  const cardName=document.getElementById('cname')?.value?.trim();
-  const cardNum =document.getElementById('cnum')?.value?.trim();
-  const cardExp =document.getElementById('cexp')?.value?.trim();
-  const cardCvv =document.getElementById('ccvv')?.value?.trim();
-  if(!cardName||!cardNum||!cardExp||!cardCvv){
-    goStep(4); setTimeout(()=>alert('Please complete all payment fields before finishing.'),100); return;
+  const cardName = document.getElementById('cname')?.value?.trim();
+  // Require either a real Stripe PM or demo mode token
+  if(!cardName){
+    goStep(4); setTimeout(()=>alert('Please enter your cardholder name and complete the card fields.'),100); return;
+  }
+  if(!_effPmId){
+    goStep(4); setTimeout(()=>alert('Please complete the card information step before finishing.'),100); return;
   }
   const firstName= document.getElementById('fn')?.value?.trim()||'';
   const lastName = document.getElementById('ln')?.value?.trim()||'';
@@ -2465,16 +2705,18 @@ function submitAll(){
   if(!email){ goStep(3); setTimeout(()=>alert('Please enter your business email in Step 3.'),100); return; }
 
   const planVal    = _selectedPlan();
+  const isBundle   = planVal === 'bundle';
   const clientId   = _genClientId();
   const tempPass   = _genPassword();
   const consultant = _conName();
   const now        = new Date();
-  const trialEndStr= new Date(Date.now()+29*864e5).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const subStart   = _addMonths(now,1);
+  const trialEndStr= isBundle ? 'N/A (Bundle — full access immediately)' : new Date(Date.now()+29*864e5).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const subStart   = now.toISOString().split('T')[0];
   const subMonths  = _planMonths(planVal);
-  const subEnd     = _addMonths(subStart,subMonths);
+  const subEnd     = _addMonths(subStart, subMonths);
   const monthly    = _planMonthly(planVal);
   const planName   = _planLabel(planVal);
+  const totalBilled= _planTotal(planVal);
   const banks=[];
   if(document.getElementById('bt-chk')?.classList.contains('sel')) banks.push('Checking');
   if(document.getElementById('bt-sav')?.classList.contains('sel')) banks.push('Savings');
@@ -2487,14 +2729,19 @@ function submitAll(){
     email, phone, business_name:bizName||`${firstName} ${lastName}`.trim(),
     business_type:bizType, employee_count:empCnt, billing_zip:billingZip,
     plan:planVal, plan_name:planName, monthly_rate:monthly,
-    total_billed:monthly*subMonths, sub_months:subMonths,
+    is_bundle:isBundle, bundle_price:isBundle?599:0,
+    total_billed:totalBilled, sub_months:subMonths,
     trial_start:now.toISOString().split('T')[0],
-    trial_end:new Date(Date.now()+29*864e5).toISOString().split('T')[0],
-    sub_start:subStart, sub_end:subEnd, status:'trial', payment_status:'trial_active',
-    card_last4:cardNum.replace(/\s/g,'').slice(-4), card_name:cardName, card_exp:cardExp,
+    trial_end:isBundle?null:new Date(Date.now()+29*864e5).toISOString().split('T')[0],
+    sub_start:subStart, sub_end:subEnd,
+    status:isBundle?'active':'trial',
+    payment_status:isBundle?'paid':'trial_active',
+    card_last4:_effCardLast4||'****', card_brand:_effCardBrand||'card', card_name:cardName,
+    stripe_pm_id:_effPmId||null,
     username:email, temp_password:tempPass, credentials_issued:now.toISOString(),
     password_changed:false, consultant, connected_banks:banks,
-    source:'accounting_suite_purchase', created_at:now.toISOString(),
+    source:isBundle?'bundle_purchase':'accounting_suite_purchase',
+    created_at:now.toISOString(),
     hub_imported:false, hub_import_ts:null,
   };
 
@@ -2515,7 +2762,7 @@ function submitAll(){
     status:'trial_active', payment_status:'trial',
     contract_start:subStart, contract_end:subEnd, consultant,
     source:'accounting_suite_purchase', created_at:now.toISOString(),
-    notes:`30-day free trial. First charge ${subStart}. Card last 4: ${cardNum.replace(/\s/g,'').slice(-4)}.`,
+    notes:`30-day free trial. First charge ${subStart}. Card last 4: ${_effCardLast4||'****'}. Stripe PM: ${_effPmId||'demo'}.`,
   });
 
   try{
@@ -2532,13 +2779,16 @@ function submitAll(){
     localStorage.setItem('iebc-acct-biz-name',    clientRecord.business_name);
   }catch(e){}
 
+  // Persist client record to Supabase (async — fire and forget)
+  effDBSaveClient(clientRecord);
+
   document.getElementById('sw-client-id').textContent  = clientId;
   document.getElementById('sw-username').textContent   = email;
   document.getElementById('sw-password').textContent   = tempPass;
-  document.getElementById('sw-plan').textContent       = `${planName} · $${monthly}/mo`;
+  document.getElementById('sw-plan').textContent       = isBundle ? 'Bundle Deal — $599 one-time' : `${planName} · $${monthly}/mo`;
   document.getElementById('sw-trial-end').textContent  = trialEndStr;
   document.getElementById('sw-consultant').textContent = consultant;
-  document.getElementById('sw-total').textContent      = subMonths===1?`$${monthly}/mo billed monthly`:`$${monthly*subMonths} billed every ${subMonths} months`;
+  document.getElementById('sw-total').textContent      = isBundle ? '$599 one-time (Website + Hub + Accounting Suite — 1 year)' : subMonths===1 ? `$${monthly}/mo billed monthly` : `$${monthly*subMonths} billed every ${subMonths} months`;
 
   document.querySelectorAll('.mscreen').forEach(s=>s.classList.remove('show'));
   document.getElementById('msteps').style.display='none';
@@ -2693,21 +2943,26 @@ async function sendChat() {
   const msg = input.value.trim();
   if (!msg || !currentAdvisor) return;
 
-  input.value = '';
-  document.getElementById('chat-suggestions').innerHTML = '';
+  const apiKey = localStorage.getItem('eff-ai-key') || localStorage.getItem('iebc-acct-ai-key') || localStorage.getItem('iebc-wf2-key') || '';
   const advisorKey = currentAdvisor;
   const a = advisors[advisorKey];
 
+  input.value = '';
+  document.getElementById('chat-suggestions').innerHTML = '';
   addUserMessage(advisorKey, msg);
+
+  if (!apiKey) {
+    addAdvisorMessage(advisorKey, '⚙️ AI advisors need a Claude API key. Ask your IEBC admin to add it in **My Account → System Config → Claude API Key**. Until then, all other Efficient features work normally.');
+    return;
+  }
+
   chatStreaming = true;
   document.getElementById('chat-send').disabled = true;
-
   showTyping();
 
   // Build messages array for API
   const messages = [];
   const history = chatHistory[advisorKey];
-  // All except the last user message (which we just added)
   for (let i = 0; i < history.length - 1; i++) {
     const h = history[i];
     messages.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.content });
@@ -2717,21 +2972,30 @@ async function sendChat() {
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         system: a.system,
         messages: messages
       })
     });
+    if (!response.ok) {
+      const errData = await response.json().catch(()=>({}));
+      throw new Error(errData.error?.message || 'API error ' + response.status);
+    }
     const data = await response.json();
     hideTyping();
-    const reply = data.content?.[0]?.text || 'I\'m sorry, I had trouble responding. Please try again.';
+    const reply = data.content?.[0]?.text || 'I had trouble responding. Please try again.';
     addAdvisorMessage(advisorKey, reply);
   } catch (err) {
     hideTyping();
-    addAdvisorMessage(advisorKey, 'I\'m having a connection issue right now. Please try again in a moment.');
+    addAdvisorMessage(advisorKey, '⚠️ ' + (err.message || 'Connection issue — please try again in a moment.'));
   }
 
   chatStreaming = false;
@@ -2748,7 +3012,7 @@ function copyCreds(){
   const plan=document.getElementById('sw-plan').textContent;
   const trial=document.getElementById('sw-trial-end').textContent;
   const con=document.getElementById('sw-consultant').textContent;
-  const text=`IEBC Accounting Suite Credentials
+  const text=`Efficient — Accounting Credentials
 Client ID: ${id}
 Username:  ${user}
 Password:  ${pass}
@@ -2776,12 +3040,20 @@ function faqToggle(item) {
 }
 
 function launchHub(){
-  // Write a flag so MasterHub knows to open accounting page
   try{ localStorage.setItem('iebc-open-page','accounting'); }catch(e){}
-  // If MasterHub is open in another tab, it will pick this up on focus
-  // Otherwise navigate — user can update this URL to their actual MasterHub path
-  const hubUrl = localStorage.getItem('iebc-hub-url') || 'IEBC_MasterHub_CONNECTED.html';
-  window.open(hubUrl,'_blank');
+  const me = cpGetSession();
+  if(me){
+    // Already logged in — go straight to portal
+    showClientPortal(me);
+  } else if(window.parent !== window){
+    // Running inside an iframe on the website — tell parent to open standalone
+    try{ window.parent.postMessage({type:'open_client_portal'}, '*'); }catch(e){}
+    // Also show login page within iframe as fallback
+    showPage('login');
+  } else {
+    // Already standalone — show login
+    showPage('login');
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2807,7 +3079,7 @@ function initInvoices() {
   if (!_invItems.length) { _invItems = [{desc:'',qty:1,rate:0}]; renderInvItems(); }
   renderInvPreview();
   // Live-update preview on all inputs
-  ['inv-client','inv-email','inv-addr','inv-date','inv-due','inv-notes','inv-tax'].forEach(id => {
+  ['inv-client','inv-email','inv-addr','inv-date','inv-due','inv-notes','inv-tax','inv-stripe-link'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', renderInvPreview);
   });
@@ -2913,8 +3185,28 @@ function renderInvPreview() {
         <div style="display:flex;justify-content:space-between;padding:7px 0;border-top:2px solid #0B2140;font-weight:800;color:#0B2140;font-size:.84rem"><span>TOTAL DUE</span><span style="color:#C8902A">${f(total)}</span></div>
       </div>
     </div>
-    ${notes?`<div style="background:#F7F9FC;border-radius:6px;padding:9px 12px;font-size:.7rem;color:#5A6A82;border-left:3px solid #C8902A"><strong>Notes:</strong> ${notes}</div>`:''}
-    <div style="margin-top:12px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:#7A8AA0;letter-spacing:.1em">GENERATED BY EFFICIENT™ · IEBC ACCOUNTING & AUTOMATION</div>`;
+    ${notes?`<div style="background:#F7F9FC;border-radius:6px;padding:9px 12px;font-size:.7rem;color:#5A6A82;border-left:3px solid #C8902A;margin-bottom:12px"><strong>Notes:</strong> ${notes}</div>`:''}
+    ${(()=>{
+      const stripeLink = document.getElementById('inv-stripe-link')?.value?.trim();
+      return stripeLink ? `<div style="text-align:center;margin:14px 0"><a href="${stripeLink}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#635BFF,#7A73FF);color:#fff;padding:12px 32px;border-radius:10px;font-weight:800;font-size:.88rem;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:-.01em">💳 Pay Now — ${f(total)}</a><div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#7A8AA0;margin-top:5px;letter-spacing:.08em">Secure payment via Stripe</div></div>` : '';
+    })()}
+    <div style="margin-top:16px;border-top:1px solid #EEF2F8;padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.48rem;letter-spacing:.15em;text-transform:uppercase;color:#7A8AA0;margin-bottom:3px">Powered by</div>
+        <div style="font-family:'Playfair Display',serif;font-size:.82rem;font-weight:800;color:#0B2140">Efficient™ <span style="font-weight:400;font-style:italic;font-size:.7rem">by IEBC</span></div>
+        <div style="font-size:.64rem;color:#5A6A82;margin-top:2px">AI Accounting &amp; Payroll · efficient.iebc.app</div>
+        <div style="margin-top:6px;font-size:.62rem;color:#C8902A;font-weight:600">📲 Scan to get your free 30-day trial →</div>
+      </div>
+      <div style="text-align:center">
+        ${(()=>{
+          const me = (() => { try { return JSON.parse(localStorage.getItem('iebc_me')||'null'); } catch(e){ return null; } })();
+          const refCode = me?.client_id || 'IEBC';
+          const refUrl = encodeURIComponent('https://efficient.iebc.app?ref=' + refCode);
+          return `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&color=0B2140&bgcolor=FFFFFF&data=${refUrl}" width="80" height="80" style="border-radius:6px;border:2px solid #EEF2F8" alt="Efficient QR">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.45rem;color:#7A8AA0;margin-top:3px;letter-spacing:.06em">REF: ${refCode}</div>`;
+        })()}
+      </div>
+    </div>`;
 }
 
 function saveInvoice() {
@@ -2928,6 +3220,7 @@ function saveInvoice() {
     items: [..._invItems],
     subtotal: sub, tax, total,
     notes: document.getElementById('inv-notes')?.value || '',
+    stripe_link: document.getElementById('inv-stripe-link')?.value || '',
     status: 'pending',
     created_at: new Date().toISOString()
   };
@@ -2964,20 +3257,30 @@ function printInvoice() {
   const w = window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>body{font-family:Inter,sans-serif;padding:40px;max-width:680px;margin:0 auto;color:#0B1D35}@media print{body{padding:20px}}</style>
+    <style>
+      body{font-family:Inter,sans-serif;padding:40px;max-width:680px;margin:0 auto;color:#0B1D35}
+      @media print{body{padding:20px}a{color:#635BFF!important}}
+      img{max-width:100%}
+    </style>
     </head><body>${prev.innerHTML}<script>window.onload=()=>window.print()<\/script></body></html>`);
   w.document.close();
 }
 
 function sendInvoiceStripe() {
   const client = document.getElementById('inv-client')?.value;
-  const email = document.getElementById('inv-email')?.value;
+  const email  = document.getElementById('inv-email')?.value;
+  const link   = document.getElementById('inv-stripe-link')?.value?.trim();
   const {total} = calcInvTotal();
   if (!client || total <= 0) { alert('Please add a client name and at least one line item.'); return; }
-  if (!email) { alert('Please add the client email to send the payment link.'); return; }
-  // In production: call Stripe API via Supabase Edge Function
-  // Jordan Hayes Sprint 2 task: POST /functions/v1/create-payment-link
-  showImpSuccess('⚡ Payment link created! Sending $' + total.toFixed(2) + ' invoice to ' + email + ' via Stripe. (Stripe Connect required — configure in Account Settings)');
+  if (link) {
+    // Open the Stripe payment link directly
+    window.open(link, '_blank');
+    showImpSuccess('⚡ Stripe payment page opened — share this link with ' + (client||'your client') + ' to collect $' + total.toFixed(2));
+  } else {
+    if (!email) { alert('Paste a Stripe Payment Link above, or add client email.'); return; }
+    // Copy a mailto: with the invoice total as a fallback
+    showImpSuccess('💡 Paste a Stripe Payment Link (from your Stripe dashboard → Payment Links) to enable one-click payments. Link copied to clipboard when saved.');
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -3896,6 +4199,1639 @@ function showImpSuccess(msg){
   setTimeout(()=>t.classList.remove('show'),5500);
 }
 
+// ══════════════════════════════════════════════════════════════
+// CLIENT PORTAL — Login + Accounting App for customers
+// ══════════════════════════════════════════════════════════════
+const CP_KEY = id => 'iebc-cp-'+id+'-records';
+const CP_INV_KEY = id => 'iebc-cp-'+id+'-invoices';
+
+function cpGetSession(){
+  try{ const m=JSON.parse(localStorage.getItem('iebc_me')||'null'); return (m&&m.role==='accounting_client')?m:null; }catch(e){ return null; }
+}
+function cpGetClientRecord(clientId){
+  try{ return JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]').find(c=>c.client_id===clientId)||null; }catch(e){ return null; }
+}
+function cpGetRecords(clientId){
+  try{ return JSON.parse(localStorage.getItem(CP_KEY(clientId))||'[]'); }catch(e){ return []; }
+}
+function cpSaveRecords(clientId, recs){
+  localStorage.setItem(CP_KEY(clientId), JSON.stringify(recs));
+  effDBSave(clientId, 'records', recs);  // async Supabase sync
+}
+function cpSaveInvoices(clientId, invs){
+  localStorage.setItem(CP_INV_KEY(clientId), JSON.stringify(invs));
+  effDBSave(clientId, 'invoices', invs);
+}
+function cpGetInvoices(clientId){
+  try{ return JSON.parse(localStorage.getItem(CP_INV_KEY(clientId))||'[]'); }catch(e){ return []; }
+}
+
+function cpCheckAndShow(){
+  const me = cpGetSession();
+  if(me){ showClientPortal(me); }
+  else { showPage('login'); }
+}
+
+async function showClientPortal(me){
+  const cr = cpGetClientRecord(me.client_id) || {};
+  // Update sidebar brand
+  const bizEl = document.getElementById('cp-biz-name');
+  const planEl = document.getElementById('cp-plan-name');
+  if(bizEl) bizEl.textContent = me.org || cr.business_name || 'My Business';
+  if(planEl) planEl.textContent = (cr.plan_name||'Accounting Suite') + ' · $'+(cr.monthly_rate||0)+'/mo';
+  // Update nav: show logout, hide login
+  const loginBtn = document.getElementById('nl-portal');
+  if(loginBtn){ loginBtn.textContent = '👤 My Account'; loginBtn.onclick = ()=>showPage('portal'); }
+  showPage('portal');
+  cpNav('dashboard');
+  // Hydrate data from Supabase (async — updates views when ready)
+  if(EFF_DB){
+    cpShowToast('🔄 Syncing your data…');
+    await effDBSyncAll(me.client_id);
+    cpShowToast('✅ Data synced from cloud');
+    cpNav('dashboard'); // re-render dashboard with fresh data
+  }
+}
+
+function clientPortalLogin(){
+  const email    = (document.getElementById('cp-login-email')?.value||'').trim().toLowerCase();
+  const password = (document.getElementById('cp-login-pass')?.value||'').trim();
+  const errEl    = document.getElementById('cp-login-err');
+  if(!email||!password){ if(errEl){errEl.textContent='Enter your email and password.';errEl.style.display='block';} return; }
+
+  const clients = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]');
+  const match = clients.find(c=>(c.username||c.email||'').toLowerCase()===email && (c.temp_password===password||c.password===password));
+
+  if(!match){
+    if(errEl){errEl.textContent='Incorrect email or password. Check your credentials email or contact your consultant.';errEl.style.display='block';}
+    return;
+  }
+  // Save session
+  const me = {name:match.full_name, email:match.email, role:'accounting_client', org:match.business_name, client_id:match.client_id, source:'accounting_suite', ts:Date.now()};
+  localStorage.setItem('iebc_me', JSON.stringify(me));
+  if(errEl) errEl.style.display='none';
+  document.getElementById('cp-login-email').value='';
+  document.getElementById('cp-login-pass').value='';
+  showClientPortal(me);
+}
+
+function clientPortalLogout(){
+  if(!confirm('Sign out of your account?')) return;
+  localStorage.removeItem('iebc_me');
+  const loginBtn = document.getElementById('nl-portal');
+  if(loginBtn){ loginBtn.textContent='🔑 Client Login'; loginBtn.onclick=()=>cpCheckAndShow(); }
+  showPage('home');
+}
+
+function cpNav(panel){
+  document.querySelectorAll('.cp-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.portal-nav-btn').forEach(b=>b.classList.remove('active'));
+  const panelEl = document.getElementById('cp-panel-'+panel);
+  const btnEl   = document.getElementById('cp-nav-'+panel);
+  if(panelEl) panelEl.classList.add('active');
+  if(btnEl)   btnEl.classList.add('active');
+
+  const me = cpGetSession(); if(!me) return;
+  if(panel==='dashboard') cpRenderDashboard(me.client_id);
+  if(panel==='records'){
+    const dateEl=document.getElementById('cp-rec-date');
+    if(dateEl&&!dateEl.value) dateEl.value=new Date().toISOString().split('T')[0];
+    cpRenderRecords(me.client_id);
+  }
+  if(panel==='invoices')    cpRenderInvoices(me.client_id);
+  if(panel==='reports'){    cpRenderReports(me.client_id); cpReportTab('pnl'); }
+  if(panel==='tax'){        cpRenderTax(me.client_id); cpRender1099(me.client_id); }
+  if(panel==='budget')      cpRenderBudget(me.client_id);
+  if(panel==='deductions'){  cpRenderMileage(me.client_id); cpRenderMeals(me.client_id); cpDeductTab('mileage'); }
+  if(panel==='recurring'){   cpRenderRecurring(me.client_id); const nd=document.getElementById('rec-next'); if(nd&&!nd.value) nd.value=new Date().toISOString().split('T')[0]; }
+  if(panel==='referrals')    cpRenderReferrals(me.client_id);
+  if(panel==='time'){        cpRenderTime(me.client_id); const td=document.getElementById('tt-date'); if(td&&!td.value) td.value=new Date().toISOString().split('T')[0]; }
+  if(panel==='assets')       cpRenderAssets(me.client_id);
+  if(panel==='account'){
+    cpRenderAccount(me.client_id);
+    cpRenderAuditLog(me.client_id);
+    const conEl=document.getElementById('cp-consultant-note');
+    const cr=cpGetClientRecord(me.client_id)||{};
+    if(conEl) conEl.textContent=cr.consultant?'Your assigned consultant is '+cr.consultant+'. Reach out via email or the Hub portal.':'Contact IEBC for consultant assignment.';
+  }
+}
+
+function cpRenderDashboard(clientId){
+  const recs = cpGetRecords(clientId);
+  const now  = new Date();
+  const thisMonth = now.toISOString().substring(0,7);
+  const income   = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expenses = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const mIncome  = recs.filter(r=>r.type==='income'&&(r.date||'').startsWith(thisMonth)).reduce((s,r)=>s+(+r.amount||0),0);
+  const mExp     = recs.filter(r=>r.type==='expense'&&(r.date||'').startsWith(thisMonth)).reduce((s,r)=>s+(+r.amount||0),0);
+  const profit   = income - expenses;
+
+  const fmt = n=>'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const kpiEl = document.getElementById('cp-kpi-grid');
+  if(kpiEl) kpiEl.innerHTML = [
+    {lbl:'Total Income',   val:fmt(income),   color:'var(--green)'},
+    {lbl:'Total Expenses', val:fmt(expenses), color:'var(--red)'},
+    {lbl:'Net Profit',     val:fmt(profit),   color:profit>=0?'var(--green)':'var(--red)'},
+    {lbl:'This Month Net', val:fmt(mIncome-mExp), color:(mIncome-mExp)>=0?'var(--green)':'var(--red)'},
+  ].map(k=>`<div class="cp-kpi"><div class="cp-kpi-val" style="color:${k.color}">${k.val}</div><div class="cp-kpi-lbl">${k.lbl}</div></div>`).join('');
+
+  // Recent records
+  const recentEl = document.getElementById('cp-recent-list');
+  if(recentEl){
+    const recent = [...recs].sort((a,b)=>new Date(b.date||b.created_at||0)-new Date(a.date||a.created_at||0)).slice(0,8);
+    recentEl.innerHTML = recent.length ? recent.map(r=>`
+      <tr>
+        <td style="color:var(--muted)">${(r.date||'').substring(0,10)||'—'}</td>
+        <td style="font-weight:600">${r.vendor||r.description||'—'}</td>
+        <td>${r.category||'—'}</td>
+        <td style="color:${r.type==='income'?'var(--green)':'var(--red)'}; font-weight:700">${r.type==='income'?'+':'-'}${fmt(r.amount)}</td>
+      </tr>`).join('')
+    : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">No records yet — add your first receipt or transaction</td></tr>';
+  }
+}
+
+function cpAddRecord(){
+  const me = cpGetSession(); if(!me) return;
+  const type     = document.getElementById('cp-rec-type')?.value||'expense';
+  const vendor   = document.getElementById('cp-rec-vendor')?.value?.trim()||'';
+  const amount   = parseFloat(document.getElementById('cp-rec-amount')?.value)||0;
+  const date     = document.getElementById('cp-rec-date')?.value||new Date().toISOString().split('T')[0];
+  const category = document.getElementById('cp-rec-cat')?.value||'';
+  const notes    = document.getElementById('cp-rec-notes')?.value?.trim()||'';
+  if(!vendor||!amount){ alert('Enter vendor/description and amount'); return; }
+
+  const recs = cpGetRecords(me.client_id);
+  const rec = {id:'cp-'+Date.now(), type, vendor, amount, date, category, notes, created_at:new Date().toISOString()};
+  recs.unshift(rec);
+  cpSaveRecords(me.client_id, recs);
+  cpLogAudit(me.client_id, 'Add Record', `${type} · ${vendor} · $${amount} · ${category}`);
+  ['cp-rec-vendor','cp-rec-amount','cp-rec-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderRecords(me.client_id);
+  cpRenderDashboard(me.client_id);
+  cpShowToast('✅ Record saved');
+}
+
+function cpDeleteRecord(recId){
+  const me = cpGetSession(); if(!me) return;
+  const all = cpGetRecords(me.client_id);
+  const rec = all.find(r=>r.id===recId);
+  cpSaveRecords(me.client_id, all.filter(r=>r.id!==recId));
+  if(rec) cpLogAudit(me.client_id, 'Delete Record', `${rec.vendor} · $${rec.amount}`);
+  cpRenderRecords(me.client_id);
+  cpRenderDashboard(me.client_id);
+}
+
+function cpRenderRecords(clientId){
+  const tbody = document.getElementById('cp-records-tbody');
+  if(!tbody) return;
+  const recs = cpGetRecords(clientId);
+  if(!recs.length){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px">No records yet. Add your first expense or income above.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = recs.map(r=>`<tr>
+    <td>${(r.date||'').substring(0,10)||'—'}</td>
+    <td style="font-weight:600">${r.vendor||'—'}</td>
+    <td>${r.category||'—'}</td>
+    <td><span class="cp-badge-${r.type==='income'?'green':'red'}">${r.type}</span></td>
+    <td style="font-weight:700;color:${r.type==='income'?'var(--green)':'var(--red)'}">${r.type==='income'?'+':'-'}$${(+r.amount||0).toFixed(2)}</td>
+    <td><button onclick="cpDeleteRecord('${r.id}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.8rem">✕</button></td>
+  </tr>`).join('');
+}
+
+function cpRenderReports(clientId){
+  const recs = cpGetRecords(clientId);
+  const income   = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expenses = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const profit   = income - expenses;
+  const margin   = income>0?(profit/income*100).toFixed(1):0;
+
+  const pnlEl = document.getElementById('cp-pnl-body');
+  if(pnlEl) pnlEl.innerHTML = [
+    {lbl:'Total Revenue',   val:income,   color:'var(--green)', divider:false},
+    {lbl:'Total Expenses',  val:-expenses, color:'var(--red)',   divider:false},
+    {lbl:'Net Profit',      val:profit,   color:profit>=0?'var(--green)':'var(--red)', divider:true},
+    {lbl:'Profit Margin',   val:margin+'%', isText:true, color:profit>=0?'var(--green)':'var(--red)', divider:false},
+  ].map(row=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;${row.divider?'border-top:2px solid rgba(255,255,255,.15);margin-top:4px':'border-bottom:1px solid rgba(255,255,255,.06)'}">
+      <span style="font-size:.78rem;color:rgba(255,255,255,.7)">${row.lbl}</span>
+      <span style="font-family:var(--ff-m);font-weight:800;font-size:.88rem;color:${row.color}">${row.isText?row.val:('$'+Math.abs(row.val).toFixed(2))}</span>
+    </div>`).join('');
+
+  // Category breakdown
+  const catEl = document.getElementById('cp-cat-body');
+  if(catEl){
+    const cats = {};
+    recs.filter(r=>r.type==='expense').forEach(r=>{ cats[r.category||'Other']=(cats[r.category||'Other']||0)+(+r.amount||0); });
+    const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+    catEl.innerHTML = sorted.length ? sorted.slice(0,8).map(([cat,amt])=>`
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.76rem">
+        <span>${cat}</span><span style="font-weight:700;color:var(--red)">$${amt.toFixed(2)}</span>
+      </div>`).join('') : '<div style="color:var(--muted);font-size:.76rem;padding:12px 0">No expense records yet</div>';
+  }
+}
+
+function cpRenderTax(clientId){
+  const recs     = cpGetRecords(clientId);
+  const income   = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expenses = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const netProfit= income - expenses;
+  const seTax    = Math.max(0, netProfit * 0.9235 * 0.153);
+  const statusEl = document.getElementById('cp-tax-status');
+  const fedRate  = statusEl ? parseFloat(statusEl.value||'0.22') : 0.22;
+  const fedTax   = Math.max(0, netProfit * fedRate);
+  const qtrPmt   = (seTax + fedTax) / 4;
+
+  const taxEl = document.getElementById('cp-tax-breakdown');
+  if(taxEl) taxEl.innerHTML = [
+    {lbl:'Net Profit (taxable)',    val:'$'+netProfit.toFixed(2)},
+    {lbl:'Self-Employment Tax (15.3%)', val:'$'+seTax.toFixed(2), highlight:true},
+    {lbl:'Est. Federal Income Tax', val:'$'+fedTax.toFixed(2), highlight:true},
+    {lbl:'Quarterly Payment (÷4)',  val:'$'+qtrPmt.toFixed(2), big:true},
+  ].map(row=>`
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)">
+      <span style="font-size:.76rem;color:rgba(255,255,255,.65)">${row.lbl}</span>
+      <span style="font-family:var(--ff-m);font-weight:800;font-size:${row.big?'.95':'0.82'}rem;color:${row.highlight||row.big?'var(--gold3)':'#fff'}">${row.val}</span>
+    </div>`).join('');
+}
+
+function cpRenderInvoices(clientId){
+  const tbody = document.getElementById('cp-inv-tbody');
+  if(!tbody) return;
+  // Merge invoices from iebc-cp-clientId-invoices + any from iebc_orders with matching clientId
+  const invs = cpGetInvoices(clientId);
+  try{
+    const orders = JSON.parse(localStorage.getItem('iebc_orders')||'[]');
+    orders.filter(o=>o.order_id===clientId||o.client_email===(cpGetClientRecord(clientId)||{}).email).forEach(o=>{
+      if(!invs.find(i=>i.id===o.order_id)){
+        invs.push({id:o.order_id, description:o.plan_name+' Subscription', amount:o.monthly_fee, date:o.contract_start, status:'pending', type:'subscription'});
+      }
+    });
+  }catch(e){}
+  if(!invs.length){
+    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px">No invoices yet. Your subscription invoice will appear here.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = invs.map(inv=>`<tr>
+    <td style="font-family:var(--ff-m);font-size:.68rem;color:var(--muted)">${inv.id||'—'}</td>
+    <td>${inv.description||'Service'}</td>
+    <td style="color:var(--muted)">${(inv.date||'').substring(0,10)||'—'}</td>
+    <td style="font-weight:700">$${(+inv.amount||0).toFixed(2)}</td>
+    <td><span class="cp-badge-${inv.status==='paid'?'green':inv.status==='overdue'?'red':'gray'}">${inv.status||'pending'}</span></td>
+  </tr>`).join('');
+}
+
+function cpRenderAccount(clientId){
+  const cr  = cpGetClientRecord(clientId)||{};
+  const me  = cpGetSession()||{};
+  const el  = document.getElementById('cp-account-body');
+  if(!el) return;
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      ${[
+        ['Client ID',       cr.client_id||'—'],
+        ['Business',        cr.business_name||me.org||'—'],
+        ['Email / Username',cr.email||'—'],
+        ['Plan',            (cr.plan_name||'—')+' · $'+(cr.monthly_rate||0)+'/mo'],
+        ['Trial Ends',      cr.trial_end||'—'],
+        ['Subscription End',cr.sub_end||'—'],
+        ['Status',          cr.status||'trial'],
+        ['Consultant',      cr.consultant||'—'],
+      ].map(([lbl,val])=>`<div style="background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-family:var(--ff-m);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">${lbl}</div>
+        <div style="font-weight:600;font-size:.82rem;color:var(--navy)">${val}</div>
+      </div>`).join('')}
+    </div>
+    <div style="background:var(--off);border:1.5px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Change Password</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px">
+        <div>
+          <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">New Password</div>
+          <input id="cp-new-pass" type="password" class="login-fi" style="margin-bottom:0" placeholder="New password">
+        </div>
+        <div>
+          <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Confirm Password</div>
+          <input id="cp-conf-pass" type="password" class="login-fi" style="margin-bottom:0" placeholder="Confirm">
+        </div>
+      </div>
+      <button onclick="cpChangePassword()" style="margin-top:12px;padding:9px 20px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">Update Password</button>
+    </div>
+    <button onclick="clientPortalLogout()" style="margin-top:14px;padding:9px 20px;background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2);border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">🚪 Sign Out</button>
+
+    <!-- ── System Config (IEBC Admin) ── -->
+    <div style="background:var(--off);border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-top:16px">
+      <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">🛠 System Config <span style="font-size:.65rem;font-family:var(--ff-m);color:var(--muted);font-weight:400">(IEBC Admin)</span></div>
+      <div style="font-size:.7rem;color:var(--muted);margin-bottom:12px">Configure Supabase database and Stripe payment processing. Set once — applies to all clients.</div>
+
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Claude API Key <span style="font-weight:400">(AI Chat Advisors + Receipt OCR + PDF Parsing)</span></div>
+      <input id="cfg-ai-key" class="login-fi" type="password" style="margin-bottom:12px;font-family:var(--ff-m);font-size:.72rem" placeholder="sk-ant-..." value="${localStorage.getItem('eff-ai-key')||''}">
+
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Supabase Project URL</div>
+      <input id="cfg-sb-url" class="login-fi" style="margin-bottom:8px;font-family:var(--ff-m);font-size:.72rem" placeholder="https://xxxx.supabase.co" value="${localStorage.getItem('eff-sb-url')||''}">
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px">Supabase Anon Key</div>
+      <input id="cfg-sb-key" class="login-fi" type="password" style="margin-bottom:8px;font-family:var(--ff-m);font-size:.72rem" placeholder="eyJhbGc..." value="${localStorage.getItem('eff-sb-key')||''}">
+
+      <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px;margin-top:4px">Stripe Publishable Key</div>
+      <input id="cfg-stripe-pk" class="login-fi" style="margin-bottom:12px;font-family:var(--ff-m);font-size:.72rem" placeholder="pk_live_..." value="${localStorage.getItem('eff-stripe-pk')||''}">
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="cpSaveSystemConfig()" style="padding:9px 20px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.76rem;cursor:pointer">💾 Save & Connect</button>
+        <button onclick="cpTestDBConnection()" style="padding:9px 16px;background:var(--green-lt);color:var(--green);border:1px solid var(--green-md);border-radius:8px;font-weight:700;font-size:.76rem;cursor:pointer">🔌 Test DB</button>
+      </div>
+      <div id="cfg-status" style="margin-top:10px;font-family:var(--ff-m);font-size:.7rem;color:var(--green)">
+        ${EFF_DB ? '✅ Database connected' : '⚪ Database not configured'}
+        ${effStripe ? ' · ✅ Stripe connected' : ' · ⚪ Stripe not configured'}
+      </div>
+    </div>
+  `;
+}
+
+function cpSaveSystemConfig(){
+  const aiKey = document.getElementById('cfg-ai-key')?.value?.trim();
+  const url   = document.getElementById('cfg-sb-url')?.value?.trim();
+  const sbKey = document.getElementById('cfg-sb-key')?.value?.trim();
+  const pk    = document.getElementById('cfg-stripe-pk')?.value?.trim();
+  const statusEl = document.getElementById('cfg-status');
+  let msgs = [];
+  if(aiKey){
+    try{ localStorage.setItem('eff-ai-key', aiKey); localStorage.setItem('iebc-acct-ai-key', aiKey); }catch(e){}
+    msgs.push('✅ Claude API key saved');
+  }
+  if(url && sbKey){
+    const ok = initEffDB(url, sbKey);
+    msgs.push(ok ? '✅ Supabase connected' : '❌ Supabase failed — check URL/key');
+  }
+  if(pk){
+    const ok = initEffStripe(pk);
+    msgs.push(ok ? '✅ Stripe connected' : '❌ Stripe failed — check publishable key');
+  }
+  if(statusEl) statusEl.textContent = msgs.join(' · ') || 'No changes';
+  cpShowToast('💾 Config saved');
+}
+
+async function cpTestDBConnection(){
+  const statusEl = document.getElementById('cfg-status');
+  if(!EFF_DB){ if(statusEl) statusEl.textContent='❌ Database not initialized'; return; }
+  try{
+    const {error} = await EFF_DB.from('efficient_data').select('client_id').limit(1);
+    if(statusEl) statusEl.textContent = error
+      ? '❌ DB error: '+error.message+' — make sure to run the SQL setup below'
+      : '✅ Database connected and table exists';
+  }catch(e){ if(statusEl) statusEl.textContent='❌ Connection failed: '+e.message; }
+}
+
+function cpChangePassword(){
+  const np = document.getElementById('cp-new-pass')?.value||'';
+  const cp2= document.getElementById('cp-conf-pass')?.value||'';
+  if(np.length<6){ alert('Password must be at least 6 characters'); return; }
+  if(np!==cp2){ alert('Passwords do not match'); return; }
+  const me = cpGetSession(); if(!me) return;
+  try{
+    const list = JSON.parse(localStorage.getItem('iebc_accounting_clients')||'[]').map(c=>
+      c.client_id===me.client_id ? {...c, password:np, password_changed:true} : c
+    );
+    localStorage.setItem('iebc_accounting_clients', JSON.stringify(list));
+  }catch(e){}
+  cpShowToast('✅ Password updated');
+  cpRenderAccount(me.client_id);
+}
+
+function cpShowToast(msg){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;bottom:24px;right:22px;background:#0B2140;color:#F5C842;padding:10px 18px;border-radius:10px;font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:600;box-shadow:0 8px 32px rgba(11,33,64,.3);z-index:99999;pointer-events:none;max-width:320px';
+  el.textContent=msg; document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+
+// ══════════════════════════════════════════════════════════
+// STORAGE HELPERS — new feature keys
+// ══════════════════════════════════════════════════════════
+const CP_LIAB_KEY   = id=>'iebc-cp-'+id+'-liabilities';
+const CP_BUDGET_KEY = id=>'iebc-cp-'+id+'-budgets';
+const CP_MILE_KEY   = id=>'iebc-cp-'+id+'-mileage';
+const CP_MEAL_KEY   = id=>'iebc-cp-'+id+'-meals';
+const CP_1099_KEY   = id=>'iebc-cp-'+id+'-1099';
+const CP_RECUR_KEY  = id=>'iebc-cp-'+id+'-recurring';
+const CP_AUDIT_KEY  = id=>'iebc-cp-'+id+'-audit';
+const cpGet = (key,def=[])=>{ try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;} };
+// cpSet auto-syncs to Supabase: keys "iebc-cp-{clientId}-{tableName}" are detected by suffix
+const _EFF_TABLES = ['records','invoices','liabilities','budgets','mileage','meals','1099','recurring','audit','time','assets','referrals'];
+const cpSet = (key,val)=>{
+  try{ localStorage.setItem(key,JSON.stringify(val)); }catch(e){}
+  if(!EFF_DB || !key.startsWith('iebc-cp-')) return;
+  const suffix = key.slice(8); // strip "iebc-cp-"
+  for(const t of _EFF_TABLES){
+    if(suffix.endsWith('-'+t)){
+      const clientId = suffix.slice(0, suffix.length - t.length - 1);
+      effDBSave(clientId, t, val);
+      break;
+    }
+  }
+};
+const cpFmt = n=>'$'+Math.abs(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+// ══ REPORT TABS ══
+function cpReportTab(tab){
+  ['pnl','bs','cf','export'].forEach(t=>{
+    const el=document.getElementById('rpt-'+t); if(el) el.style.display=t===tab?'block':'none';
+    const btn=document.getElementById('rpt-tab-'+t);
+    if(btn){ btn.style.background=t===tab?'var(--navy)':'var(--off)'; btn.style.color=t===tab?'var(--gold2)':'var(--navy)'; btn.style.fontWeight=t===tab?'700':'600'; }
+  });
+  if(tab==='bs'){   const me=cpGetSession(); if(me) cpRenderBalanceSheet(me.client_id); }
+  if(tab==='cf'){   const me=cpGetSession(); if(me) cpRenderCashFlow(me.client_id); }
+}
+
+// ══ BALANCE SHEET ══
+function cpRenderBalanceSheet(clientId){
+  const recs    = cpGetRecords(clientId);
+  const invs    = cpGetInvoices(clientId);
+  const liabs   = cpGet(CP_LIAB_KEY(clientId));
+  const income  = recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expense = recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const ar      = invs.filter(i=>i.status!=='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  const cash    = Math.max(0, income - expense);
+  const totalAssets = cash + ar;
+  const totalLiab   = liabs.reduce((s,l)=>s+(+l.amount||0),0);
+  const equity      = totalAssets - totalLiab;
+  const row=(lbl,val,bold)=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem${bold?';font-weight:700;border-top:2px solid var(--border);margin-top:4px':''}"><span>${lbl}</span><span style="font-family:var(--ff-m)">${cpFmt(val)}</span></div>`;
+  const ae=document.getElementById('cp-bs-assets');
+  if(ae) ae.innerHTML=row('Cash / Net Revenue',cash)+row('Accounts Receivable (unpaid invoices)',ar)+`<div style="display:flex;justify-content:space-between;padding:9px 0;font-weight:700;font-size:.82rem;color:var(--green)"><span>TOTAL ASSETS</span><span>${cpFmt(totalAssets)}</span></div>`;
+  const le=document.getElementById('cp-bs-liabilities');
+  if(le) le.innerHTML=(liabs.length?liabs.map(l=>row(l.desc,l.amount)).join(''):'<div style="font-size:.76rem;color:var(--muted);padding:8px 0">No liabilities added</div>')+`<div style="display:flex;justify-content:space-between;padding:9px 0;font-weight:700;font-size:.82rem;color:var(--red)"><span>TOTAL LIABILITIES</span><span>${cpFmt(totalLiab)}</span></div>`;
+  const ee=document.getElementById('cp-bs-equity');
+  if(ee) ee.innerHTML=`<div style="display:flex;justify-content:space-between;padding:9px 0;font-weight:700;font-size:.88rem;color:${equity>=0?'var(--green)':'var(--red)'}"><span>Owner's Equity</span><span>${cpFmt(equity)}</span></div><div style="font-size:.7rem;color:var(--muted);margin-top:4px">Assets − Liabilities = ${equity>=0?'Positive':'Negative'} equity</div>`;
+}
+
+function cpAddLiability(){
+  const me=cpGetSession(); if(!me) return;
+  const desc=(document.getElementById('bs-liab-desc')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('bs-liab-amt')?.value||0);
+  if(!desc||!amt){ alert('Enter description and amount'); return; }
+  const liabs=cpGet(CP_LIAB_KEY(me.client_id));
+  liabs.push({id:'liab-'+Date.now(),desc,amount:amt});
+  cpSet(CP_LIAB_KEY(me.client_id),liabs);
+  cpLogAudit(me.client_id,'Add Liability',desc+' · '+cpFmt(amt));
+  document.getElementById('bs-liab-desc').value='';
+  document.getElementById('bs-liab-amt').value='';
+  cpRenderBalanceSheet(me.client_id);
+  cpShowToast('✅ Liability added');
+}
+
+// ══ CASH FLOW ══
+function cpRenderCashFlow(clientId){
+  const recs=cpGetRecords(clientId);
+  const months=[];
+  for(let i=5;i>=0;i--){ const d=new Date(); d.setMonth(d.getMonth()-i); months.push(d.toISOString().slice(0,7)); }
+  const data=months.map(m=>{
+    const mi=recs.filter(r=>r.type==='income'&&(r.date||'').startsWith(m)).reduce((s,r)=>s+(+r.amount||0),0);
+    const me=recs.filter(r=>r.type==='expense'&&(r.date||'').startsWith(m)).reduce((s,r)=>s+(+r.amount||0),0);
+    return {month:m,income:mi,expense:me,net:mi-me};
+  });
+  const el=document.getElementById('cp-cf-body');
+  if(el) el.innerHTML=data.map(d=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:.74rem;margin-bottom:4px">
+        <span style="font-weight:600">${d.month}</span>
+        <span style="color:${d.net>=0?'var(--green)':'var(--red)'};font-weight:700">${d.net>=0?'+':''}${cpFmt(d.net)}</span>
+      </div>
+      <div style="display:flex;gap:4px;height:8px;border-radius:4px;overflow:hidden">
+        <div style="flex:${d.income||0.01};background:var(--green);border-radius:4px;opacity:.7"></div>
+        <div style="flex:${d.expense||0.01};background:var(--red);border-radius:4px;opacity:.7"></div>
+      </div>
+      <div style="display:flex;gap:12px;font-size:.68rem;color:var(--muted);margin-top:3px">
+        <span>💚 In: ${cpFmt(d.income)}</span><span>🔴 Out: ${cpFmt(d.expense)}</span>
+      </div>
+    </div>`).join('');
+  let running=0;
+  const re=document.getElementById('cp-cf-running');
+  if(re) re.innerHTML=data.map(d=>{ running+=d.net; return `
+    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.78rem">
+      <span>${d.month}</span>
+      <span style="font-family:var(--ff-m);font-weight:700;color:${running>=0?'var(--green)':'var(--red)'}">${cpFmt(running)}</span>
+    </div>`; }).join('');
+}
+
+// ══ BUDGET VS ACTUAL ══
+function cpRenderBudget(clientId){
+  const recs=cpGetRecords(clientId);
+  const budgets=cpGet(CP_BUDGET_KEY(clientId),{});
+  const thisMonth=new Date().toISOString().slice(0,7);
+  const actuals={};
+  recs.filter(r=>r.type==='expense'&&(r.date||'').startsWith(thisMonth)).forEach(r=>{ actuals[r.category||'Other']=(actuals[r.category||'Other']||0)+(+r.amount||0); });
+  const allCats=[...new Set([...Object.keys(budgets),...Object.keys(actuals)])];
+  const el=document.getElementById('cp-budget-body');
+  if(!el) return;
+  if(!allCats.length){ el.innerHTML='<div style="color:var(--muted);font-size:.78rem;padding:12px">Set a budget above to get started.</div>'; return; }
+  el.innerHTML=allCats.map(cat=>{
+    const budget=budgets[cat]||0; const actual=actuals[cat]||0;
+    const pct=budget>0?Math.min(100,(actual/budget*100)):0;
+    const over=actual>budget&&budget>0;
+    return `<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:5px">
+        <span style="font-weight:600">${cat}</span>
+        <span style="color:${over?'var(--red)':'var(--text)'}">${cpFmt(actual)} ${budget?'/ '+cpFmt(budget):''} ${over?'⚠️ OVER':''}</span>
+      </div>
+      ${budget?`<div style="background:var(--border);border-radius:4px;height:8px"><div style="width:${pct}%;height:8px;border-radius:4px;background:${over?'var(--red)':pct>75?'var(--amber)':'var(--green)'};transition:width .3s"></div></div>`:'<div style="font-size:.68rem;color:var(--muted)">No budget set</div>'}
+    </div>`;
+  }).join('');
+}
+
+function cpSaveBudgetEntry(){
+  const me=cpGetSession(); if(!me) return;
+  const cat=(document.getElementById('bgt-cat')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('bgt-amt')?.value||0);
+  if(!cat||!amt){ alert('Select category and enter amount'); return; }
+  const budgets=cpGet(CP_BUDGET_KEY(me.client_id),{});
+  budgets[cat]=amt;
+  cpSet(CP_BUDGET_KEY(me.client_id),budgets);
+  cpShowToast('✅ Budget saved for '+cat);
+  cpRenderBudget(me.client_id);
+}
+
+// ══ DEDUCTION TABS ══
+function cpDeductTab(tab){
+  ['mileage','homeoffice','meals'].forEach(t=>{
+    const el=document.getElementById('ded-'+t); if(el) el.style.display=t===tab?'block':'none';
+    const btn=document.getElementById('ded-tab-'+t);
+    if(btn){ btn.style.background=t===tab?'var(--navy)':'var(--off)'; btn.style.color=t===tab?'var(--gold2)':'var(--navy)'; btn.style.fontWeight=t===tab?'700':'600'; }
+  });
+}
+
+// ══ MILEAGE ══
+function cpAddMileage(){
+  const me=cpGetSession(); if(!me) return;
+  const date=(document.getElementById('mi-date')?.value||'').trim();
+  const from=(document.getElementById('mi-from')?.value||'').trim();
+  const to=(document.getElementById('mi-to')?.value||'').trim();
+  const miles=parseFloat(document.getElementById('mi-miles')?.value||0);
+  const purpose=(document.getElementById('mi-purpose')?.value||'').trim();
+  if(!date||!miles){ alert('Enter date and miles'); return; }
+  const IRS_RATE=0.67;
+  const log=cpGet(CP_MILE_KEY(me.client_id));
+  log.unshift({id:'mi-'+Date.now(),date,from,to,miles,purpose,deduction:+(miles*IRS_RATE).toFixed(2)});
+  cpSet(CP_MILE_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add Mileage',`${miles}mi — ${from} → ${to}`);
+  ['mi-from','mi-to','mi-miles','mi-purpose'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderMileage(me.client_id);
+  cpShowToast('✅ Trip logged');
+}
+
+function cpRenderMileage(clientId){
+  const log=cpGet(CP_MILE_KEY(clientId));
+  const total=log.reduce((s,l)=>s+(+l.deduction||0),0);
+  const sumEl=document.getElementById('cp-mileage-summary');
+  if(sumEl) sumEl.innerHTML=`Total Mileage Deduction: <span style="color:var(--green);font-weight:700">${cpFmt(total)}</span> (${log.reduce((s,l)=>s+(+l.miles||0),0).toFixed(1)} mi × $0.67)`;
+  const tbody=document.getElementById('cp-mileage-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=log.length?log.map(l=>`<tr>
+    <td>${l.date}</td><td>${l.from||'—'} → ${l.to||'—'}</td>
+    <td>${(+l.miles).toFixed(1)}</td><td>${l.purpose||'—'}</td>
+    <td style="color:var(--green);font-weight:700">${cpFmt(l.deduction)}</td>
+    <td><button onclick="cpDeleteMileage('${l.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:16px">No trips logged</td></tr>';
+}
+
+function cpDeleteMileage(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_MILE_KEY(me.client_id),cpGet(CP_MILE_KEY(me.client_id)).filter(l=>l.id!==id));
+  cpRenderMileage(me.client_id);
+}
+
+// ══ HOME OFFICE ══
+function cpCalcHomeOffice(){
+  const officeSqft=parseFloat(document.getElementById('ho-office-sqft')?.value||0);
+  const totalSqft =parseFloat(document.getElementById('ho-total-sqft')?.value||0);
+  const monthly   =parseFloat(document.getElementById('ho-monthly')?.value||0);
+  const utilities =parseFloat(document.getElementById('ho-utilities')?.value||0);
+  const el=document.getElementById('cp-ho-result');
+  if(!el||!officeSqft||!totalSqft) return;
+  const pct=officeSqft/totalSqft;
+  const simplifiedAnnual=Math.min(officeSqft,300)*5;
+  const regularMonthly=(monthly+utilities)*pct;
+  const regularAnnual=regularMonthly*12;
+  el.innerHTML=`
+    <div style="font-weight:700;margin-bottom:10px">Business Use: ${(pct*100).toFixed(1)}% of home</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <div style="background:var(--green-lt);border-radius:8px;padding:10px 14px">
+        <div style="font-size:.7rem;color:var(--muted)">Simplified Method</div>
+        <div style="font-weight:700;color:var(--green);font-size:.95rem">${cpFmt(simplifiedAnnual)}/yr</div>
+        <div style="font-size:.68rem;color:var(--muted)">$5 × ${Math.min(officeSqft,300)} sq ft</div>
+      </div>
+      <div style="background:var(--blue-lt);border-radius:8px;padding:10px 14px">
+        <div style="font-size:.7rem;color:var(--muted)">Regular Method</div>
+        <div style="font-weight:700;color:var(--blue);font-size:.95rem">${cpFmt(regularAnnual)}/yr</div>
+        <div style="font-size:.68rem;color:var(--muted)">${(pct*100).toFixed(1)}% × (${cpFmt(monthly+utilities)}/mo)</div>
+      </div>
+    </div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:10px">Use whichever gives you the larger deduction. Simplified is easier; Regular requires records of all home expenses.</div>`;
+}
+
+// ══ MEALS ══
+function cpAddMeal(){
+  const me=cpGetSession(); if(!me) return;
+  const date=(document.getElementById('ml-date')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('ml-amt')?.value||0);
+  const purpose=(document.getElementById('ml-purpose')?.value||'').trim();
+  if(!date||!amt){ alert('Enter date and amount'); return; }
+  const log=cpGet(CP_MEAL_KEY(me.client_id));
+  log.unshift({id:'ml-'+Date.now(),date,amount:amt,deductible:+(amt*0.5).toFixed(2),purpose});
+  cpSet(CP_MEAL_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add Meal',`${cpFmt(amt)} — ${purpose}`);
+  ['ml-amt','ml-purpose'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderMeals(me.client_id);
+  cpShowToast('✅ Meal logged');
+}
+
+function cpRenderMeals(clientId){
+  const log=cpGet(CP_MEAL_KEY(clientId));
+  const total=log.reduce((s,l)=>s+(+l.deductible||0),0);
+  const sumEl=document.getElementById('cp-meals-summary');
+  if(sumEl) sumEl.innerHTML=`Total Meals Deduction (50%): <span style="color:var(--green);font-weight:700">${cpFmt(total)}</span>`;
+  const tbody=document.getElementById('cp-meals-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=log.length?log.map(l=>`<tr>
+    <td>${l.date}</td><td>${l.purpose||'—'}</td>
+    <td>${cpFmt(l.amount)}</td>
+    <td style="color:var(--green);font-weight:700">${cpFmt(l.deductible)}</td>
+    <td><button onclick="cpDeleteMeal('${l.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">No meals logged</td></tr>';
+}
+
+function cpDeleteMeal(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_MEAL_KEY(me.client_id),cpGet(CP_MEAL_KEY(me.client_id)).filter(l=>l.id!==id));
+  cpRenderMeals(me.client_id);
+}
+
+// ══ 1099 CONTRACTOR TRACKER ══
+function cpAdd1099(){
+  const me=cpGetSession(); if(!me) return;
+  const name=(document.getElementById('c1099-name')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('c1099-amt')?.value||0);
+  const date=document.getElementById('c1099-date')?.value||new Date().toISOString().split('T')[0];
+  if(!name||!amt){ alert('Enter contractor name and amount'); return; }
+  const log=cpGet(CP_1099_KEY(me.client_id));
+  log.push({id:'c1099-'+Date.now(),name,amount:amt,date,ts:Date.now()});
+  cpSet(CP_1099_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add 1099 Payment',`${name} · ${cpFmt(amt)}`);
+  ['c1099-name','c1099-amt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRender1099(me.client_id);
+  cpShowToast('✅ Payment logged');
+}
+
+function cpRender1099(clientId){
+  const log=cpGet(CP_1099_KEY(clientId));
+  const tbody=document.getElementById('cp-1099-tbody');
+  if(!tbody) return;
+  // Aggregate by contractor name
+  const contractors={};
+  log.forEach(l=>{ if(!contractors[l.name]) contractors[l.name]={total:0,lastDate:''}; contractors[l.name].total+=(+l.amount||0); if(l.date>contractors[l.name].lastDate) contractors[l.name].lastDate=l.date; });
+  const entries=Object.entries(contractors).sort((a,b)=>b[1].total-a[1].total);
+  tbody.innerHTML=entries.length?entries.map(([name,data])=>{
+    const needs1099=data.total>=600;
+    const approaching=data.total>=400&&data.total<600;
+    return `<tr>
+      <td style="font-weight:600">${name}</td>
+      <td style="font-weight:700">${cpFmt(data.total)}</td>
+      <td>${needs1099?'<span style="background:var(--red-lt);color:var(--red);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">⚠️ NEEDS 1099-NEC</span>':approaching?'<span style="background:var(--amber-lt);color:var(--amber);padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">🔔 Approaching $600</span>':'<span style="background:var(--green-lt);color:var(--green);padding:2px 8px;border-radius:10px;font-size:.7rem">Under $600</span>'}</td>
+      <td style="color:var(--muted)">${data.lastDate||'—'}</td>
+      <td><button onclick="cpDelete1099Name('${name}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.8rem">✕</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">No contractor payments logged</td></tr>';
+}
+
+function cpDelete1099Name(name){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_1099_KEY(me.client_id),cpGet(CP_1099_KEY(me.client_id)).filter(l=>l.name!==name));
+  cpRender1099(me.client_id);
+}
+
+// ══ RECURRING TRANSACTIONS ══
+function cpAddRecurring(){
+  const me=cpGetSession(); if(!me) return;
+  const type=document.getElementById('rec-type')?.value||'expense';
+  const cat=document.getElementById('rec-cat')?.value||'';
+  const desc=(document.getElementById('rec-desc')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('rec-amt')?.value||0);
+  const freq=document.getElementById('rec-freq')?.value||'monthly';
+  const next=document.getElementById('rec-next')?.value||'';
+  if(!desc||!amt||!next){ alert('Fill in description, amount, and next date'); return; }
+  const rules=cpGet(CP_RECUR_KEY(me.client_id));
+  rules.push({id:'rec-'+Date.now(),type,category:cat,description:desc,amount:amt,frequency:freq,next_date:next,last_run:null,active:true});
+  cpSet(CP_RECUR_KEY(me.client_id),rules);
+  cpLogAudit(me.client_id,'Add Recurring',`${desc} · ${cpFmt(amt)} · ${freq}`);
+  ['rec-desc','rec-amt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderRecurring(me.client_id);
+  cpShowToast('✅ Recurring rule added');
+}
+
+function cpNextDate(currentDate, freq){
+  const d=new Date(currentDate);
+  if(freq==='weekly')    d.setDate(d.getDate()+7);
+  else if(freq==='monthly')   d.setMonth(d.getMonth()+1);
+  else if(freq==='quarterly') d.setMonth(d.getMonth()+3);
+  else if(freq==='annually')  d.setFullYear(d.getFullYear()+1);
+  return d.toISOString().split('T')[0];
+}
+
+function cpProcessRecurring(){
+  const me=cpGetSession(); if(!me) return;
+  const today=new Date().toISOString().split('T')[0];
+  const rules=cpGet(CP_RECUR_KEY(me.client_id));
+  let count=0;
+  rules.forEach(rule=>{
+    if(!rule.active||!rule.next_date||rule.next_date>today) return;
+    // Create the transaction
+    const recs=cpGetRecords(me.client_id);
+    recs.unshift({id:'cp-'+Date.now()+'-rec',type:rule.type,vendor:rule.description,amount:rule.amount,date:rule.next_date,category:rule.category,notes:'Auto: '+rule.frequency,created_at:new Date().toISOString()});
+    cpSaveRecords(me.client_id,recs);
+    rule.last_run=rule.next_date;
+    rule.next_date=cpNextDate(rule.next_date,rule.frequency);
+    count++;
+  });
+  cpSet(CP_RECUR_KEY(me.client_id),rules);
+  cpRenderRecurring(me.client_id);
+  cpRenderDashboard(me.client_id);
+  cpShowToast(count?`✅ ${count} recurring transaction(s) processed`:'No transactions due today');
+}
+
+function cpRenderRecurring(clientId){
+  const rules=cpGet(CP_RECUR_KEY(clientId));
+  const tbody=document.getElementById('cp-recurring-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=rules.length?rules.map(r=>`<tr>
+    <td><span style="font-size:.7rem;padding:2px 7px;border-radius:8px;font-weight:700;background:${r.type==='income'?'var(--green-lt)':'var(--red-lt)'};color:${r.type==='income'?'var(--green)':'var(--red)'}">${r.type}</span></td>
+    <td>${r.description}</td>
+    <td style="font-weight:700">${cpFmt(r.amount)}</td>
+    <td style="color:var(--muted)">${r.frequency}</td>
+    <td style="color:${r.next_date<=new Date().toISOString().split('T')[0]?'var(--red)':'var(--text)'};font-weight:${r.next_date<=new Date().toISOString().split('T')[0]?'700':'400'}">${r.next_date||'—'}</td>
+    <td style="color:var(--muted)">${r.last_run||'Never'}</td>
+    <td><button onclick="cpDeleteRecurring('${r.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:16px">No recurring rules. Add one above.</td></tr>';
+}
+
+function cpDeleteRecurring(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_RECUR_KEY(me.client_id),cpGet(CP_RECUR_KEY(me.client_id)).filter(r=>r.id!==id));
+  cpRenderRecurring(me.client_id);
+}
+
+// ══ EXPORT ══
+function cpExportCSV(){
+  const me=cpGetSession(); if(!me) return;
+  const recs=cpGetRecords(me.client_id);
+  if(!recs.length){ alert('No transactions to export'); return; }
+  const header='Date,Type,Category,Vendor/Description,Amount,Notes';
+  const rows=recs.map(r=>`${r.date||''},${r.type},${r.category||''},\"${(r.vendor||r.description||'').replace(/"/g,'""')}\",${r.amount},\"${(r.notes||'').replace(/"/g,'""')}\"`);
+  const csv=[header,...rows].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`efficient-records-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  cpLogAudit(me.client_id,'Export','CSV export — '+recs.length+' records');
+  cpShowToast('✅ CSV downloaded');
+}
+
+function cpExportQBO(){
+  const me=cpGetSession(); if(!me) return;
+  const recs=cpGetRecords(me.client_id);
+  if(!recs.length){ alert('No transactions to export'); return; }
+  // IIF format for QuickBooks
+  const lines=['!TRNS\tTRNSTYPE\tDATE\tACCNT\tNAME\tAMOUNT\tMEMO','!SPL\tTRNSTYPE\tDATE\tACCNT\tAMOUNT\tMEMO','!ENDTRNS'];
+  recs.forEach(r=>{
+    const dt=r.date?r.date.split('-').join('/'):new Date().toLocaleDateString();
+    const amt=r.type==='income'?+(+r.amount).toFixed(2):-(+r.amount).toFixed(2);
+    const acct=r.type==='income'?'Sales Revenue':r.category||'Expense';
+    lines.push(`TRNS\t${r.type==='income'?'INVOICE':'CHECK'}\t${dt}\tChecking\t${r.vendor||'—'}\t${amt}\t${r.notes||r.category||''}`);
+    lines.push(`SPL\t${r.type==='income'?'INVOICE':'CHECK'}\t${dt}\t${acct}\t${-amt}\t${r.vendor||''}`);
+    lines.push('ENDTRNS');
+  });
+  const iif=lines.join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(iif);
+  a.download=`efficient-quickbooks-${new Date().toISOString().split('T')[0]}.iif`;
+  a.click();
+  cpLogAudit(me.client_id,'Export','QBO/IIF export — '+recs.length+' records');
+  cpShowToast('✅ QuickBooks IIF downloaded');
+}
+
+function cpPrintPL(){
+  const me=cpGetSession(); if(!me) return;
+  const recs=cpGetRecords(me.client_id);
+  const income=recs.filter(r=>r.type==='income').reduce((s,r)=>s+(+r.amount||0),0);
+  const expense=recs.filter(r=>r.type==='expense').reduce((s,r)=>s+(+r.amount||0),0);
+  const profit=income-expense;
+  const cats={};
+  recs.filter(r=>r.type==='expense').forEach(r=>{ cats[r.category||'Other']=(cats[r.category||'Other']||0)+(+r.amount||0); });
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>P&L — ${me.org||'My Business'}</title><style>body{font-family:Arial,sans-serif;padding:40px;color:#0B1D35}h1{color:#0B2140}table{width:100%;border-collapse:collapse;margin:16px 0}td,th{padding:8px 12px;border:1px solid #DDE4EF;font-size:13px}th{background:#F7F9FC;font-weight:700}</style></head><body>`);
+  w.document.write(`<h1>Profit & Loss Statement</h1><p><strong>${me.org||'My Business'}</strong> · Generated ${new Date().toLocaleDateString()}</p>`);
+  w.document.write(`<table><tr><th>Item</th><th style="text-align:right">Amount</th></tr><tr><td><strong>Total Revenue</strong></td><td style="text-align:right;color:green"><strong>$${income.toFixed(2)}</strong></td></tr>${Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<tr><td style="padding-left:24px">${c}</td><td style="text-align:right;color:red">($${v.toFixed(2)})</td></tr>`).join('')}<tr style="background:#F7F9FC"><td><strong>Total Expenses</strong></td><td style="text-align:right;color:red"><strong>($${expense.toFixed(2)})</strong></td></tr><tr><td><strong>Net Profit</strong></td><td style="text-align:right;color:${profit>=0?'green':'red'}"><strong>$${profit.toFixed(2)}</strong></td></tr></table>`);
+  w.document.write('</body></html>'); w.print();
+}
+
+// ══ AUDIT LOG ══
+function cpLogAudit(clientId, action, details){
+  const log=cpGet(CP_AUDIT_KEY(clientId));
+  log.unshift({id:'audit-'+Date.now(),action,details,ts:new Date().toISOString()});
+  if(log.length>200) log.splice(200);
+  cpSet(CP_AUDIT_KEY(clientId),log);
+}
+
+function cpRenderAuditLog(clientId){
+  const tbody=document.getElementById('cp-audit-tbody');
+  if(!tbody) return;
+  const log=cpGet(CP_AUDIT_KEY(clientId));
+  tbody.innerHTML=log.length?log.slice(0,50).map(l=>`<tr>
+    <td style="font-family:var(--ff-m);font-size:.65rem;color:var(--muted);white-space:nowrap">${new Date(l.ts).toLocaleString()}</td>
+    <td style="font-weight:600;font-size:.76rem">${l.action}</td>
+    <td style="font-size:.74rem;color:var(--text2)">${l.details||'—'}</td>
+  </tr>`).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:12px">No activity yet</td></tr>';
+}
+
+// ══ TIME TRACKING ══
+const CP_TIME_KEY   = id => 'iebc-cp-'+id+'-time';
+const CP_ASSETS_KEY = id => 'iebc-cp-'+id+'-assets';
+
+function cpCalcTimeEntry(){
+  const hours = parseFloat(document.getElementById('tt-hours')?.value||0);
+  const rate  = parseFloat(document.getElementById('tt-rate')?.value||0);
+  const lbl   = document.getElementById('tt-total-lbl');
+  if(lbl) lbl.textContent = 'Billable: '+cpFmt(hours*rate);
+}
+
+function cpAddTimeEntry(){
+  const me=cpGetSession(); if(!me) return;
+  const date  =(document.getElementById('tt-date')?.value||'').trim();
+  const client=(document.getElementById('tt-client')?.value||'').trim();
+  const desc  =(document.getElementById('tt-desc')?.value||'').trim();
+  const hours =parseFloat(document.getElementById('tt-hours')?.value||0);
+  const rate  =parseFloat(document.getElementById('tt-rate')?.value||0);
+  if(!date||!desc||!hours){ alert('Enter date, description, and hours'); return; }
+  const log=cpGet(CP_TIME_KEY(me.client_id));
+  log.unshift({id:'tt-'+Date.now(),date,client,description:desc,hours,rate,billable:+(hours*rate).toFixed(2),billed:false,created_at:new Date().toISOString()});
+  cpSet(CP_TIME_KEY(me.client_id),log);
+  cpLogAudit(me.client_id,'Add Time',`${client} · ${hours}h · ${cpFmt(hours*rate)}`);
+  ['tt-client','tt-desc','tt-hours','tt-rate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('tt-total-lbl').textContent='Billable: $0.00';
+  cpRenderTime(me.client_id);
+  cpShowToast('✅ Time entry logged');
+}
+
+function cpRenderTime(clientId){
+  const log=cpGet(CP_TIME_KEY(clientId));
+  const today=new Date(); const weekAgo=new Date(today); weekAgo.setDate(today.getDate()-7);
+  const monthStr=today.toISOString().slice(0,7);
+  const weekEntries=log.filter(e=>new Date(e.date)>=weekAgo);
+  const monthEntries=log.filter(e=>(e.date||'').startsWith(monthStr));
+  const weekHrs=weekEntries.reduce((s,e)=>s+(+e.hours||0),0);
+  const weekVal=weekEntries.reduce((s,e)=>s+(+e.billable||0),0);
+  const mHrs=monthEntries.reduce((s,e)=>s+(+e.hours||0),0);
+  const mVal=monthEntries.reduce((s,e)=>s+(+e.billable||0),0);
+  const se=document.getElementById('tt-week-hrs'); if(se) se.textContent=weekHrs.toFixed(1)+'h';
+  const sv=document.getElementById('tt-week-val'); if(sv) sv.textContent=cpFmt(weekVal)+' billable';
+  const me2=document.getElementById('tt-month-hrs'); if(me2) me2.textContent=mHrs.toFixed(1)+'h';
+  const mv=document.getElementById('tt-month-val'); if(mv) mv.textContent=cpFmt(mVal)+' billable';
+  const tbody=document.getElementById('cp-time-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=log.length?log.map(e=>`<tr>
+    <td>${e.date}</td><td>${e.client||'—'}</td><td>${e.description}</td>
+    <td style="text-align:center">${(+e.hours).toFixed(2)}</td>
+    <td style="text-align:right">${e.rate?cpFmt(e.rate)+'/hr':'—'}</td>
+    <td style="font-weight:700;color:${e.billed?'var(--muted)':'var(--green)'}">${cpFmt(e.billable)}</td>
+    <td><span style="font-size:.68rem;padding:2px 7px;border-radius:8px;background:${e.billed?'var(--green-lt)':'var(--amber-lt)'};color:${e.billed?'var(--green)':'var(--amber)'};font-weight:700">${e.billed?'Billed':'Unbilled'}</span></td>
+    <td><button onclick="cpDeleteTime('${e.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+  </tr>`).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:16px">No time entries yet</td></tr>';
+}
+
+function cpDeleteTime(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_TIME_KEY(me.client_id),cpGet(CP_TIME_KEY(me.client_id)).filter(e=>e.id!==id));
+  cpRenderTime(me.client_id);
+}
+
+function cpTimeToInvoice(){
+  const me=cpGetSession(); if(!me) return;
+  const log=cpGet(CP_TIME_KEY(me.client_id));
+  const unbilled=log.filter(e=>!e.billed&&e.billable>0);
+  if(!unbilled.length){ cpShowToast('No unbilled time entries'); return; }
+  // Group by client
+  const byClient={};
+  unbilled.forEach(e=>{ if(!byClient[e.client||'Client']) byClient[e.client||'Client']=[]; byClient[e.client||'Client'].push(e); });
+  // Create invoice line items from the first client group
+  const [client,entries]=Object.entries(byClient)[0];
+  const total=entries.reduce((s,e)=>s+(+e.billable||0),0);
+  // Mark as billed
+  const updated=log.map(e=>entries.find(u=>u.id===e.id)?{...e,billed:true}:e);
+  cpSet(CP_TIME_KEY(me.client_id),updated);
+  // Store as pending invoice
+  const invs=cpGetInvoices(me.client_id);
+  invs.push({id:'TIME-'+Date.now(),description:`Time billing — ${entries.length} entries — ${client}`,amount:total,date:new Date().toISOString().split('T')[0],status:'pending',type:'time'});
+  localStorage.setItem(CP_INV_KEY(me.client_id),JSON.stringify(invs));
+  cpLogAudit(me.client_id,'Invoice from Time',`${client} · ${entries.length} entries · ${cpFmt(total)}`);
+  cpRenderTime(me.client_id);
+  cpShowToast(`✅ Invoice created for ${client} — ${cpFmt(total)}`);
+}
+
+// ══ FIXED ASSETS ══
+function cpAddAsset(){
+  const me=cpGetSession(); if(!me) return;
+  const name  =(document.getElementById('fa-name')?.value||'').trim();
+  const cat   =(document.getElementById('fa-cat')?.value||'Other');
+  const date  =(document.getElementById('fa-date')?.value||'').trim();
+  const cost  =parseFloat(document.getElementById('fa-cost')?.value||0);
+  const life  =parseInt(document.getElementById('fa-life')?.value||5);
+  const method=(document.getElementById('fa-method')?.value||'sl');
+  if(!name||!date||!cost){ alert('Enter asset name, purchase date, and cost'); return; }
+  const assets=cpGet(CP_ASSETS_KEY(me.client_id));
+  assets.unshift({id:'fa-'+Date.now(),name,category:cat,purchase_date:date,cost,useful_life:life,method,created_at:new Date().toISOString()});
+  cpSet(CP_ASSETS_KEY(me.client_id),assets);
+  cpLogAudit(me.client_id,'Add Asset',`${name} · ${cpFmt(cost)} · ${life}yr ${method==='sl'?'SL':'DB'}`);
+  ['fa-name','fa-cost','fa-life'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  cpRenderAssets(me.client_id);
+  cpShowToast('✅ Asset added');
+}
+
+function cpCalcDepreciation(asset){
+  const purchaseYear=parseInt((asset.purchase_date||'').slice(0,4))||new Date().getFullYear();
+  const currentYear=new Date().getFullYear();
+  const age=Math.max(0,currentYear-purchaseYear);
+  const cost=+asset.cost||0; const life=+asset.useful_life||5;
+  let annualDepr=0, accumDepr=0, bookValue=cost;
+  if(asset.method==='sl'){
+    annualDepr=cost/life;
+    accumDepr=Math.min(cost,annualDepr*age);
+    bookValue=Math.max(0,cost-accumDepr);
+  } else {
+    // Double declining balance
+    const rate=2/life;
+    let bv=cost;
+    for(let y=0;y<age&&bv>0;y++){ const d=bv*rate; accumDepr+=d; bv-=d; }
+    accumDepr=Math.min(cost,accumDepr);
+    bookValue=Math.max(0,cost-accumDepr);
+    annualDepr=bookValue>0?bookValue*rate:0;
+  }
+  return {annualDepr,accumDepr,bookValue};
+}
+
+function cpRenderAssets(clientId){
+  const assets=cpGet(CP_ASSETS_KEY(clientId));
+  const tbody=document.getElementById('cp-assets-tbody');
+  if(!tbody) return;
+  tbody.innerHTML=assets.length?assets.map(a=>{
+    const {annualDepr,accumDepr,bookValue}=cpCalcDepreciation(a);
+    return `<tr>
+      <td style="font-weight:600">${a.name}</td>
+      <td style="color:var(--muted)">${a.category}</td>
+      <td>${cpFmt(a.cost)}</td>
+      <td style="color:var(--muted)">${(a.purchase_date||'').slice(0,10)}</td>
+      <td style="font-size:.68rem">${a.method==='sl'?'Straight-Line':'Declining 2×'}</td>
+      <td style="color:var(--red)">${cpFmt(annualDepr)}/yr</td>
+      <td style="color:var(--amber)">${cpFmt(accumDepr)}</td>
+      <td style="font-weight:700;color:${bookValue>0?'var(--green)':'var(--muted)'}">${cpFmt(bookValue)}</td>
+      <td><button onclick="cpDeleteAsset('${a.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer">✕</button></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:16px">No assets added</td></tr>';
+}
+
+function cpDeleteAsset(id){
+  const me=cpGetSession(); if(!me) return;
+  cpSet(CP_ASSETS_KEY(me.client_id),cpGet(CP_ASSETS_KEY(me.client_id)).filter(a=>a.id!==id));
+  cpRenderAssets(me.client_id);
+}
+
+// ══ REFERRALS ══
+const CP_REF_KEY = id => 'iebc-cp-'+id+'-referrals';
+const EFFICIENT_URL = 'https://efficient.iebc.app';
+
+function cpGetRefLink(clientId){
+  return EFFICIENT_URL + '?ref=' + encodeURIComponent(clientId);
+}
+
+function cpRenderReferrals(clientId){
+  const refLink = cpGetRefLink(clientId);
+  const refs    = cpGet(CP_REF_KEY(clientId));
+
+  // Link input
+  const linkEl = document.getElementById('cp-ref-link');
+  if(linkEl) linkEl.value = refLink;
+
+  // QR code
+  const qrEl = document.getElementById('cp-ref-qr');
+  if(qrEl) qrEl.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&color=F5C842&bgcolor=0B2140&data=${encodeURIComponent(refLink)}" width="100" height="100" style="border-radius:10px;border:2px solid rgba(255,255,255,.15)" alt="Referral QR">`;
+
+  // Stats
+  const paid    = refs.filter(r=>r.status==='active');
+  const pending = refs.filter(r=>r.status==='pending');
+  const earned  = paid.reduce((s,r)=>s+(r.credited||0),0);
+  const pendAmt = pending.length * 25;
+  const countEl = document.getElementById('ref-count');    if(countEl) countEl.textContent = refs.length;
+  const earnEl  = document.getElementById('ref-earned');   if(earnEl)  earnEl.textContent  = '$'+earned;
+  const pendEl  = document.getElementById('ref-pending');  if(pendEl)  pendEl.textContent  = '$'+pendAmt;
+
+  // History table
+  const tbody = document.getElementById('cp-ref-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = refs.length ? refs.map(r=>`<tr>
+    <td style="color:var(--muted)">${(r.date||'').slice(0,10)||'—'}</td>
+    <td style="font-weight:600">${r.business||'—'}</td>
+    <td><span style="font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700;background:${r.status==='active'?'var(--green-lt)':r.status==='pending'?'var(--amber-lt)':'var(--off)'};color:${r.status==='active'?'var(--green)':r.status==='pending'?'var(--amber)':'var(--muted)'}">${r.status==='active'?'✓ Active':'⏳ Trial'}</span></td>
+    <td style="font-weight:700;color:${r.status==='active'?'var(--green)':'var(--muted)'}">$${r.credited||0}</td>
+  </tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">No referrals yet — share your link to start earning</td></tr>';
+}
+
+function cpCopyRefLink(){
+  const me=cpGetSession(); if(!me) return;
+  const link=cpGetRefLink(me.client_id);
+  navigator.clipboard?.writeText(link).then(()=>cpShowToast('✅ Referral link copied!')).catch(()=>{
+    const ta=document.createElement('textarea'); ta.value=link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); cpShowToast('✅ Referral link copied!');
+  });
+}
+
+function cpShareRefLink(){
+  const me=cpGetSession(); if(!me) return;
+  const link=cpGetRefLink(me.client_id);
+  const text='Check out Efficient — AI-powered accounting for $19/mo. Try it free for 30 days: '+link;
+  if(navigator.share){ navigator.share({title:'Efficient by IEBC',text,url:link}); }
+  else { window.open('mailto:?subject=Try%20Efficient%20Free&body='+encodeURIComponent(text)); }
+}
+
+// Auto-check session on load + pre-select plan from URL param
+(function cpAutoLogin(){
+  try{
+    // Pre-select plan from ?plan=bundle URL param
+    const params = new URLSearchParams(window.location.search);
+    const planParam = params.get('plan');
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // Init Supabase + Stripe from stored config
+      tryInitEffDB();
+      tryInitEffStripe();
+
+      // Pre-select plan from URL param
+      if(planParam){
+        const picker = document.getElementById('modal-plan-picker');
+        if(picker){
+          picker.value = planParam;
+          if(typeof pickPlanFromSelect==='function') pickPlanFromSelect(planParam);
+        }
+      }
+
+      const me = cpGetSession();
+      if(me && me.client_id){
+        const btn = document.getElementById('nl-portal');
+        if(btn){ btn.textContent='👤 My Account'; btn.onclick=()=>showPage('portal'); }
+        // If returning directly to the suite standalone, auto-show portal
+        if(window.parent === window){
+          showClientPortal(me);
+        }
+      }
+    });
+  }catch(e){}
+})();
+
 </script>
+
+<!-- PAGE: CLIENT LOGIN -->
+<div class="page" id="page-login">
+  <div class="login-outer">
+    <div class="login-box">
+      <div class="login-logo">IB</div>
+      <div class="login-title">Client Login</div>
+      <div class="login-sub">Sign in to Efficient by IEBC</div>
+      <div id="cp-login-err" class="login-err"></div>
+      <div class="login-lbl">Email Address</div>
+      <input id="cp-login-email" type="email" class="login-fi" placeholder="your@email.com" autocomplete="email">
+      <div class="login-lbl">Password</div>
+      <input id="cp-login-pass" type="password" class="login-fi" placeholder="Temporary or updated password" autocomplete="current-password" onkeydown="if(event.key==='Enter')clientPortalLogin()">
+      <button class="login-btn" onclick="clientPortalLogin()">Sign In →</button>
+      <div style="text-align:center;margin-top:16px;font-size:.75rem;color:var(--muted)">
+        Don't have an account?
+        <button onclick="openModal()" style="background:none;border:none;color:var(--gold);font-weight:700;cursor:pointer;font-size:.75rem;text-decoration:underline">Start your 30-day free trial →</button>
+      </div>
+      <div style="text-align:center;margin-top:8px;font-size:.7rem;color:var(--muted)">Your username and temporary password were emailed to you when you signed up.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: CLIENT PORTAL -->
+<div class="page" id="page-portal">
+  <div class="portal-wrap">
+    <!-- Sidebar -->
+    <div class="portal-sidebar">
+      <div class="portal-sid-brand">
+        <div class="portal-sid-biz" id="cp-biz-name">My Business</div>
+        <div class="portal-sid-sub" id="cp-plan-name">Accounting Suite</div>
+      </div>
+      <button id="cp-nav-dashboard" class="portal-nav-btn active" onclick="cpNav('dashboard')"><span class="portal-nav-ico">⚡</span><span>Dashboard</span></button>
+      <button id="cp-nav-records"   class="portal-nav-btn" onclick="cpNav('records')"><span class="portal-nav-ico">📝</span><span>Records</span></button>
+      <button id="cp-nav-invoices"  class="portal-nav-btn" onclick="cpNav('invoices')"><span class="portal-nav-ico">🧾</span><span>Invoices</span></button>
+      <button id="cp-nav-reports"   class="portal-nav-btn" onclick="cpNav('reports')"><span class="portal-nav-ico">📊</span><span>Reports</span></button>
+      <button id="cp-nav-tax"         class="portal-nav-btn" onclick="cpNav('tax')"><span class="portal-nav-ico">🏛️</span><span>Tax + 1099</span></button>
+      <button id="cp-nav-budget"      class="portal-nav-btn" onclick="cpNav('budget')"><span class="portal-nav-ico">💰</span><span>Budget</span></button>
+      <button id="cp-nav-deductions"  class="portal-nav-btn" onclick="cpNav('deductions')"><span class="portal-nav-ico">🚗</span><span>Deductions</span></button>
+      <button id="cp-nav-recurring"   class="portal-nav-btn" onclick="cpNav('recurring')"><span class="portal-nav-ico">🔄</span><span>Recurring</span></button>
+      <button id="cp-nav-time"        class="portal-nav-btn" onclick="cpNav('time')"><span class="portal-nav-ico">⏱</span><span>Time Tracking</span></button>
+      <button id="cp-nav-assets"      class="portal-nav-btn" onclick="cpNav('assets')"><span class="portal-nav-ico">🏗</span><span>Fixed Assets</span></button>
+      <button id="cp-nav-referrals"   class="portal-nav-btn" onclick="cpNav('referrals')" style="color:var(--gold2)"><span class="portal-nav-ico">🎁</span><span>Referrals</span></button>
+      <button id="cp-nav-account"     class="portal-nav-btn" onclick="cpNav('account')"><span class="portal-nav-ico">⚙️</span><span>My Account</span></button>
+      <div style="flex:1"></div>
+      <button class="portal-nav-btn" onclick="clientPortalLogout()" style="border-top:1px solid rgba(255,255,255,.08);margin-top:8px"><span class="portal-nav-ico">🚪</span><span>Sign Out</span></button>
+    </div>
+    <!-- Main content -->
+    <div class="portal-main">
+
+      <!-- DASHBOARD -->
+      <div class="cp-panel active" id="cp-panel-dashboard">
+        <div class="cp-section-title">📊 Dashboard</div>
+        <div class="cp-kpi-grid" id="cp-kpi-grid"></div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Recent Transactions</div>
+          <table class="cp-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th></tr></thead>
+            <tbody id="cp-recent-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RECORDS -->
+      <div class="cp-panel" id="cp-panel-records">
+        <div class="cp-section-title">📝 Add Record</div>
+        <div class="cp-card">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr) 1fr;gap:12px;align-items:end">
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Type</div>
+              <select id="cp-rec-type" class="login-fi" style="margin-bottom:0">
+                <option value="expense">Expense</option>
+                <option value="income">Income</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Vendor / Description</div>
+              <input id="cp-rec-vendor" class="login-fi" style="margin-bottom:0" placeholder="e.g. Office Depot">
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Amount ($)</div>
+              <input id="cp-rec-amount" type="number" step="0.01" class="login-fi" style="margin-bottom:0" placeholder="0.00">
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Date</div>
+              <input id="cp-rec-date" type="date" class="login-fi" style="margin-bottom:0">
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Category</div>
+              <select id="cp-rec-cat" class="login-fi" style="margin-bottom:0">
+                <option value="">Select...</option>
+                <optgroup label="Expenses">
+                  <option>Advertising</option><option>Meals & Entertainment</option><option>Travel</option>
+                  <option>Office Supplies</option><option>Software & Tech</option><option>Professional Services</option>
+                  <option>Utilities</option><option>Rent & Facilities</option><option>Insurance</option>
+                  <option>Payroll & Contractors</option><option>Equipment</option><option>Vehicle</option>
+                  <option>Bank Fees</option><option>Other Expense</option>
+                </optgroup>
+                <optgroup label="Income">
+                  <option>Sales Revenue</option><option>Service Revenue</option>
+                  <option>Retainer Income</option><option>Other Income</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Notes</div>
+              <input id="cp-rec-notes" class="login-fi" style="margin-bottom:0" placeholder="Optional">
+            </div>
+            <div style="grid-column:1/-1">
+              <button onclick="cpAddRecord()" style="padding:11px 24px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer;font-style:italic">✅ Save Record</button>
+            </div>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">All Records</div>
+          <table class="cp-table">
+            <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th></th></tr></thead>
+            <tbody id="cp-records-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INVOICES -->
+      <div class="cp-panel" id="cp-panel-invoices">
+        <div class="cp-section-title">🧾 My Invoices</div>
+        <div class="cp-card">
+          <table class="cp-table">
+            <thead><tr><th>Invoice ID</th><th>Description</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="cp-inv-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="cp-panel" id="cp-panel-reports">
+        <div class="cp-section-title">📊 Financial Reports</div>
+        <!-- Report Tabs -->
+        <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">
+          <button id="rpt-tab-pnl"     onclick="cpReportTab('pnl')"     style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;background:var(--navy);color:var(--gold2)">P&amp;L</button>
+          <button id="rpt-tab-bs"      onclick="cpReportTab('bs')"      style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">Balance Sheet</button>
+          <button id="rpt-tab-cf"      onclick="cpReportTab('cf')"      style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">Cash Flow</button>
+          <button id="rpt-tab-export"  onclick="cpReportTab('export')"  style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">⬇ Export</button>
+        </div>
+        <!-- P&L Tab -->
+        <div id="rpt-pnl" style="display:block">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div style="background:var(--navy);border-radius:12px;padding:20px">
+              <div style="font-family:var(--ff-h);font-weight:800;color:#fff;margin-bottom:14px">Profit &amp; Loss</div>
+              <div id="cp-pnl-body"></div>
+            </div>
+            <div class="cp-card">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Top Expense Categories</div>
+              <div id="cp-cat-body"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Balance Sheet Tab -->
+        <div id="rpt-bs" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="cp-card">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Assets</div>
+              <div id="cp-bs-assets"></div>
+            </div>
+            <div>
+              <div class="cp-card" style="margin-bottom:14px">
+                <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Liabilities</div>
+                <div id="cp-bs-liabilities"></div>
+              </div>
+              <div class="cp-card">
+                <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Equity</div>
+                <div id="cp-bs-equity"></div>
+              </div>
+            </div>
+          </div>
+          <div class="cp-card" style="margin-top:14px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Add Liability (Loans / AP)</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Description</div><input id="bs-liab-desc" class="login-fi" style="margin-bottom:0;width:180px" placeholder="e.g. Business Loan"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount ($)</div><input id="bs-liab-amt" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="0.00"></div>
+              <button onclick="cpAddLiability()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <!-- Cash Flow Tab -->
+        <div id="rpt-cf" style="display:none">
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">Cash Flow — Last 6 Months</div>
+            <div id="cp-cf-body"></div>
+          </div>
+          <div class="cp-card" style="margin-top:14px">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:10px">Running Balance</div>
+            <div id="cp-cf-running"></div>
+          </div>
+        </div>
+        <!-- Export Tab -->
+        <div id="rpt-export" style="display:none">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+            <div class="cp-card" style="text-align:center">
+              <div style="font-size:2rem;margin-bottom:10px">📄</div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:6px">CSV Export</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:14px">All transactions in a spreadsheet-ready CSV file</div>
+              <button onclick="cpExportCSV()" style="width:100%;padding:10px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">⬇ Download CSV</button>
+            </div>
+            <div class="cp-card" style="text-align:center">
+              <div style="font-size:2rem;margin-bottom:10px">📊</div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:6px">QuickBooks Export (QBO)</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:14px">IIF format — import directly into QuickBooks Desktop</div>
+              <button onclick="cpExportQBO()" style="width:100%;padding:10px;background:var(--green);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">⬇ Download QBO/IIF</button>
+            </div>
+            <div class="cp-card" style="text-align:center">
+              <div style="font-size:2rem;margin-bottom:10px">📋</div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:6px">P&amp;L PDF Summary</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:14px">Print-ready P&amp;L report for your CPA or tax filing</div>
+              <button onclick="cpPrintPL()" style="width:100%;padding:10px;background:var(--off);border:1.5px solid var(--border);color:var(--navy);border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">🖨 Print / Save PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAX CENTER + 1099 -->
+      <div class="cp-panel" id="cp-panel-tax">
+        <div class="cp-section-title">🏛️ Tax Center + 1099 Tracker</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div>
+            <div class="cp-card">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:12px">Quarterly Estimator</div>
+              <div style="margin-bottom:12px">
+                <div style="font-family:var(--ff-m);font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:5px">Filing Status</div>
+                <select id="cp-tax-status" class="login-fi" style="margin-bottom:0" onchange="cpRenderTax(cpGetSession()?.client_id)">
+                  <option value="0.22">Single (22%)</option>
+                  <option value="0.12">Single — lower income (12%)</option>
+                  <option value="0.22">Married Filing Jointly (22%)</option>
+                  <option value="0.24">Higher income (24%)</option>
+                </select>
+              </div>
+              <div style="background:var(--navy);border-radius:12px;padding:16px">
+                <div id="cp-tax-breakdown"></div>
+              </div>
+              <div style="font-size:.7rem;color:var(--muted);margin-top:10px;line-height:1.6">⚠️ Estimates only. Consult a CPA for your actual tax liability. Includes self-employment tax (15.3%).</div>
+            </div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">📅 IRS Quarterly Deadlines</div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:.78rem">
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q1 (Jan–Mar)</span><strong>April 15</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q2 (Apr–May)</span><strong>June 15</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q3 (Jun–Aug)</span><strong>September 15</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--off);border-radius:8px"><span>Q4 (Sep–Dec)</span><strong>January 15</strong></div>
+            </div>
+            <div style="margin-top:16px;font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:8px">Your Consultant</div>
+            <div style="font-size:.78rem;color:var(--muted)" id="cp-consultant-note">Loading…</div>
+          </div>
+        </div>
+        <!-- 1099 TRACKER -->
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:4px">📋 1099 Contractor Tracker</div>
+          <div style="font-size:.74rem;color:var(--muted);margin-bottom:14px">Track payments to contractors. You must file a 1099-NEC for anyone paid $600+ in a calendar year.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:14px">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Contractor Name</div><input id="c1099-name" class="login-fi" style="margin-bottom:0;width:160px" placeholder="Jane Smith"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount Paid ($)</div><input id="c1099-amt" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="0.00"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="c1099-date" type="date" class="login-fi" style="margin-bottom:0;width:140px"></div>
+            <button onclick="cpAdd1099()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add Payment</button>
+          </div>
+          <table class="cp-table">
+            <thead><tr><th>Contractor</th><th>YTD Total</th><th>Status</th><th>Last Payment</th><th></th></tr></thead>
+            <tbody id="cp-1099-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BUDGET VS ACTUAL -->
+      <div class="cp-panel" id="cp-panel-budget">
+        <div class="cp-section-title">💰 Budget vs Actual</div>
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Set Monthly Budget by Category</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Category</div>
+              <select id="bgt-cat" class="login-fi" style="margin-bottom:0;width:180px">
+                <option>Advertising</option><option>Meals &amp; Entertainment</option><option>Travel</option>
+                <option>Office Supplies</option><option>Software &amp; Tech</option><option>Professional Services</option>
+                <option>Utilities</option><option>Rent &amp; Facilities</option><option>Insurance</option>
+                <option>Payroll &amp; Contractors</option><option>Equipment</option><option>Vehicle</option>
+                <option>Bank Fees</option><option>Other Expense</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Monthly Budget ($)</div><input id="bgt-amt" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="500"></div>
+            <button onclick="cpSaveBudgetEntry()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">Save</button>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">This Month vs Budget</div>
+          <div id="cp-budget-body"></div>
+        </div>
+      </div>
+
+      <!-- DEDUCTIONS -->
+      <div class="cp-panel" id="cp-panel-deductions">
+        <div class="cp-section-title">🚗 Deductions Tracker</div>
+        <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+          <button onclick="cpDeductTab('mileage')" id="ded-tab-mileage" style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;background:var(--navy);color:var(--gold2)">🚗 Mileage</button>
+          <button onclick="cpDeductTab('homeoffice')" id="ded-tab-homeoffice" style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">🏠 Home Office</button>
+          <button onclick="cpDeductTab('meals')" id="ded-tab-meals" style="padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--off);color:var(--navy)">🍽️ Meals</button>
+        </div>
+        <!-- Mileage -->
+        <div id="ded-mileage">
+          <div class="cp-card" style="margin-bottom:14px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Mileage Log <span style="font-size:.68rem;color:var(--green);font-weight:600">IRS rate: $0.67/mile (2024)</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:10px">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="mi-date" type="date" class="login-fi" style="margin-bottom:0;width:140px"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">From</div><input id="mi-from" class="login-fi" style="margin-bottom:0;width:150px" placeholder="Office"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">To</div><input id="mi-to" class="login-fi" style="margin-bottom:0;width:150px" placeholder="Client site"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Miles</div><input id="mi-miles" type="number" step="0.1" class="login-fi" style="margin-bottom:0;width:90px" placeholder="12.5"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Purpose</div><input id="mi-purpose" class="login-fi" style="margin-bottom:0;width:150px" placeholder="Client meeting"></div>
+              <button onclick="cpAddMileage()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Log Trip</button>
+            </div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:6px" id="cp-mileage-summary">Total Deduction: $0.00</div>
+            <table class="cp-table"><thead><tr><th>Date</th><th>From → To</th><th>Miles</th><th>Purpose</th><th>Deduction</th><th></th></tr></thead>
+            <tbody id="cp-mileage-tbody"></tbody></table>
+          </div>
+        </div>
+        <!-- Home Office -->
+        <div id="ded-homeoffice" style="display:none">
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Home Office Deduction <span style="font-size:.68rem;color:var(--muted)">(Simplified: $5/sq ft, max 300 sq ft = $1,500/yr)</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:12px">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Office Sq Ft</div><input id="ho-office-sqft" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="120" oninput="cpCalcHomeOffice()"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Total Home Sq Ft</div><input id="ho-total-sqft" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="1800" oninput="cpCalcHomeOffice()"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Monthly Rent/Mortgage ($)</div><input id="ho-monthly" type="number" class="login-fi" style="margin-bottom:0;width:130px" placeholder="2000" oninput="cpCalcHomeOffice()"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Monthly Utilities ($)</div><input id="ho-utilities" type="number" class="login-fi" style="margin-bottom:0;width:120px" placeholder="200" oninput="cpCalcHomeOffice()"></div>
+            </div>
+            <div id="cp-ho-result" style="margin-top:16px;background:var(--off);border-radius:10px;padding:14px;font-size:.82rem"></div>
+          </div>
+        </div>
+        <!-- Meals -->
+        <div id="ded-meals" style="display:none">
+          <div class="cp-card" style="margin-bottom:14px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Business Meals <span style="font-size:.68rem;color:var(--green);font-weight:600">50% deductible</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:10px">
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="ml-date" type="date" class="login-fi" style="margin-bottom:0;width:140px"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount ($)</div><input id="ml-amt" type="number" step="0.01" class="login-fi" style="margin-bottom:0;width:110px" placeholder="85.00"></div>
+              <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Who With / Purpose</div><input id="ml-purpose" class="login-fi" style="margin-bottom:0;width:200px" placeholder="Client meeting — John Doe"></div>
+              <button onclick="cpAddMeal()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Log Meal</button>
+            </div>
+          </div>
+          <div class="cp-card">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:6px" id="cp-meals-summary">Total Deduction: $0.00</div>
+            <table class="cp-table"><thead><tr><th>Date</th><th>Purpose</th><th>Full Amount</th><th>Deductible (50%)</th><th></th></tr></thead>
+            <tbody id="cp-meals-tbody"></tbody>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECURRING TRANSACTIONS -->
+      <div class="cp-panel" id="cp-panel-recurring">
+        <div class="cp-section-title">🔄 Recurring Transactions</div>
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Add Recurring Rule</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Type</div>
+              <select id="rec-type" class="login-fi" style="margin-bottom:0">
+                <option value="expense">Expense</option><option value="income">Income</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Category</div>
+              <select id="rec-cat" class="login-fi" style="margin-bottom:0">
+                <option>Software &amp; Tech</option><option>Rent &amp; Facilities</option><option>Utilities</option>
+                <option>Insurance</option><option>Advertising</option><option>Payroll &amp; Contractors</option>
+                <option>Professional Services</option><option>Sales Revenue</option><option>Retainer Income</option><option>Other</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Description</div><input id="rec-desc" class="login-fi" style="margin-bottom:0" placeholder="e.g. Slack subscription"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Amount ($)</div><input id="rec-amt" type="number" step="0.01" class="login-fi" style="margin-bottom:0" placeholder="0.00"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Frequency</div>
+              <select id="rec-freq" class="login-fi" style="margin-bottom:0">
+                <option value="weekly">Weekly</option><option value="monthly" selected>Monthly</option>
+                <option value="quarterly">Quarterly</option><option value="annually">Annually</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Next Date</div><input id="rec-next" type="date" class="login-fi" style="margin-bottom:0"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">&nbsp;</div>
+              <button onclick="cpAddRecurring()" style="width:100%;padding:9px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add Rule</button>
+            </div>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy)">Active Rules</div>
+            <button onclick="cpProcessRecurring()" style="padding:6px 14px;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.2);border-radius:7px;font-size:.72rem;font-weight:700;cursor:pointer">▶ Process Due Now</button>
+          </div>
+          <table class="cp-table">
+            <thead><tr><th>Type</th><th>Description</th><th>Amount</th><th>Frequency</th><th>Next Date</th><th>Last Run</th><th></th></tr></thead>
+            <tbody id="cp-recurring-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TIME TRACKING -->
+      <div class="cp-panel" id="cp-panel-time">
+        <div class="cp-section-title">⏱ Time Tracking</div>
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Log Time Entry</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Date</div><input id="tt-date" type="date" class="login-fi" style="margin-bottom:0"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Client / Project</div><input id="tt-client" class="login-fi" style="margin-bottom:0" placeholder="Client name"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Description</div><input id="tt-desc" class="login-fi" style="margin-bottom:0" placeholder="Work performed"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Hours</div><input id="tt-hours" type="number" step="0.25" min="0.25" class="login-fi" style="margin-bottom:0" placeholder="1.5" oninput="cpCalcTimeEntry()"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Rate ($/hr)</div><input id="tt-rate" type="number" step="1" class="login-fi" style="margin-bottom:0" placeholder="150" oninput="cpCalcTimeEntry()"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px" id="tt-total-lbl">Billable: $0.00</div>
+              <button onclick="cpAddTimeEntry()" style="width:100%;padding:9px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Log</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <div class="cp-card"><div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">This Week</div><div style="font-family:var(--ff-m);font-size:1.4rem;font-weight:800;color:var(--navy)" id="tt-week-hrs">0h</div><div style="font-size:.72rem;color:var(--green);font-weight:600" id="tt-week-val">$0 billable</div></div>
+          <div class="cp-card"><div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">This Month</div><div style="font-family:var(--ff-m);font-size:1.4rem;font-weight:800;color:var(--navy)" id="tt-month-hrs">0h</div><div style="font-size:.72rem;color:var(--green);font-weight:600" id="tt-month-val">$0 billable</div></div>
+        </div>
+        <div class="cp-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="font-weight:700;font-size:.82rem;color:var(--navy)">Time Log</div>
+            <button onclick="cpTimeToInvoice()" style="padding:6px 14px;background:var(--gold-lt);color:var(--navy);border:1px solid var(--gold-md);border-radius:7px;font-size:.72rem;font-weight:700;cursor:pointer">🧾 Convert Unbilled → Invoice</button>
+          </div>
+          <table class="cp-table">
+            <thead><tr><th>Date</th><th>Client</th><th>Description</th><th>Hours</th><th>Rate</th><th>Billable</th><th>Status</th><th></th></tr></thead>
+            <tbody id="cp-time-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FIXED ASSETS -->
+      <div class="cp-panel" id="cp-panel-assets">
+        <div class="cp-section-title">🏗 Fixed Asset Register</div>
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Add Asset</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end">
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Asset Name</div><input id="fa-name" class="login-fi" style="margin-bottom:0" placeholder="MacBook Pro"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Category</div>
+              <select id="fa-cat" class="login-fi" style="margin-bottom:0">
+                <option>Computer & Tech</option><option>Vehicle</option><option>Equipment</option>
+                <option>Furniture</option><option>Real Estate</option><option>Other</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Purchase Date</div><input id="fa-date" type="date" class="login-fi" style="margin-bottom:0"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Cost ($)</div><input id="fa-cost" type="number" step="0.01" class="login-fi" style="margin-bottom:0" placeholder="2499.00"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Useful Life (yrs)</div><input id="fa-life" type="number" min="1" class="login-fi" style="margin-bottom:0" placeholder="5"></div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">Method</div>
+              <select id="fa-method" class="login-fi" style="margin-bottom:0">
+                <option value="sl">Straight-Line</option><option value="db">Declining Balance (2×)</option>
+              </select>
+            </div>
+            <div><div style="font-size:.68rem;color:var(--muted);margin-bottom:4px">&nbsp;</div>
+              <button onclick="cpAddAsset()" style="width:100%;padding:9px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer">+ Add Asset</button>
+            </div>
+          </div>
+        </div>
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:4px">Asset Register</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">Depreciation calculated automatically each year from purchase date.</div>
+          <table class="cp-table">
+            <thead><tr><th>Asset</th><th>Category</th><th>Cost</th><th>Purchased</th><th>Method</th><th>Annual Depr.</th><th>Accum. Depr.</th><th>Book Value</th><th></th></tr></thead>
+            <tbody id="cp-assets-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REFERRALS -->
+      <div class="cp-panel" id="cp-panel-referrals">
+        <div class="cp-section-title">🎁 Referral Program</div>
+        <!-- Hero banner -->
+        <div style="background:linear-gradient(135deg,var(--navy),#17377A);border-radius:14px;padding:24px 28px;margin-bottom:18px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <div style="font-family:var(--ff-h);font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:6px">Earn with Efficient</div>
+            <div style="font-size:.82rem;color:rgba(255,255,255,.8);margin-bottom:14px;line-height:1.7">Share Efficient with other business owners. Every paid signup through your link earns you <strong style="color:var(--gold3)">$25/month credit</strong> for 12 months — up to <strong style="color:var(--gold3)">$300 per referral</strong>. No cap.</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 16px;text-align:center">
+                <div style="font-family:var(--ff-m);font-size:1.2rem;font-weight:800;color:var(--gold3)" id="ref-count">0</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.6)">Referrals</div>
+              </div>
+              <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 16px;text-align:center">
+                <div style="font-family:var(--ff-m);font-size:1.2rem;font-weight:800;color:var(--gold3)" id="ref-earned">$0</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.6)">Credits Earned</div>
+              </div>
+              <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 16px;text-align:center">
+                <div style="font-family:var(--ff-m);font-size:1.2rem;font-weight:800;color:var(--gold3)" id="ref-pending">$0</div>
+                <div style="font-size:.66rem;color:rgba(255,255,255,.6)">Pending</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center">
+            <div id="cp-ref-qr"></div>
+            <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-top:6px;font-family:var(--ff-m)">Scan to share</div>
+          </div>
+        </div>
+        <!-- Referral link -->
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Your Referral Link</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="cp-ref-link" class="login-fi" style="margin-bottom:0;flex:1;font-family:var(--ff-m);font-size:.72rem;background:var(--off)" readonly>
+            <button onclick="cpCopyRefLink()" style="padding:9px 18px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap">📋 Copy Link</button>
+            <button onclick="cpShareRefLink()" style="padding:9px 18px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap">📤 Share</button>
+          </div>
+          <div style="margin-top:10px;font-size:.72rem;color:var(--muted)">This link is unique to your account. Every signup through it is automatically credited to you.</div>
+        </div>
+        <!-- How it works -->
+        <div class="cp-card" style="margin-bottom:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:14px">How It Works</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+            ${[['1','Share your link','Send via email, text, or QR code on your invoices'],['2','They sign up','Friend starts a free 30-day Efficient trial'],['3','They subscribe','Once they pay their first month, you earn credit'],['4','You get paid','$25/month added to your account — 12 months per referral']].map(([n,t,d])=>`
+            <div style="background:var(--off);border-radius:10px;padding:14px;text-align:center">
+              <div style="width:28px;height:28px;background:var(--navy);color:var(--gold2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;margin:0 auto 8px">${n}</div>
+              <div style="font-weight:700;font-size:.76rem;color:var(--navy);margin-bottom:4px">${t}</div>
+              <div style="font-size:.68rem;color:var(--muted)">${d}</div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <!-- Referral history -->
+        <div class="cp-card">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">Referral History</div>
+          <table class="cp-table">
+            <thead><tr><th>Date</th><th>Referred Business</th><th>Status</th><th>Your Credit</th></tr></thead>
+            <tbody id="cp-ref-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACCOUNT SETTINGS -->
+      <div class="cp-panel" id="cp-panel-account">
+        <div class="cp-section-title">⚙️ My Account</div>
+        <div id="cp-account-body"></div>
+        <div class="cp-card" style="margin-top:14px">
+          <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:10px">🔍 Audit Log</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px">All add/delete actions on your account</div>
+          <table class="cp-table"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead>
+          <tbody id="cp-audit-tbody"></tbody></table>
+        </div>
+      </div>
+
+    </div><!-- /portal-main -->
+  </div><!-- /portal-wrap -->
+</div>
+
 </body>
 </html>
