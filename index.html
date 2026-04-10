@@ -55,8 +55,9 @@
   --teal:var(--navy3);
   --teal-lt:var(--gold-lt);
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--ff-b);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--gold2,#C9A84C) #0e1628}
+body{font-family:var(--ff-b);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:transparent}
+@media(max-width:768px){input,select,textarea{font-size:16px!important}}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -187,7 +188,7 @@ tr:hover td{background:rgba(255,255,255,.04)}
 .fsel option{background:var(--card2);color:var(--text)}
 
 /* ─── MODAL ────────────────────────────────────────────── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center}
 .overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.5)}
 .modal-hd{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:space-between}
@@ -478,7 +479,7 @@ tr:hover td{background:rgba(200,144,42,.03)!important}
 .chip,.section-chip{font-family:var(--ff-m)!important;font-size:.58rem!important;letter-spacing:.15em!important;text-transform:uppercase!important;color:var(--gold)!important;background:var(--gold-lt)!important;border:1px solid var(--gold-md)!important;border-radius:100px!important;padding:4px 14px!important}
 
 /* ── Modals → white / navy ── */
-.overlay{background:rgba(11,33,64,.55)!important;backdrop-filter:blur(6px)!important}
+.overlay{background:rgba(11,33,64,.55)!important;backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important}
 .modal{background:var(--white)!important;border:1.5px solid var(--border)!important;border-radius:14px!important;box-shadow:0 24px 80px rgba(11,33,64,.2)!important}
 .modal-hd,.modal-header{background:var(--off)!important;border-bottom:1px solid var(--border)!important}
 .modal-title{font-family:var(--ff-h)!important;font-weight:800!important;color:var(--navy)!important;font-size:.95rem!important}
@@ -1157,7 +1158,7 @@ footer{background:var(--navy)!important}
       </div>
 
       <!-- Full Preview Modal (inside page) -->
-      <div id="dg-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.88);z-index:4000;flex-direction:column;backdrop-filter:blur(4px)">
+      <div id="dg-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.88);z-index:4000;flex-direction:column;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)">
         <div style="background:var(--navy);padding:10px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0">
           <div style="display:flex;gap:6px">
             <div style="width:11px;height:11px;border-radius:50%;background:#FF5F57"></div>
@@ -1174,7 +1175,7 @@ footer{background:var(--navy)!important}
       </div>
 
       <!-- Send to Prospect Modal -->
-      <div id="dg-send-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.7);z-index:5000;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
+      <div id="dg-send-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.7);z-index:5000;align-items:center;justify-content:center;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)">
         <div style="background:#fff;border-radius:14px;padding:24px;max-width:500px;width:90%;box-shadow:0 24px 60px rgba(11,17,32,.3)">
           <div style="font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:4px">📧 Send Demo to Prospect</div>
           <div style="font-size:.74rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Fill in the prospect details. A personalized email will open pre-written and ready to send.</div>
@@ -7371,7 +7372,7 @@ function wfToast(msg){const el=document.createElement('div');el.style.cssText='p
 .oe-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:#8A9AB2;margin-top:5px}
 
 /* Modal */
-.oe-modal-backdrop{position:fixed;inset:0;background:rgba(11,33,64,.45);z-index:5000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.oe-modal-backdrop{position:fixed;inset:0;background:rgba(11,33,64,.45);z-index:5000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .oe-modal{background:#fff;border-radius:14px;padding:24px;max-width:580px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(11,33,64,.25);animation:oeModalIn .2s ease}
 @keyframes oeModalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
 .oe-modal-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:800;color:#0B2140;margin-bottom:4px}
