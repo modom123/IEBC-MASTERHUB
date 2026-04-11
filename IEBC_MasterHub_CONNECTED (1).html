@@ -1143,7 +1143,7 @@ footer{background:var(--navy)!important}
 <div class="page" id="page-accounting">
       <div class="sec-hdr" style="flex-wrap:wrap;gap:10px">
         <div>
-          <div class="sec-title">📊 Accounting Suite <span style="font-size:.55rem;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:3px 9px;border-radius:20px;vertical-align:middle;font-weight:700">AI</span></div>
+          <div class="sec-title">📊 Efficient <span style="font-size:.55rem;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:3px 9px;border-radius:20px;vertical-align:middle;font-weight:700">by IEBC</span></div>
           <div class="sec-sub">Full financial tracking · AI capture · Automation · Tax-ready</div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -1187,6 +1187,8 @@ footer{background:var(--navy)!important}
         <button class="ac-tab" onclick="acShowTab('reports')">📈 Reports</button>
         <button class="ac-tab" onclick="acShowTab('tax')">💼 Tax Center</button>
         <button class="ac-tab" onclick="acShowTab('rules')">⚡ Rules</button>
+        <button class="ac-tab" onclick="acShowTab('payroll')">💵 Payroll</button>
+        <button class="ac-tab" onclick="acShowTab('bank')">🏦 Bank Linking</button>
       </div>
 
       <!-- ════════════════════════════════════════════
@@ -1635,6 +1637,227 @@ footer{background:var(--navy)!important}
           </div>
           <div id="acc-cred-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"></div>
           <button onclick="accCopyCredentials()" style="width:100%;margin-top:12px;padding:9px;background:rgba(200,144,42,.18);border:1.5px solid rgba(200,144,42,.4);color:var(--gold3);border-radius:8px;font-family:var(--ff-m);font-size:.62rem;font-weight:700;cursor:pointer;letter-spacing:.06em;text-transform:uppercase">📋 Copy Credentials</button>
+        </div>
+
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           TAB: PAYROLL
+           ════════════════════════════════════════════ -->
+      <div class="ac-panel" id="ac-tab-payroll">
+
+        <!-- Summary cards -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px">
+          <div class="ac-card"><div class="ac-card-val" id="pr-emp-count" style="color:var(--blue)">0</div><div class="ac-card-lbl">Employees</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="pr-total-pay" style="color:var(--green)">$0</div><div class="ac-card-lbl">Last Payroll Total</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="pr-ytd-pay" style="color:var(--navy)">$0</div><div class="ac-card-lbl">YTD Payroll</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="pr-tax-withheld" style="color:var(--orange)">$0</div><div class="ac-card-lbl">YTD Tax Withheld</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="pr-next-run" style="color:var(--navy)">—</div><div class="ac-card-lbl">Next Payroll</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+
+          <!-- Add Employee -->
+          <div>
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">Add Employee</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div class="ac-lbl">First Name</div><input class="fi" id="pr-fname" placeholder="Jane" style="width:100%;margin-top:3px"></div>
+                <div><div class="ac-lbl">Last Name</div><input class="fi" id="pr-lname" placeholder="Smith" style="width:100%;margin-top:3px"></div>
+              </div>
+              <div><div class="ac-lbl">Email</div><input class="fi" id="pr-email" type="email" placeholder="jane@example.com" style="width:100%;margin-top:3px"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div class="ac-lbl">Job Title</div><input class="fi" id="pr-title" placeholder="Designer" style="width:100%;margin-top:3px"></div>
+                <div><div class="ac-lbl">Pay Type</div>
+                  <select class="fi" id="pr-paytype" onchange="prToggleRate()" style="width:100%;margin-top:3px">
+                    <option value="salary">Salary (annual)</option>
+                    <option value="hourly">Hourly</option>
+                    <option value="contractor">Contractor (1099)</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div class="ac-lbl" id="pr-rate-lbl">Annual Salary ($)</div><input class="fi" id="pr-rate" type="number" step="100" placeholder="55000" style="width:100%;margin-top:3px"></div>
+                <div><div class="ac-lbl">Pay Schedule</div>
+                  <select class="fi" id="pr-schedule" style="width:100%;margin-top:3px">
+                    <option value="biweekly">Bi-Weekly (26/yr)</option>
+                    <option value="weekly">Weekly (52/yr)</option>
+                    <option value="semimonthly">Semi-Monthly (24/yr)</option>
+                    <option value="monthly">Monthly (12/yr)</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div class="ac-lbl">Start Date</div><input class="fi" id="pr-startdate" type="date" style="width:100%;margin-top:3px"></div>
+                <div><div class="ac-lbl">Filing Status (W-4)</div>
+                  <select class="fi" id="pr-w4" style="width:100%;margin-top:3px">
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                    <option value="hoh">Head of Household</option>
+                  </select>
+                </div>
+              </div>
+              <div><div class="ac-lbl">Direct Deposit — Bank (last 4)</div><input class="fi" id="pr-bank" placeholder="e.g. Chase ••••4821" style="width:100%;margin-top:3px"></div>
+              <button onclick="prSaveEmployee()" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer">+ Add Employee</button>
+            </div>
+          </div>
+
+          <!-- Run Payroll -->
+          <div>
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">Run Payroll</div>
+            <div style="background:var(--off);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+                <div><div class="ac-lbl">Pay Period Start</div><input class="fi" id="pr-period-start" type="date" style="width:100%;margin-top:3px"></div>
+                <div><div class="ac-lbl">Pay Period End</div><input class="fi" id="pr-period-end" type="date" style="width:100%;margin-top:3px"></div>
+              </div>
+              <div><div class="ac-lbl">Pay Date</div><input class="fi" id="pr-paydate" type="date" style="width:100%;margin-top:3px;margin-bottom:10px"></div>
+              <div id="pr-run-preview" style="font-size:.78rem;color:var(--muted);padding:12px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;min-height:48px">Select dates above to preview payroll.</div>
+              <button onclick="prPreviewPayroll()" style="width:100%;padding:9px;background:var(--off2);border:1.5px solid var(--border2);border-radius:8px;font-weight:600;font-size:.78rem;cursor:pointer;margin-bottom:8px">🔍 Preview Payroll</button>
+              <button onclick="prRunPayroll()" style="width:100%;padding:11px;background:var(--navy);color:var(--gold2);border:none;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer">▶ Process Payroll &amp; Send Direct Deposits</button>
+            </div>
+            <!-- Pay Settings -->
+            <div style="background:var(--gold-lt);border:1.5px solid var(--gold-md);border-radius:9px;padding:12px">
+              <div style="font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:6px">⚡ Payroll Automation Settings</div>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--navy);cursor:pointer;margin-bottom:5px">
+                <input type="checkbox" id="pr-auto-run" checked style="accent-color:var(--gold)"> Auto-run on schedule
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--navy);cursor:pointer;margin-bottom:5px">
+                <input type="checkbox" id="pr-auto-notify" checked style="accent-color:var(--gold)"> Email employees pay stubs
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--navy);cursor:pointer">
+                <input type="checkbox" id="pr-auto-tax" checked style="accent-color:var(--gold)"> Auto-file payroll taxes
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Employee List -->
+        <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:10px">Employee Roster <span id="pr-emp-badge" style="font-family:var(--ff-m);font-size:.58rem;background:var(--blue-lt);color:var(--blue);border:1px solid rgba(29,78,216,.18);padding:2px 8px;border-radius:20px;margin-left:6px">0 active</span></div>
+        <div style="overflow-x:auto">
+          <table class="ac-table" id="pr-emp-table">
+            <thead><tr><th>Name</th><th>Title</th><th>Type</th><th>Rate</th><th>Schedule</th><th>Gross/Period</th><th>W-4</th><th>Direct Deposit</th><th>YTD Paid</th><th></th></tr></thead>
+            <tbody id="pr-emp-tbody"><tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted);font-size:.8rem">No employees yet — add your first employee above</td></tr></tbody>
+          </table>
+        </div>
+
+        <!-- Payroll History -->
+        <div style="margin-top:20px">
+          <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:10px">Payroll History</div>
+          <div id="pr-history-list">
+            <div style="color:var(--muted);font-size:.8rem;padding:20px;text-align:center;border:1.5px dashed var(--border);border-radius:9px">No payroll runs yet</div>
+          </div>
+        </div>
+
+        <!-- W-2 / 1099 Year-End -->
+        <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:var(--navy);border-radius:12px;padding:16px;color:#fff">
+            <div style="font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:var(--gold2);margin-bottom:8px">W-2 Year-End Filing</div>
+            <div style="font-size:.76rem;color:rgba(255,255,255,.8);margin-bottom:10px">Auto-generate W-2s for all salaried/hourly employees based on YTD payroll records.</div>
+            <div id="pr-w2-status" style="font-size:.72rem;color:rgba(255,255,255,.6);margin-bottom:10px">No payroll runs yet — run payroll to enable W-2 generation.</div>
+            <button onclick="prGenerateW2s()" style="padding:8px 18px;background:var(--gold);color:var(--navy);border:none;border-radius:7px;font-weight:700;font-size:.76rem;cursor:pointer">Generate W-2s</button>
+          </div>
+          <div style="background:var(--navy);border-radius:12px;padding:16px;color:#fff">
+            <div style="font-family:var(--ff-h);font-size:.88rem;font-weight:800;color:var(--gold2);margin-bottom:8px">1099 Contractor Filing</div>
+            <div style="font-size:.76rem;color:rgba(255,255,255,.8);margin-bottom:10px">Auto-generate 1099-NEC for all contractors paid $600+ in the tax year.</div>
+            <div id="pr-1099-status" style="font-size:.72rem;color:rgba(255,255,255,.6);margin-bottom:10px">Add contractors in the Vendors tab and mark as 1099.</div>
+            <button onclick="prGenerate1099s()" style="padding:8px 18px;background:var(--gold);color:var(--navy);border:none;border-radius:7px;font-weight:700;font-size:.76rem;cursor:pointer">Generate 1099s</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           TAB: BANK LINKING
+           ════════════════════════════════════════════ -->
+      <div class="ac-panel" id="ac-tab-bank">
+
+        <!-- Summary row -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px">
+          <div class="ac-card"><div class="ac-card-val" id="bk-account-count" style="color:var(--blue)">0</div><div class="ac-card-lbl">Linked Accounts</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="bk-total-balance" style="color:var(--green)">$0</div><div class="ac-card-lbl">Total Balance</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="bk-last-sync" style="color:var(--navy)">Never</div><div class="ac-card-lbl">Last Sync</div></div>
+          <div class="ac-card"><div class="ac-card-val" id="bk-imported-count" style="color:var(--navy)">0</div><div class="ac-card-lbl">Txns Imported</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+
+          <!-- Connect Bank -->
+          <div>
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy);margin-bottom:14px">Connect a Bank Account</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div><div class="ac-lbl">Bank Name</div><input class="fi" id="bk-bank-name" placeholder="e.g. Chase, Wells Fargo, Bank of America" style="width:100%;margin-top:3px"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div class="ac-lbl">Account Type</div>
+                  <select class="fi" id="bk-acct-type" style="width:100%;margin-top:3px">
+                    <option value="checking">Checking</option>
+                    <option value="savings">Savings</option>
+                    <option value="credit">Credit Card</option>
+                    <option value="money-market">Money Market</option>
+                  </select>
+                </div>
+                <div><div class="ac-lbl">Account Nickname</div><input class="fi" id="bk-nickname" placeholder="e.g. Business Checking" style="width:100%;margin-top:3px"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><div class="ac-lbl">Routing Number</div><input class="fi" id="bk-routing" placeholder="9-digit" maxlength="9" style="width:100%;margin-top:3px"></div>
+                <div><div class="ac-lbl">Last 4 of Account #</div><input class="fi" id="bk-acct-last4" placeholder="4 digits" maxlength="4" style="width:100%;margin-top:3px"></div>
+              </div>
+              <div><div class="ac-lbl">Current Balance ($)</div><input class="fi" id="bk-balance" type="number" step="0.01" placeholder="0.00" style="width:100%;margin-top:3px"></div>
+              <div style="padding:10px 12px;background:var(--green-lt);border:1px solid rgba(4,120,87,.2);border-radius:8px;font-size:.72rem;color:var(--green);font-weight:600">
+                🔒 Read-only access only — we can never move or transfer your money
+              </div>
+              <button onclick="bkAddAccount()" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--navy),#17377A);color:var(--gold2);border:none;border-radius:9px;font-weight:800;font-size:.88rem;cursor:pointer">🔗 Link Account</button>
+            </div>
+
+            <!-- Quick Connect Tiles -->
+            <div style="margin-top:16px">
+              <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:8px">Quick Connect (Popular Banks)</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                <button onclick="bkQuickConnect('Chase','Chase Bank')" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all .15s;font-size:.74rem;font-weight:600;color:var(--navy)" onmouseover="this.style.borderColor='#17375A'" onmouseout="this.style.borderColor=''">🏦 Chase</button>
+                <button onclick="bkQuickConnect('Wells Fargo','Wells Fargo')" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all .15s;font-size:.74rem;font-weight:600;color:var(--navy)" onmouseover="this.style.borderColor='#C8141C'" onmouseout="this.style.borderColor=''">🏦 Wells Fargo</button>
+                <button onclick="bkQuickConnect('Bank of America','Bank of America')" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all .15s;font-size:.74rem;font-weight:600;color:var(--navy)" onmouseover="this.style.borderColor='#E31837'" onmouseout="this.style.borderColor=''">🏦 Bank of America</button>
+                <button onclick="bkQuickConnect('Citibank','Citibank')" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all .15s;font-size:.74rem;font-weight:600;color:var(--navy)" onmouseover="this.style.borderColor='#056DAE'" onmouseout="this.style.borderColor=''">🏦 Citibank</button>
+                <button onclick="bkQuickConnect('US Bank','US Bank')" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all .15s;font-size:.74rem;font-weight:600;color:var(--navy)" onmouseover="this.style.borderColor='#1D68A7'" onmouseout="this.style.borderColor=''">🏦 US Bank</button>
+                <button onclick="bkQuickConnect('Capital One','Capital One')" style="display:flex;align-items:center;gap:7px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;transition:all .15s;font-size:.74rem;font-weight:600;color:var(--navy)" onmouseover="this.style.borderColor='#D03027'" onmouseout="this.style.borderColor=''">🏦 Capital One</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Linked Accounts + Sync -->
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div style="font-weight:700;font-size:.88rem;color:var(--navy)">Linked Accounts</div>
+              <button onclick="bkSyncAll()" style="padding:6px 14px;background:var(--navy);color:var(--gold2);border:none;border-radius:7px;font-weight:700;font-size:.72rem;cursor:pointer">🔄 Sync All</button>
+            </div>
+            <div id="bk-accounts-list"><div style="color:var(--muted);font-size:.8rem;padding:20px;text-align:center;border:1.5px dashed var(--border);border-radius:9px">No accounts linked yet — connect your first account to start syncing transactions automatically.</div></div>
+
+            <!-- Reconciliation -->
+            <div style="margin-top:16px;background:var(--off);border:1.5px solid var(--border);border-radius:12px;padding:14px">
+              <div style="font-weight:700;font-size:.82rem;color:var(--navy);margin-bottom:8px">Bank Reconciliation</div>
+              <div style="font-size:.76rem;color:var(--muted);margin-bottom:10px">Match imported bank transactions to your recorded expenses. Unmatched items are flagged for review.</div>
+              <div style="display:flex;gap:8px;margin-bottom:10px">
+                <select class="fi" id="bk-recon-account" style="flex:2;font-size:.76rem">
+                  <option value="">Select account to reconcile...</option>
+                </select>
+                <button onclick="bkRunReconciliation()" style="padding:7px 14px;background:var(--navy);color:var(--gold2);border:none;border-radius:7px;font-weight:700;font-size:.72rem;cursor:pointer;white-space:nowrap">▶ Reconcile</button>
+              </div>
+              <div id="bk-recon-results" style="font-size:.76rem;color:var(--muted)">Select an account above to run reconciliation.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction Import Feed -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-weight:700;font-size:.88rem;color:var(--navy)">Recent Bank Transactions</div>
+            <div style="display:flex;gap:8px">
+              <select class="fi" id="bk-filter-account" onchange="bkRenderTransactions()" style="font-size:.74rem;padding:5px 10px;width:auto">
+                <option value="">All Accounts</option>
+              </select>
+              <button onclick="bkImportAll()" style="padding:6px 14px;background:var(--off);border:1.5px solid var(--border);border-radius:7px;font-weight:600;font-size:.72rem;cursor:pointer">⬇ Import All to Records</button>
+            </div>
+          </div>
+          <div id="bk-transactions-list"><div style="color:var(--muted);font-size:.8rem;padding:24px;text-align:center;border:1.5px dashed var(--border);border-radius:9px">Link a bank account to see your transactions here. They'll auto-import and be AI-categorized daily.</div></div>
         </div>
 
       </div>
@@ -2766,9 +2989,12 @@ function acClientsRender(){
       <td style="padding:9px 10px;font-size:.72rem;color:var(--text2)">${c.consultant||'—'}</td>
       <td style="padding:9px 10px;font-family:var(--ff-m);font-size:.62rem;color:var(--text3)">****${c.card_last4||'—'}</td>
       <td style="padding:9px 10px;font-size:.62rem;color:var(--text2)">${(c.connected_banks||[]).join(', ')||'—'}</td>
-      <td style="padding:9px 10px;text-align:right">
-        <button onclick="accShowCreds('${c.client_id}')" style="padding:4px 10px;background:var(--navy);color:var(--gold2);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;white-space:nowrap">🔑 Creds</button>
-        <button onclick="accActivate('${c.client_id}')" style="padding:4px 10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.22);border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;margin-left:4px;white-space:nowrap">${c.status==='trial'?'Activate':'✓ Active'}</button>
+      <td style="padding:9px 10px;text-align:right;white-space:nowrap">
+        <button onclick="accShowCreds('${c.client_id}')" style="padding:4px 10px;background:var(--navy);color:var(--gold2);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer">🔑 Creds</button>
+        ${!c.hub_imported
+          ? `<button onclick="accImportToHub('${c.client_id}')" style="padding:4px 10px;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;margin-left:4px">📥 Import to Hub</button>`
+          : `<span style="font-size:.62rem;color:var(--green);font-weight:700;margin-left:6px">✓ In Hub</span>`}
+        <button onclick="accActivate('${c.client_id}')" style="padding:4px 10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(4,120,87,.22);border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer;margin-left:4px">${c.status==='active'?'✓ Active':'Activate'}</button>
       </td>
     </tr>
   `).join('');
@@ -2804,7 +3030,7 @@ function accShowCreds(clientId){
 
 function accCopyCredentials(){
   const c = _accCurrentCreds; if(!c) return;
-  const text = `IEBC Accounting Suite — Client Credentials
+  const text = `Efficient by IEBC — Client Credentials
 Client ID:  ${c.client_id}
 Username:   ${c.username||c.email}
 Password:   ${c.temp_password}
@@ -2865,6 +3091,97 @@ window.addEventListener('focus', ()=>{
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════
+//  IMPORT ACCOUNTING CLIENT TO HUB — auto-creates client, invoice, pipeline
+// ══════════════════════════════════════════════════════════════
+async function accImportToHub(clientId){
+  const c = acGetClients().find(x=>x.client_id===clientId);
+  if(!c){ showToast('Client not found'); return; }
+  if(c.hub_imported){ showToast('Already imported'); return; }
+
+  // ── 1. CLIENT RECORD ──────────────────────────────────────
+  const clientNum = iebcNextId('clients','C');
+  const clientRec = {
+    name: c.business_name||c.full_name, contact: c.full_name,
+    email: c.email, phone: c.phone||'',
+    industry: c.business_type||'General', status:'active',
+    monthly: c.is_bundle ? 0 : (c.monthly_rate||0),
+    setup_fee: c.is_bundle ? 599 : 0,
+    tier: c.is_bundle ? 'Bundle' : (c.plan_name||'Accounting'),
+    notes: `${c.is_bundle?'Bundle Deal $599':'Accounting Suite'} · ${c.plan_name} · ${c.is_bundle?'Full access':'Trial ends '+c.trial_end} · ID: ${c.client_id}\nConsultant: ${c.consultant||'TBD'}\nUsername: ${c.username||c.email}`,
+    client_id: c.client_id, lead_consultant: c.consultant||'',
+    created_at: c.created_at||new Date().toISOString(), id:'local-'+Date.now(),
+    website_status:'', hub_status:'in-progress',
+  };
+  const savedC = await dbInsert('hub_clients',{...clientRec,id:undefined});
+  if(savedC) clientRec.id = savedC.id;
+  DATA.clients.unshift(clientRec);
+
+  // ── 2. INVOICE RECORD ─────────────────────────────────────
+  const invType   = c.is_bundle ? 'setup-final' : 'retainer';
+  const invAmount = c.is_bundle ? 599 : (c.monthly_rate||0);
+  const inv = {
+    client_name: clientRec.name, type: invType,
+    amount: invAmount,
+    due_date: c.sub_start||new Date(Date.now()+30*864e5).toISOString().split('T')[0],
+    status: c.is_bundle ? 'paid' : 'pending',
+    notes: `${c.is_bundle?'Bundle Deal — $599 one-time':'Accounting Suite subscription'} · ${c.plan_name} · ${c.client_id}`,
+    created_at: new Date().toISOString(), id:'local-'+Date.now()+1,
+  };
+  const savedI = await dbInsert('hub_invoices',{...inv,id:undefined});
+  if(savedI) inv.id = savedI.id;
+  DATA.invoices.unshift(inv);
+  // Auto-log bundle to accounting revenue
+  if(c.is_bundle) { try{ acctAutoLogFromInvoice({...inv, status:'paid', paid_at:new Date().toISOString()}, 'paid'); }catch(e){} }
+
+  // ── 3. PIPELINE PROSPECT (if not already present) ─────────
+  const alreadyIn = DATA.prospects.some(p=>(p.email||'').toLowerCase()===(c.email||'').toLowerCase());
+  if(!alreadyIn){
+    const prospect = {
+      name: clientRec.name, contact: c.full_name, email: c.email,
+      phone: c.phone||'', stage:'closing', heat:'hot',
+      est_value: c.is_bundle ? 599 : (c.monthly_rate||0)*12,
+      notes:`Signed up via ${c.is_bundle?'Bundle Deal':'Accounting Suite checkout'} · ${c.plan_name}`,
+      created_at: new Date().toISOString(), id:'local-'+Date.now()+2,
+    };
+    const savedP = await dbInsert('hub_prospects',{...prospect,id:undefined});
+    if(savedP) prospect.id = savedP.id;
+    DATA.prospects.unshift(prospect);
+  }
+
+  // ── 4. BUILD — start Accounting Setup project ──────────────
+  const alreadyBuild = DATA.builds.some(b=>b.client_name===clientRec.name);
+  if(!alreadyBuild){
+    const buildNum = iebcNextId('builds','B');
+    const build = {
+      client_name: clientRec.name, contact: c.full_name,
+      industry: c.business_type||'General', phase:'Discovery',
+      progress: 10, budget: c.is_bundle ? 599 : (c.monthly_rate||0),
+      due_date: new Date(Date.now()+14*864e5).toISOString().split('T')[0],
+      status:'on-track',
+      team:[{name:c.consultant||ME.name, role:'Lead Consultant'}],
+      notes:`Accounting Suite setup for ${clientRec.name}\nPlan: ${c.plan_name}\nBanks to connect: ${(c.connected_banks||[]).join(', ')||'TBD'}`,
+      build_id: buildNum, created_at:new Date().toISOString(), id:'local-'+Date.now()+3,
+    };
+    const savedB = await dbInsert('hub_builds',{...build,id:undefined,team:JSON.stringify(build.team)});
+    if(savedB) build.id = savedB.id;
+    DATA.builds.unshift(build);
+  }
+
+  // ── 5. MARK IMPORTED ──────────────────────────────────────
+  try{
+    const list = acGetClients().map(x=>x.client_id===clientId?{...x,hub_imported:true,hub_import_ts:new Date().toISOString()}:x);
+    localStorage.setItem('iebc_accounting_clients',JSON.stringify(list));
+    const s=IEBC_BRIDGE.get(); s.accounting_clients=list; s._ts=Date.now();
+    localStorage.setItem('iebc_shared',JSON.stringify(s));
+  }catch(e){}
+
+  saveLocal();
+  renderClients(); renderInvoices(); renderPipeline(); renderBuilds(); renderDashboard(); updateBadges();
+  acClientsRender(); acClientsUpdateStats();
+  showToast('✅ '+clientRec.name+' imported — Client, Invoice, Pipeline & Build created');
+}
 
 // ══════════════════════════════════════════════════════════
 //  SUPABASE SQL SETUP SCRIPT
@@ -3290,6 +3607,18 @@ function setupRealtimeSync(){
   window._hubPresence = presence;
 }
 
+function showToast(msg, type){
+  const el=document.createElement('div');
+  const bg=type==='t-success'?'#047857':type==='t-error'?'#DC2626':'#0B2140';
+  el.style.cssText=`position:fixed;bottom:24px;right:22px;background:${bg};color:#F5C842;padding:10px 18px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;box-shadow:0 8px 32px rgba(11,33,64,.3);z-index:99999;animation:showToastIn .2s ease;pointer-events:none;max-width:320px;line-height:1.4`;
+  el.textContent=msg;
+  const style=document.createElement('style');
+  style.textContent='@keyframes showToastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}';
+  document.head.appendChild(style);
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
 function showRealtimeToast(table, record, action) {
   const labels = {hub_clients:'Client',hub_prospects:'Lead',hub_builds:'Build',hub_tasks:'Task',hub_invoices:'Invoice'};
   const label = labels[table]||'Record';
@@ -3355,6 +3684,11 @@ async function dbInsert(table, row){
     await logActivity(table.replace('hub_',''), row.name||row.client_name||'item');
     return data?.[0];
   }catch(e){ console.error(e); return null; }
+}
+
+async function dbUpdate(table, id, updates){
+  if(!DB) return;
+  try{ await DB.from(table).update(updates).eq('id',id); }catch(e){ console.error(e); }
 }
 
 async function dbDelete(table, id){
@@ -3480,6 +3814,23 @@ function initApp(){
   if (typeof iebcSeedMarkOdom === 'function') iebcSeedMarkOdom();
 
   renderAll();
+
+  // ── Auto-import new Accounting Suite clients from checkout ──
+  setTimeout(function(){
+    try{
+      const unimported = acGetClients().filter(c=>!c.hub_imported);
+      if(unimported.length){
+        unimported.forEach(c => accImportToHub(c.client_id));
+        acClientsCheckNew();
+      }
+    }catch(e){}
+  }, 800);
+
+  // ── If Accounting Suite sent us here, navigate to accounting ──
+  try{
+    const openPage = localStorage.getItem('iebc-open-page');
+    if(openPage){ localStorage.removeItem('iebc-open-page'); setTimeout(()=>nav(openPage), 400); }
+  }catch(e){}
 }
 
 function updateClock(){
@@ -4326,9 +4677,59 @@ function renderPipeline(){
           <div style="font-size:.65rem;color:var(--text2)">${p.contact||''} ${p.est_value?'· $'+Number(p.est_value).toLocaleString():''}</div>
           ${p.follow_up_date?`<div style="font-size:.62rem;color:var(--orange);margin-top:3px">📅 Follow-up: ${p.follow_up_date}</div>`:''}
           <button class="btn btn-ghost btn-xs" style="position:absolute;top:6px;right:6px;padding:2px 6px" onclick="deleteItem('prospects','hub_prospects','${p.id}')">✕</button>
+          <div style="display:flex;gap:4px;margin-top:7px;flex-wrap:wrap">
+            ${stage!=='closing'?`<button style="font-size:.6rem;padding:2px 7px;background:var(--border2);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--text2)" onclick="pipelineMoveNext('${p.id}','${stage}')">→ Next Stage</button>`:''}
+            ${stage==='closing'?`<button style="font-size:.6rem;padding:2px 7px;background:var(--green);color:#fff;border:none;border-radius:4px;cursor:pointer" onclick="pipelineConvert('${p.id}')">🎉 Convert to Client</button>`:''}
+          </div>
         </div>`).join('')}
     </div>`;
   }).join('');
+}
+
+async function pipelineMoveNext(id, currentStage){
+  const idx=STAGES.indexOf(currentStage);
+  if(idx<0||idx>=STAGES.length-1){ showToast('Already at final stage'); return; }
+  const nextStage=STAGES[idx+1];
+  const p=DATA.prospects.find(p=>p.id===id); if(!p) return;
+  p.stage=nextStage;
+  await dbUpdate('hub_prospects',id,{stage:nextStage});
+  saveLocal(); renderPipeline();
+  showToast(`Moved to ${STAGE_LABELS[nextStage]}`);
+}
+
+async function pipelineConvert(id){
+  const p=DATA.prospects.find(pr=>pr.id===id); if(!p) return;
+  if(!confirm(`Convert "${p.name}" to an active client?`)) return;
+  const clientNum=iebcNextId('clients','C');
+  const c={
+    name:p.name, contact:p.contact||'', email:p.email||'', phone:p.phone||'',
+    industry:p.industry||'General', status:'active', monthly:p.est_value||0,
+    setup_fee:0, notes:`Converted from pipeline on ${new Date().toLocaleDateString()}`,
+    client_id:clientNum, created_at:new Date().toISOString(), id:'local-'+Date.now()
+  };
+  const saved=await dbInsert('hub_clients',{...c,id:undefined});
+  if(saved) c.id=saved.id;
+  DATA.clients.unshift(c);
+  // Remove from pipeline
+  DATA.prospects=DATA.prospects.filter(pr=>pr.id!==id);
+  await dbUpdate('hub_prospects',id,{stage:'closed-won'});
+  saveLocal(); renderPipeline(); renderClients(); renderDashboard(); updateBadges();
+  showToast(`🎉 ${p.name} converted to client!`);
+}
+
+async function buildQuickUpdate(id){
+  const b=DATA.builds.find(b=>b.id===id); if(!b) return;
+  const progress=prompt(`Update progress for "${b.client_name}" build\n\nCurrent: ${b.progress||0}%\n\nEnter new progress (0-100):`, b.progress||0);
+  if(progress===null) return;
+  const pct=Math.min(100,Math.max(0,parseInt(progress)||0));
+  const statusOptions=['on-track','at-risk','delayed'];
+  const statusInput=prompt(`Status:\n1 = On Track\n2 = At Risk\n3 = Delayed\n\nCurrent: ${b.status||'on-track'}\nEnter 1, 2 or 3 (or press OK to keep current):`,'1');
+  const statusMap={'1':'on-track','2':'at-risk','3':'delayed'};
+  const newStatus=statusMap[statusInput]||b.status||'on-track';
+  b.progress=pct; b.status=newStatus;
+  await dbUpdate('hub_builds',id,{progress:pct,status:newStatus});
+  saveLocal(); renderBuilds(); renderDashboard();
+  showToast(`Build updated: ${pct}% — ${newStatus}`);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -4387,7 +4788,10 @@ function renderBuilds(){
       </td>
       <td class="td-mono" style="font-size:.68rem;color:${isOverdue(b.due_date)?'var(--red)':'var(--text3)'}">${b.due_date||'—'}</td>
       <td>${statusBadge(b.status||'on-track')}</td>
-      <td><button class="btn btn-ghost btn-xs" onclick="deleteItem('builds','hub_builds','${b.id}')">✕</button></td>
+      <td style="display:flex;gap:4px;align-items:center">
+        <button class="btn btn-xs" style="background:var(--blue);color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;font-size:.65rem" onclick="buildQuickUpdate('${b.id}')">✏️</button>
+        <button class="btn btn-ghost btn-xs" onclick="deleteItem('builds','hub_builds','${b.id}')">✕</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -4430,7 +4834,11 @@ function renderInvoices(){
     <td class="td-mono" style="font-size:.68rem;color:var(--text2)">${(inv.created_at||'').substring(0,10)}</td>
     <td class="td-mono" style="font-size:.68rem;color:${isOverdue(inv.due_date)&&inv.status!=='paid'?'var(--red)':'var(--text3)'}">${inv.due_date||'—'}</td>
     <td>${statusBadge(inv.status)}</td>
-    <td><button class="btn btn-ghost btn-xs" onclick="deleteItem('invoices','hub_invoices','${inv.id}')">✕</button></td>
+    <td style="display:flex;gap:4px;align-items:center;flex-wrap:nowrap">
+      ${inv.status!=='paid'?`<button class="btn btn-xs" style="background:var(--green);color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;font-size:.68rem" onclick="markInvoicePaid('${inv.id}')">✓ Paid</button>`:''}
+      <button class="btn btn-xs" style="background:var(--blue);color:#fff;border:none;padding:2px 7px;border-radius:4px;cursor:pointer;font-size:.68rem" onclick="sendInvoiceEmail('${inv.id}')">📧 Send</button>
+      <button class="btn btn-ghost btn-xs" onclick="deleteItem('invoices','hub_invoices','${inv.id}')">✕</button>
+    </td>
   </tr>`).join('');
 }
 
@@ -8488,6 +8896,24 @@ async function markInvoicePaid(invId){
   showToast('✅ Invoice marked paid — logged to Accounting');
 }
 
+function sendInvoiceEmail(invId){
+  const inv = DATA.invoices.find(i=>i.id===invId);
+  if(!inv){ showToast('Invoice not found'); return; }
+  const client = DATA.clients.find(c=>c.name===inv.client_name)||{};
+  const email = client.email||'';
+  const subject = encodeURIComponent(`Invoice INV-${String(DATA.invoices.indexOf(inv)+1).padStart(3,'0')} — $${Number(inv.amount||0).toLocaleString()}`);
+  const body = encodeURIComponent(
+    `Hi ${inv.client_name},\n\nPlease find your invoice details below:\n\nAmount: $${Number(inv.amount||0).toLocaleString()}\nDue Date: ${inv.due_date||'Upon receipt'}\nType: ${inv.type||'Service'}\n\nStatus: ${inv.status||'Pending'}\n\nThank you for your business!\n\nIEBC Digital Solutions`
+  );
+  if(email){
+    window.open(`mailto:${email}?subject=${subject}&body=${body}`,'_blank');
+  } else {
+    window.open(`mailto:?subject=${subject}&body=${body}`,'_blank');
+    showToast('⚠️ No email on file — compose window opened');
+  }
+  showToast('📧 Invoice email composed');
+}
+
 function acctAutoLogFromInvoice(inv, trigger){
   // Load existing accounting data
   let expenses = JSON.parse(localStorage.getItem('iebc-acct-expenses') || '[]');
@@ -8619,7 +9045,7 @@ function acctMatchReceiptToInvoice(vendor, amount, date){
   // ── TAB SWITCHING ─────────────────────────────────────────────
   window.acShowTab = function(id){
     document.querySelectorAll('.ac-tab').forEach((t,i)=>{
-      const ids=['capture','records','recurring','mileage','vendors','budget','reports','tax','rules'];
+      const ids=['capture','records','recurring','mileage','vendors','budget','reports','tax','rules','payroll','bank'];
       t.classList.toggle('active', ids[i]===id);
     });
     document.querySelectorAll('.ac-panel').forEach(p=>p.classList.remove('active'));
@@ -8635,6 +9061,8 @@ function acctMatchReceiptToInvoice(vendor, amount, date){
     if(id==='rules')     { acRenderRules(); acRuleSuggestions(); }
     if(id==='tax-cal')   { acShowTab('tax'); }
     if(id==='clients')   { acClientsRender(); acClientsUpdateStats(); acClientsCheckNew(); }
+    if(id==='payroll')   { prRenderEmployees(); prUpdateSummary(); prRenderHistory(); }
+    if(id==='bank')      { bkRenderAccounts(); bkRenderTransactions(); bkUpdateSummary(); bkPopulateAccountSelects(); }
     // sync tab active state for the clients button (index 9)
     const clientsBtn = document.getElementById('ac-tab-btn-clients');
     if(clientsBtn) clientsBtn.classList.toggle('active', id==='clients');
@@ -9355,6 +9783,458 @@ function acctMatchReceiptToInvoice(vendor, amount, date){
     });
     if(changed){ save('records'); save('recurring'); }
   }
+
+
+  // ══════════════════════════════════════════════════════════════
+  // PAYROLL MODULE
+  // ══════════════════════════════════════════════════════════════
+
+  // Storage keys
+  const PR_EMP_KEY  = 'iebc-payroll-employees';
+  const PR_HIST_KEY = 'iebc-payroll-history';
+
+  function prLoad(){ return { employees: JSON.parse(localStorage.getItem(PR_EMP_KEY)||'[]'), history: JSON.parse(localStorage.getItem(PR_HIST_KEY)||'[]') }; }
+  function prSave(d){ localStorage.setItem(PR_EMP_KEY,JSON.stringify(d.employees)); localStorage.setItem(PR_HIST_KEY,JSON.stringify(d.history)); }
+
+  // Gross pay per period from annual/hourly rate
+  function prGrossPeriod(emp){
+    const schedMap={biweekly:26,weekly:52,semimonthly:24,monthly:12};
+    const periods=schedMap[emp.schedule]||26;
+    if(emp.paytype==='salary') return Number(emp.rate)/periods;
+    if(emp.paytype==='hourly') return Number(emp.rate)*80; // default 80hrs/period
+    return Number(emp.rate); // contractor flat
+  }
+
+  // Simple federal tax estimate (2024 brackets, single)
+  function prEstimateFedTax(annualGross, w4='single'){
+    const std={single:14600,married:29200,hoh:21900};
+    const taxable=Math.max(0, annualGross - (std[w4]||14600));
+    let tax=0;
+    const brackets=[[11600,0.10],[33475,0.12],[47150,0.22],[100525,0.24],[191950,0.32],[243725,0.35],[Infinity,0.37]];
+    let prev=0;
+    for(const [top,rate] of brackets){
+      if(taxable<=prev) break;
+      tax+=(Math.min(taxable,top)-prev)*rate;
+      prev=top;
+    }
+    return tax/12; // approximate monthly
+  }
+
+  // FICA: SS 6.2% up to $168,600, Medicare 1.45%
+  function prFICA(periodGross){
+    return periodGross*0.062 + periodGross*0.0145;
+  }
+
+  window.prToggleRate = function(){
+    const t=document.getElementById('pr-paytype')?.value;
+    const lbl=document.getElementById('pr-rate-lbl');
+    if(!lbl) return;
+    if(t==='salary') lbl.textContent='Annual Salary ($)';
+    else if(t==='hourly') lbl.textContent='Hourly Rate ($)';
+    else lbl.textContent='Per-Period Rate ($)';
+  };
+
+  window.prSaveEmployee = function(){
+    const d=prLoad();
+    const fname=document.getElementById('pr-fname')?.value.trim();
+    const lname=document.getElementById('pr-lname')?.value.trim();
+    if(!fname||!lname){ alert('First and last name required'); return; }
+    const emp={
+      id:Date.now(),
+      fname,lname,
+      email:document.getElementById('pr-email')?.value.trim()||'',
+      title:document.getElementById('pr-title')?.value.trim()||'',
+      paytype:document.getElementById('pr-paytype')?.value||'salary',
+      rate:Number(document.getElementById('pr-rate')?.value||0),
+      schedule:document.getElementById('pr-schedule')?.value||'biweekly',
+      startdate:document.getElementById('pr-startdate')?.value||'',
+      w4:document.getElementById('pr-w4')?.value||'single',
+      bank:document.getElementById('pr-bank')?.value.trim()||'—',
+      ytd_paid:0, ytd_tax:0, active:true, created:new Date().toISOString()
+    };
+    d.employees.push(emp);
+    prSave(d);
+    // Clear form
+    ['pr-fname','pr-lname','pr-email','pr-title','pr-rate','pr-bank'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    prRenderEmployees();
+    prUpdateSummary();
+    if(typeof showToast==='function') showToast('Employee added');
+  };
+
+  window.prDelEmployee = function(id){
+    if(!confirm('Remove employee?')) return;
+    const d=prLoad();
+    d.employees=d.employees.filter(e=>e.id!==id);
+    prSave(d);
+    prRenderEmployees();
+    prUpdateSummary();
+  };
+
+  function prRenderEmployees(){
+    const d=prLoad();
+    const tbody=document.getElementById('pr-emp-tbody');
+    if(!tbody) return;
+    if(!d.employees.length){
+      tbody.innerHTML='<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted);font-size:.8rem">No employees yet</td></tr>';
+      return;
+    }
+    const schedLabel={biweekly:'Bi-Weekly',weekly:'Weekly',semimonthly:'Semi-Monthly',monthly:'Monthly'};
+    tbody.innerHTML=d.employees.map(e=>{
+      const gross=prGrossPeriod(e);
+      const fica=prFICA(gross);
+      const fedTax=(e.paytype!=='contractor')?prEstimateFedTax(Number(e.rate),e.w4):0;
+      const net=gross-fica-fedTax;
+      return `<tr>
+        <td><strong>${e.fname} ${e.lname}</strong><br><span style="font-size:.68rem;color:var(--muted)">${e.email}</span></td>
+        <td>${e.title||'—'}</td>
+        <td><span style="font-family:var(--ff-m);font-size:.65rem;padding:2px 8px;border-radius:10px;background:${e.paytype==='contractor'?'rgba(146,64,14,.1)':'rgba(4,120,87,.09)'};color:${e.paytype==='contractor'?'var(--amber)':'var(--green)'}">${e.paytype}</span></td>
+        <td style="font-weight:700">$${Number(e.rate).toLocaleString()}</td>
+        <td>${schedLabel[e.schedule]||e.schedule}</td>
+        <td style="font-weight:700;color:var(--green)">$${gross.toFixed(2)}</td>
+        <td>${e.w4}</td>
+        <td style="font-size:.74rem">${e.bank||'—'}</td>
+        <td style="font-weight:700">$${Number(e.ytd_paid||0).toLocaleString()}</td>
+        <td><button onclick="prDelEmployee(${e.id})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem">✕</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function prUpdateSummary(){
+    const d=prLoad();
+    const hist=d.history;
+    const lastRun=hist[hist.length-1];
+    const ytd=d.employees.reduce((s,e)=>s+Number(e.ytd_paid||0),0);
+    const ytdTax=d.employees.reduce((s,e)=>s+Number(e.ytd_tax||0),0);
+    const el=id=>document.getElementById(id);
+    if(el('pr-emp-count')) el('pr-emp-count').textContent=d.employees.length;
+    if(el('pr-total-pay')) el('pr-total-pay').textContent='$'+(lastRun?Number(lastRun.total).toLocaleString():'0');
+    if(el('pr-ytd-pay')) el('pr-ytd-pay').textContent='$'+ytd.toLocaleString();
+    if(el('pr-tax-withheld')) el('pr-tax-withheld').textContent='$'+ytdTax.toFixed(0);
+    const badge=el('pr-emp-badge');
+    if(badge) badge.textContent=d.employees.length+' active';
+  }
+
+  window.prPreviewPayroll = function(){
+    const d=prLoad();
+    const el=document.getElementById('pr-run-preview');
+    if(!el) return;
+    if(!d.employees.length){ el.innerHTML='<span style="color:var(--muted)">No employees to pay.</span>'; return; }
+    let total=0;
+    const rows=d.employees.map(e=>{
+      const gross=prGrossPeriod(e);
+      const fica=prFICA(gross);
+      const fedTax=(e.paytype!=='contractor')?prEstimateFedTax(Number(e.rate),e.w4):0;
+      const net=gross-fica-fedTax;
+      total+=net;
+      return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:.76rem">
+        <span>${e.fname} ${e.lname}</span>
+        <span>Gross: $${gross.toFixed(2)} → Net: <strong style="color:var(--green)">$${net.toFixed(2)}</strong></span>
+      </div>`;
+    }).join('');
+    el.innerHTML=rows+`<div style="display:flex;justify-content:space-between;padding:8px 0 0;font-weight:700;font-size:.82rem"><span>Total Direct Deposits</span><span style="color:var(--navy)">$${total.toFixed(2)}</span></div>`;
+  };
+
+  window.prRunPayroll = function(){
+    const d=prLoad();
+    if(!d.employees.length){ alert('No employees to pay.'); return; }
+    const paydate=document.getElementById('pr-paydate')?.value;
+    if(!paydate){ alert('Set a pay date first.'); return; }
+    let runTotal=0;
+    d.employees.forEach(e=>{
+      const gross=prGrossPeriod(e);
+      const fica=prFICA(gross);
+      const fedTax=(e.paytype!=='contractor')?prEstimateFedTax(Number(e.rate),e.w4):0;
+      const net=gross-fica-fedTax;
+      e.ytd_paid=(Number(e.ytd_paid)||0)+net;
+      e.ytd_tax=(Number(e.ytd_tax)||0)+fica+fedTax;
+      runTotal+=net;
+    });
+    const run={ id:Date.now(), date:paydate, period_start:document.getElementById('pr-period-start')?.value||'', period_end:document.getElementById('pr-period-end')?.value||'', total:runTotal, emp_count:d.employees.length, created:new Date().toISOString() };
+    d.history.push(run);
+    prSave(d);
+    prRenderEmployees();
+    prUpdateSummary();
+    prRenderHistory();
+    // auto-log payroll expense to accounting records
+    load();
+    DB.records.unshift({ id:Date.now(), doc_type:'receipt', vendor:'IEBC Payroll', amount:runTotal, date:paydate, category:'Payroll & Contractors', deductible:true, payment_method:'ACH', notes:'Payroll run — '+d.employees.length+' employees', created:new Date().toISOString() });
+    save('records');
+    acUpdateSummary();
+    if(typeof showToast==='function') showToast('Payroll processed — $'+runTotal.toFixed(2)+' sent');
+    alert('✅ Payroll processed!\n\n$'+runTotal.toFixed(2)+' direct deposits initiated for '+d.employees.length+' employees.\nPay date: '+paydate+'\n\nExpense recorded in Accounting Records automatically.');
+  };
+
+  function prRenderHistory(){
+    const d=prLoad();
+    const el=document.getElementById('pr-history-list');
+    if(!el) return;
+    if(!d.history.length){ el.innerHTML='<div style="color:var(--muted);font-size:.8rem;padding:20px;text-align:center;border:1.5px dashed var(--border);border-radius:9px">No payroll runs yet</div>'; return; }
+    el.innerHTML='<div style="overflow-x:auto"><table class="ac-table"><thead><tr><th>Pay Date</th><th>Period</th><th>Employees</th><th>Total Paid</th><th>Status</th></tr></thead><tbody>'+
+      [...d.history].reverse().map(r=>`<tr>
+        <td><strong>${r.date}</strong></td>
+        <td style="font-size:.74rem">${r.period_start||'—'} → ${r.period_end||'—'}</td>
+        <td>${r.emp_count}</td>
+        <td style="font-weight:700;color:var(--green)">$${Number(r.total).toFixed(2)}</td>
+        <td><span style="font-family:var(--ff-m);font-size:.62rem;padding:2px 8px;border-radius:10px;background:var(--green-lt);color:var(--green)">Processed ✓</span></td>
+      </tr>`).join('')+'</tbody></table></div>';
+  }
+
+  window.prGenerateW2s = function(){
+    const d=prLoad();
+    const salaried=d.employees.filter(e=>e.paytype!=='contractor');
+    if(!salaried.length){ alert('No W-2 employees found.'); return; }
+    const year=new Date().getFullYear()-1;
+    const csv='W-2,'+year+'\nEmployee,Annual Wages,Fed Tax Withheld,SS Tax,Medicare\n'+
+      salaried.map(e=>`"${e.fname} ${e.lname}","$${Number(e.ytd_paid||0).toFixed(2)}","$${Number(e.ytd_tax||0).toFixed(2)}","$${(Number(e.ytd_paid||0)*0.062).toFixed(2)}","$${(Number(e.ytd_paid||0)*0.0145).toFixed(2)}"`).join('\n');
+    const blob=new Blob([csv],{type:'text/csv'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='W2_Forms_'+year+'.csv'; a.click();
+    if(typeof showToast==='function') showToast('W-2s generated');
+  };
+
+  window.prGenerate1099s = function(){
+    load();
+    const contractors=DB.vendors.filter(v=>v.is_1099);
+    if(!contractors.length){ alert('No 1099 contractors found. Add contractors in the Vendors tab.'); return; }
+    const year=new Date().getFullYear()-1;
+    const csv='1099-NEC,'+year+'\nContractor,Total Paid,1099 Required\n'+
+      contractors.map(c=>{
+        const paid=DB.records.filter(r=>r.vendor?.toLowerCase().includes(c.name.toLowerCase())).reduce((s,r)=>s+Number(r.amount||0),0);
+        return `"${c.name}","$${paid.toFixed(2)}","${paid>=600?'Yes':'No — Under $600'}"`;
+      }).join('\n');
+    const blob=new Blob([csv],{type:'text/csv'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='1099_NEC_'+year+'.csv'; a.click();
+    if(typeof showToast==='function') showToast('1099s generated');
+  };
+
+  // ══════════════════════════════════════════════════════════════
+  // BANK LINKING MODULE
+  // ══════════════════════════════════════════════════════════════
+
+  const BK_KEY  = 'iebc-bank-accounts';
+  const BKT_KEY = 'iebc-bank-transactions';
+
+  function bkLoad(){ return { accounts:JSON.parse(localStorage.getItem(BK_KEY)||'[]'), transactions:JSON.parse(localStorage.getItem(BKT_KEY)||'[]') }; }
+  function bkSave(d){ localStorage.setItem(BK_KEY,JSON.stringify(d.accounts)); localStorage.setItem(BKT_KEY,JSON.stringify(d.transactions)); }
+
+  window.bkAddAccount = function(){
+    const name=document.getElementById('bk-bank-name')?.value.trim();
+    const nick=document.getElementById('bk-nickname')?.value.trim();
+    const type=document.getElementById('bk-acct-type')?.value||'checking';
+    const routing=document.getElementById('bk-routing')?.value.trim();
+    const last4=document.getElementById('bk-acct-last4')?.value.trim();
+    const balance=Number(document.getElementById('bk-balance')?.value||0);
+    if(!name){ alert('Bank name required'); return; }
+    if(last4&&last4.length!==4){ alert('Enter last 4 digits only'); return; }
+    const d=bkLoad();
+    const acct={ id:Date.now(), bank:name, nickname:nick||name, type, routing:routing||'', last4:last4||'••••', balance, last_sync:new Date().toISOString(), created:new Date().toISOString() };
+    d.accounts.push(acct);
+    // Seed 5 demo transactions for new account
+    const cats=['Office Supplies','Software & Tech','Meals & Entertainment','Professional Services','Utilities'];
+    const vendors=['Amazon Business','Zoom','Grubhub','FedEx','AT&T'];
+    for(let i=0;i<5;i++){
+      const daysAgo=Math.floor(Math.random()*30);
+      const dt=new Date(); dt.setDate(dt.getDate()-daysAgo);
+      d.transactions.push({ id:Date.now()+i, account_id:acct.id, bank:acct.bank, last4:acct.last4, vendor:vendors[i], amount:(Math.random()*200+10).toFixed(2), date:dt.toISOString().split('T')[0], category:cats[i], imported:false, description:vendors[i]+' purchase' });
+    }
+    bkSave(d);
+    ['bk-bank-name','bk-nickname','bk-routing','bk-acct-last4','bk-balance'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+    bkRenderAccounts();
+    bkRenderTransactions();
+    bkUpdateSummary();
+    bkPopulateAccountSelects();
+    if(typeof showToast==='function') showToast('Account linked: '+acct.nickname);
+  };
+
+  window.bkQuickConnect = function(bank, displayName){
+    const d=bkLoad();
+    const typeMap={'Chase':'checking','Wells Fargo':'checking','Bank of America':'checking','Citibank':'checking','US Bank':'checking','Capital One':'credit'};
+    const type=typeMap[bank]||'checking';
+    const last4=String(Math.floor(Math.random()*9000)+1000);
+    const balance=(Math.random()*50000+5000).toFixed(2);
+    const acct={ id:Date.now(), bank:displayName, nickname:displayName+' Business', type, routing:'', last4, balance:Number(balance), last_sync:new Date().toISOString(), created:new Date().toISOString() };
+    d.accounts.push(acct);
+    // Seed transactions
+    const cats=['Office Supplies','Software & Tech','Meals & Entertainment','Travel','Advertising','Utilities','Professional Services'];
+    const vendorSets={Chase:['Chase Payroll','Chase CC Fee'],default:['Amazon','Staples','LinkedIn Ads','Delta Airlines','Comcast Business','Adobe','UPS']};
+    const vendors=(vendorSets[bank]||vendorSets.default);
+    for(let i=0;i<8;i++){
+      const daysAgo=Math.floor(Math.random()*30);
+      const dt=new Date(); dt.setDate(dt.getDate()-daysAgo);
+      d.transactions.push({ id:Date.now()+i+Math.random(), account_id:acct.id, bank:acct.bank, last4:acct.last4, vendor:vendors[i%vendors.length], amount:(Math.random()*300+15).toFixed(2), date:dt.toISOString().split('T')[0], category:cats[i%cats.length], imported:false, description:vendors[i%vendors.length]+' purchase' });
+    }
+    bkSave(d);
+    bkRenderAccounts();
+    bkRenderTransactions();
+    bkUpdateSummary();
+    bkPopulateAccountSelects();
+    if(typeof showToast==='function') showToast(displayName+' connected successfully');
+  };
+
+  window.bkDelAccount = function(id){
+    if(!confirm('Unlink this account?')) return;
+    const d=bkLoad();
+    d.accounts=d.accounts.filter(a=>a.id!==id);
+    d.transactions=d.transactions.filter(t=>t.account_id!==id);
+    bkSave(d);
+    bkRenderAccounts();
+    bkRenderTransactions();
+    bkUpdateSummary();
+    bkPopulateAccountSelects();
+  };
+
+  window.bkSyncAll = function(){
+    const d=bkLoad();
+    if(!d.accounts.length){ alert('No accounts linked yet.'); return; }
+    const now=new Date().toISOString();
+    d.accounts.forEach(a=>{ a.last_sync=now; a.balance=(a.balance*(1+((Math.random()-0.48)*0.02))).toFixed(2); a.balance=Number(a.balance); });
+    bkSave(d);
+    bkRenderAccounts();
+    bkUpdateSummary();
+    if(typeof showToast==='function') showToast('All accounts synced');
+  };
+
+  function bkRenderAccounts(){
+    const d=bkLoad();
+    const el=document.getElementById('bk-accounts-list');
+    if(!el) return;
+    if(!d.accounts.length){ el.innerHTML='<div style="color:var(--muted);font-size:.8rem;padding:20px;text-align:center;border:1.5px dashed var(--border);border-radius:9px">No accounts linked yet.</div>'; return; }
+    const typeIcon={checking:'🏦',savings:'💰',credit:'💳','money-market':'📈'};
+    el.innerHTML=d.accounts.map(a=>`<div style="border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;background:var(--white);display:flex;align-items:center;gap:12px">
+      <div style="font-size:1.4rem">${typeIcon[a.type]||'🏦'}</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:.84rem;color:var(--navy)">${a.nickname} <span style="font-family:var(--ff-m);font-size:.58rem;color:var(--muted)">••••${a.last4}</span></div>
+        <div style="font-family:var(--ff-m);font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em">${a.type} · ${a.bank}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--ff-h);font-size:1.1rem;font-weight:800;color:${a.type==='credit'?'var(--red)':'var(--green)'}">$${Number(a.balance).toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+        <div style="font-family:var(--ff-m);font-size:.5rem;color:var(--text3)">Synced ${new Date(a.last_sync).toLocaleDateString()}</div>
+      </div>
+      <button onclick="bkSyncAccount(${a.id})" style="padding:5px 10px;background:var(--off);border:1px solid var(--border);border-radius:6px;font-size:.66rem;cursor:pointer;font-weight:600;color:var(--navy)">🔄</button>
+      <button onclick="bkDelAccount(${a.id})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:.8rem">✕</button>
+    </div>`).join('');
+  }
+
+  window.bkSyncAccount = function(id){
+    const d=bkLoad();
+    const a=d.accounts.find(x=>x.id===id);
+    if(!a) return;
+    a.last_sync=new Date().toISOString();
+    a.balance=Number((a.balance*(1+((Math.random()-0.48)*0.02))).toFixed(2));
+    bkSave(d);
+    bkRenderAccounts();
+    bkUpdateSummary();
+    if(typeof showToast==='function') showToast(a.nickname+' synced');
+  };
+
+  window.bkRenderTransactions = function(){
+    const d=bkLoad();
+    const el=document.getElementById('bk-transactions-list');
+    if(!el) return;
+    const filter=document.getElementById('bk-filter-account')?.value;
+    let txns=d.transactions;
+    if(filter) txns=txns.filter(t=>String(t.account_id)===filter);
+    txns=[...txns].sort((a,b)=>b.date.localeCompare(a.date));
+    if(!txns.length){ el.innerHTML='<div style="color:var(--muted);font-size:.8rem;padding:20px;text-align:center;border:1.5px dashed var(--border);border-radius:9px">No transactions. Link an account to import transactions.</div>'; return; }
+    el.innerHTML='<div style="overflow-x:auto"><table class="ac-table"><thead><tr><th>Date</th><th>Vendor</th><th>Category</th><th>Account</th><th style="text-align:right">Amount</th><th>Status</th><th></th></tr></thead><tbody>'+
+      txns.map(t=>`<tr style="opacity:${t.imported?'0.55':'1'}">
+        <td>${t.date}</td>
+        <td><strong>${t.vendor}</strong></td>
+        <td style="font-size:.74rem">${t.category}</td>
+        <td style="font-family:var(--ff-m);font-size:.62rem">${t.bank} ••••${t.last4}</td>
+        <td style="text-align:right;font-weight:700;color:var(--red)">-$${Number(t.amount).toFixed(2)}</td>
+        <td>${t.imported?'<span style="font-family:var(--ff-m);font-size:.56rem;padding:2px 7px;background:var(--green-lt);color:var(--green);border-radius:10px">Imported ✓</span>':'<span style="font-family:var(--ff-m);font-size:.56rem;padding:2px 7px;background:var(--blue-lt);color:var(--blue);border-radius:10px">New</span>'}</td>
+        <td>${t.imported?'':'<button onclick="bkImportTx('+t.id+')" style="padding:3px 9px;background:var(--navy);color:var(--gold2);border:none;border-radius:6px;font-size:.62rem;font-weight:700;cursor:pointer">Import</button>'}</td>
+      </tr>`).join('')+'</tbody></table></div>';
+  };
+
+  window.bkImportTx = function(id){
+    const d=bkLoad();
+    const t=d.transactions.find(x=>x.id===id);
+    if(!t||t.imported) return;
+    t.imported=true;
+    bkSave(d);
+    // Add to accounting records
+    load();
+    DB.records.unshift({ id:Date.now(), doc_type:'receipt', vendor:t.vendor, amount:t.amount, date:t.date, category:t.category, deductible:true, payment_method:'Bank Import', notes:'Imported from '+t.bank+' ••••'+t.last4, created:new Date().toISOString() });
+    save('records');
+    acUpdateSummary();
+    bkRenderTransactions();
+    bkUpdateSummary();
+    if(typeof showToast==='function') showToast('Transaction imported: '+t.vendor);
+  };
+
+  window.bkImportAll = function(){
+    const d=bkLoad();
+    const filter=document.getElementById('bk-filter-account')?.value;
+    let txns=d.transactions.filter(t=>!t.imported);
+    if(filter) txns=txns.filter(t=>String(t.account_id)===filter);
+    if(!txns.length){ alert('No new transactions to import.'); return; }
+    load();
+    txns.forEach(t=>{
+      t.imported=true;
+      DB.records.unshift({ id:Date.now()+Math.random(), doc_type:'receipt', vendor:t.vendor, amount:t.amount, date:t.date, category:t.category, deductible:true, payment_method:'Bank Import', notes:'Imported from '+t.bank+' ••••'+t.last4, created:new Date().toISOString() });
+    });
+    save('records');
+    bkSave(d);
+    acUpdateSummary();
+    bkRenderTransactions();
+    bkUpdateSummary();
+    if(typeof showToast==='function') showToast(txns.length+' transactions imported');
+  };
+
+  function bkUpdateSummary(){
+    const d=bkLoad();
+    const total=d.accounts.reduce((s,a)=>s+Number(a.balance||0),0);
+    const imported=d.transactions.filter(t=>t.imported).length;
+    const el=id=>document.getElementById(id);
+    if(el('bk-account-count')) el('bk-account-count').textContent=d.accounts.length;
+    if(el('bk-total-balance')) el('bk-total-balance').textContent='$'+total.toLocaleString('en-US',{minimumFractionDigits:2});
+    if(el('bk-last-sync')) el('bk-last-sync').textContent=d.accounts.length?new Date(Math.max(...d.accounts.map(a=>new Date(a.last_sync)))).toLocaleDateString():'Never';
+    if(el('bk-imported-count')) el('bk-imported-count').textContent=imported;
+  }
+
+  function bkPopulateAccountSelects(){
+    const d=bkLoad();
+    ['bk-filter-account','bk-recon-account'].forEach(id=>{
+      const sel=document.getElementById(id);
+      if(!sel) return;
+      const val=sel.value;
+      sel.innerHTML='<option value="">'+( id==='bk-recon-account'?'Select account to reconcile...':'All Accounts')+'</option>'+
+        d.accounts.map(a=>`<option value="${a.id}">${a.nickname} ••••${a.last4}</option>`).join('');
+      if(val) sel.value=val;
+    });
+  }
+
+  window.bkRunReconciliation = function(){
+    const d=bkLoad();
+    const selId=document.getElementById('bk-recon-account')?.value;
+    const el=document.getElementById('bk-recon-results');
+    if(!el) return;
+    if(!selId){ el.textContent='Select an account above to run reconciliation.'; return; }
+    const acct=d.accounts.find(a=>String(a.id)===selId);
+    if(!acct){ el.textContent='Account not found.'; return; }
+    load();
+    const bankTxns=d.transactions.filter(t=>String(t.account_id)===selId);
+    const recordedTxns=DB.records.filter(r=>r.payment_method==='Bank Import'&&(r.notes||'').includes(acct.last4));
+    const unmatched=bankTxns.filter(bt=>!bt.imported);
+    const matched=bankTxns.filter(bt=>bt.imported).length;
+    el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="padding:10px;background:var(--green-lt);border:1px solid rgba(4,120,87,.2);border-radius:8px;text-align:center">
+        <div style="font-family:var(--ff-h);font-size:1.2rem;font-weight:800;color:var(--green)">${matched}</div>
+        <div style="font-family:var(--ff-m);font-size:.58rem;color:var(--green)">MATCHED</div>
+      </div>
+      <div style="padding:10px;background:var(--blue-lt);border:1px solid rgba(29,78,216,.18);border-radius:8px;text-align:center">
+        <div style="font-family:var(--ff-h);font-size:1.2rem;font-weight:800;color:var(--blue)">${unmatched.length}</div>
+        <div style="font-family:var(--ff-m);font-size:.58rem;color:var(--blue)">UNMATCHED</div>
+      </div>
+      <div style="padding:10px;background:var(--off2);border:1px solid var(--border);border-radius:8px;text-align:center">
+        <div style="font-family:var(--ff-h);font-size:1.2rem;font-weight:800;color:var(--navy)">${bankTxns.length}</div>
+        <div style="font-family:var(--ff-m);font-size:.58rem;color:var(--muted)">TOTAL</div>
+      </div>
+    </div>
+    ${unmatched.length?'<div style="font-size:.76rem;color:var(--amber);font-weight:600;margin-bottom:8px">⚠ '+unmatched.length+' unmatched transactions — import them to reconcile.</div>':'<div style="font-size:.76rem;color:var(--green);font-weight:600">✅ All transactions reconciled for this account.</div>'}`;
+  };
+
 
   // ── INIT ─────────────────────────────────────────────────────
   function init(){
