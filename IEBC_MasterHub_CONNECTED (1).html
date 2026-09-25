@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!--
+  FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-09-25_1639 UTC — Added "Portfolio Companies" sidebar page listing
+              cecethepiece, 3 Lakes Logistics and Jacks of All Trades, with what IEBC
+              built, links to their live sites and hubs, and a Send to Prospect button.
+-->
 <html lang="en">
 <head>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -742,6 +748,27 @@ footer{background:var(--navy)!important}
 .ac-table tr:hover td{background:var(--off)}
 
 </style>
+<!-- ═══ PORTFOLIO COMPANIES — added 2026-09-25_1639 UTC ═══ -->
+<style>
+.pfh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.pfh-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.pfh-top{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.pfh-logo{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.pfh-name{font-family:var(--ff-h);font-size:.98rem;font-weight:800;color:var(--navy);line-height:1.2}
+.pfh-ind{font-size:.68rem;color:var(--text3);margin-top:2px}
+.pfh-status{margin-left:auto;font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--green-lt);color:var(--green);white-space:nowrap}
+.pfh-blurb{font-size:.78rem;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.pfh-lbl{font-family:var(--ff-m);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:4px 0 6px}
+.pfh-list{list-style:none;margin:0 0 12px;padding:0}
+.pfh-list li{font-size:.74rem;color:var(--text2);line-height:1.5;padding:4px 0 4px 18px;position:relative;border-bottom:1px solid var(--off)}
+.pfh-list li:last-child{border-bottom:none}
+.pfh-list li::before{content:'✓';position:absolute;left:0;font-weight:800;color:var(--gold)}
+.pfh-links{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.pfh-links a{font-size:.72rem;color:var(--blue);text-decoration:none;font-family:var(--ff-m)}
+.pfh-links a:hover{text-decoration:underline}
+.pfh-foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap}
+.pfh-foot a{text-decoration:none}
+</style>
 </head>
 <body>
 
@@ -836,6 +863,7 @@ footer{background:var(--navy)!important}
     <button class="nb" onclick="nav('invoices')"><span class="ni">🧾</span> Invoices</button>
     <button class="nb" onclick="nav('outreach')"><span class="ni">📡</span> Outreach Engine <span class="nb-badge badge-orange" id="nb-outreach">AUTO</span></button>
     <button class="nb" onclick="nav('revenue')"><span class="ni">💰</span> Revenue & MRR</button>
+    <button class="nb" onclick="nav('portfolio')"><span class="ni">🏆</span> Portfolio Companies <span class="nb-badge badge-green">3</span></button>
 
     <button class="nb" onclick="nav('plan52')" style="background:linear-gradient(135deg,rgba(200,144,42,.18),rgba(200,144,42,.08));border:1px solid rgba(200,144,42,.35);font-weight:700"><span class="ni">&#128506;</span> 52-Week Plan <span class="nb-badge badge-orange" id="plan-week-badge">W13</span></button>
 
@@ -1085,6 +1113,44 @@ footer{background:var(--navy)!important}
     </div>
 
     <!-- ══════════ BUILD LIBRARY ══════════ -->
+    <!-- ══ PAGE: PORTFOLIO COMPANIES (added 2026-09-25_1639 UTC) ══ -->
+    <div class="page" id="page-portfolio">
+      <div class="sec-hdr">
+        <div class="sec-title">🏆 Portfolio Companies</div>
+        <div style="font-size:.72rem;color:var(--text3)">Also shown on the public website's Portfolio page</div>
+      </div>
+      <div style="font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:16px;max-width:760px">These are the live partner businesses IEBC builds for. Use them as case studies with prospects: open the live site or their hub, or email a prospect the link.</div>
+      <div class="pfh-grid">
+        <div class="pfh-card" style="border-top:3px solid #7C3AED">
+          <div class="pfh-top"><div class="pfh-logo" style="background:#f3e8ff">🎨</div><div><div class="pfh-name">cecethepiece</div><div class="pfh-ind">Creative Professional · Original Art · Renton, WA</div></div><span class="pfh-status">● Live</span></div>
+          <div class="pfh-blurb">Cece's original art business: resin, glass and mixed media, plus custom memorial keepsakes.</div>
+          <div class="pfh-lbl">What IEBC built</div>
+          <ul class="pfh-list"><li>Public storefront with series filters and a full-screen gallery</li><li>Buy Now checkout and deposits for custom commissions</li><li>Art rental booking and online classes</li><li>cecepieceshub: inventory, publishing new pieces, payment links, marketing templates</li><li>Studio Drop newsletter and Instagram feed</li></ul>
+          <div class="pfh-lbl">Links</div>
+          <div class="pfh-links"><a href="https://cecethepiece.com" target="_blank" rel="noopener">🌐 Website ↗ cecethepiece.com</a><a href="https://cece-hub.vercel.app" target="_blank" rel="noopener">🏢 Business Hub ↗ cece-hub.vercel.app</a></div>
+          <div class="pfh-foot"><a class="btn btn-blue btn-sm" href="https://cecethepiece.com" target="_blank" rel="noopener">Visit Site ↗</a><a class="btn btn-ghost btn-sm" href="https://cece-hub.vercel.app" target="_blank" rel="noopener">Open Their Hub ↗</a><a class="btn btn-ghost btn-sm" href="mailto:?subject=See%20our%20work:%20cecethepiece&body=Here's%20one%20of%20the%20businesses%20IEBC%20built%20for:%20cecethepiece.%20See%20it%20live%20at%20https://cecethepiece.com">📧 Send to Prospect</a></div>
+        </div>
+        <div class="pfh-card" style="border-top:3px solid #1d4ed8">
+          <div class="pfh-top"><div class="pfh-logo" style="background:#eff4ff">🚚</div><div><div class="pfh-name">3 Lakes Logistics</div><div class="pfh-ind">Logistics & Trucking · Nationwide</div></div><span class="pfh-status">● Live</span></div>
+          <div class="pfh-blurb">An AI-run trucking carrier. We built everything from driver sign-up to weekly settlements.</div>
+          <div class="pfh-lbl">What IEBC built</div>
+          <ul class="pfh-list"><li>Public website with carrier and driver sign-up</li><li>EagleEye Command Center for dispatch, fleet, leads and revenue</li><li>Hawk driver app (PWA and Android): loads, HOS, documents, pay</li><li>AI agents: onboarding, Shield safety checks, Settler settlements</li><li>E-signature library: carrier, lease-on, dispatcher and factoring agreements</li></ul>
+          <div class="pfh-lbl">Links</div>
+          <div class="pfh-links"><a href="https://www.3lakeslogistics.com" target="_blank" rel="noopener">🌐 Website ↗ www.3lakeslogistics.com</a><a href="https://admin.3lakeslogistics.com" target="_blank" rel="noopener">🦅 EagleEye Command Center ↗ admin.3lakeslogistics.com</a></div>
+          <div class="pfh-foot"><a class="btn btn-blue btn-sm" href="https://www.3lakeslogistics.com" target="_blank" rel="noopener">Visit Site ↗</a><a class="btn btn-ghost btn-sm" href="https://admin.3lakeslogistics.com" target="_blank" rel="noopener">Open Their Hub ↗</a><a class="btn btn-ghost btn-sm" href="mailto:?subject=See%20our%20work:%203%20Lakes%20Logistics&body=Here's%20one%20of%20the%20businesses%20IEBC%20built%20for:%203%20Lakes%20Logistics.%20See%20it%20live%20at%20https://www.3lakeslogistics.com">📧 Send to Prospect</a></div>
+        </div>
+        <div class="pfh-card" style="border-top:3px solid #0369a1">
+          <div class="pfh-top"><div class="pfh-logo" style="background:#e0f2fe">🔨</div><div><div class="pfh-name">Jacks of All Trades Community Development</div><div class="pfh-ind">Nonprofit · Skilled Trades · Detroit, MI</div></div><span class="pfh-status">● Live</span></div>
+          <div class="pfh-blurb">A Detroit nonprofit that rebuilds neighborhoods through skilled-trades training.</div>
+          <div class="pfh-lbl">What IEBC built</div>
+          <ul class="pfh-list"><li>Full nonprofit website: mission, programs, impact, shop, contact</li><li>50/50 raffle hub with Zeffy ticketing, QR codes and a countdown</li><li>Before-and-after renovation gallery and impact tracker</li><li>Trades-training enrollment and volunteer sign-up</li><li>Command Center for leads, fundraising and milestones, with SMS outreach</li></ul>
+          <div class="pfh-lbl">Links</div>
+          <div class="pfh-links"><a href="https://joatamp.org" target="_blank" rel="noopener">🌐 Website ↗ joatamp.org</a><a href="https://joatamp.org/admin/" target="_blank" rel="noopener">🛡️ Command Center ↗ joatamp.org/admin/</a></div>
+          <div class="pfh-foot"><a class="btn btn-blue btn-sm" href="https://joatamp.org" target="_blank" rel="noopener">Visit Site ↗</a><a class="btn btn-ghost btn-sm" href="https://joatamp.org/admin/" target="_blank" rel="noopener">Open Their Hub ↗</a><a class="btn btn-ghost btn-sm" href="mailto:?subject=See%20our%20work:%20Jacks%20of%20All%20Trades%20Community%20Development&body=Here's%20one%20of%20the%20businesses%20IEBC%20built%20for:%20Jacks%20of%20All%20Trades%20Community%20Development.%20See%20it%20live%20at%20https://joatamp.org">📧 Send to Prospect</a></div>
+        </div>
+      </div>
+    </div>
+
     <div class="page" id="page-library">
       <div class="sec-hdr">
         <div class="sec-title">📚 Build Library</div>
@@ -3059,8 +3125,7 @@ function acClientsExport(){
   if(!list.length){ alert('No clients to export.'); return; }
   const headers=['Client ID','Full Name','Business','Email','Phone','Plan','Monthly','Status','Trial End','Sub End','Consultant','Card Last 4','Banks','Business Type','Created'];
   const rows = list.map(c=>[c.client_id,c.full_name,c.business_name,c.email,c.phone,c.plan_name,c.monthly_rate,c.status,c.trial_end,c.sub_end,c.consultant,c.card_last4,(c.connected_banks||[]).join(';'),c.business_type,c.created_at]);
-  const csv = [headers,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('
-');
+  const csv = [headers,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='IEBC_Accounting_Clients_'+new Date().toISOString().split('T')[0]+'.csv';
   a.click();
@@ -3868,6 +3933,7 @@ const PAGE_LABELS = {
   invoices:'Invoices', revenue:'Revenue & MRR', library:'Build Library',
   integrations:'Vendor Integrations', tasks:'All Tasks',
   team:'Team View', workforce:'AI Workforce — 50 Employees', outreach:'Outreach Engine — Automated Campaigns', demos:'Demo Gallery — Send to Prospects', settings:'Settings & Database',
+  portfolio:'Portfolio Companies',
 };
 function nav(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
