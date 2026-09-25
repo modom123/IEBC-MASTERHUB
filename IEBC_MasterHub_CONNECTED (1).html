@@ -66,8 +66,9 @@
   --teal:var(--navy3);
   --teal-lt:var(--gold-lt);
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--ff-b);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--gold2,#C9A84C) #0e1628}
+body{font-family:var(--ff-b);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-tap-highlight-color:transparent}
+@media(max-width:768px){input,select,textarea{font-size:16px!important}}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -198,7 +199,7 @@ tr:hover td{background:rgba(255,255,255,.04)}
 .fsel option{background:var(--card2);color:var(--text)}
 
 /* ─── MODAL ────────────────────────────────────────────── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center}
 .overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.5)}
 .modal-hd{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:space-between}
@@ -457,8 +458,8 @@ body{font-family:var(--ff-b)!important;color:var(--text)!important;background:va
 
 /* ── Buttons ── */
 .btn{font-family:var(--ff-b)!important;border-radius:7px!important;font-size:.75rem!important;font-weight:600!important;transition:all .18s!important}
-.btn-blue,.btn-primary{background:var(--navy)!important;color:var(--gold2)!important;border:none!important}
-.btn-blue:hover,.btn-primary:hover{background:var(--navy2)!important;transform:translateY(-1px)!important;box-shadow:0 4px 16px rgba(11,33,64,.25)!important}
+.btn-blue,.btn-primary{background:var(--gold2)!important;color:var(--navy)!important;border:none!important;font-weight:700!important}
+.btn-blue:hover,.btn-primary:hover{background:var(--gold3)!important;color:var(--navy)!important;transform:translateY(-1px)!important;box-shadow:0 4px 16px rgba(200,144,42,.4)!important}
 .btn-ghost,.btn-secondary,.btn-outline{background:transparent!important;border:1.5px solid var(--border)!important;color:var(--navy)!important}
 .btn-ghost:hover,.btn-secondary:hover,.btn-outline:hover{border-color:var(--navy)!important;background:var(--slate)!important}
 .btn-green,.btn-success{background:var(--success)!important;color:#fff!important}
@@ -489,7 +490,7 @@ tr:hover td{background:rgba(200,144,42,.03)!important}
 .chip,.section-chip{font-family:var(--ff-m)!important;font-size:.58rem!important;letter-spacing:.15em!important;text-transform:uppercase!important;color:var(--gold)!important;background:var(--gold-lt)!important;border:1px solid var(--gold-md)!important;border-radius:100px!important;padding:4px 14px!important}
 
 /* ── Modals → white / navy ── */
-.overlay{background:rgba(11,33,64,.55)!important;backdrop-filter:blur(6px)!important}
+.overlay{background:rgba(11,33,64,.55)!important;backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important}
 .modal{background:var(--white)!important;border:1.5px solid var(--border)!important;border-radius:14px!important;box-shadow:0 24px 80px rgba(11,33,64,.2)!important}
 .modal-hd,.modal-header{background:var(--off)!important;border-bottom:1px solid var(--border)!important}
 .modal-title{font-family:var(--ff-h)!important;font-weight:800!important;color:var(--navy)!important;font-size:.95rem!important}
@@ -733,6 +734,10 @@ footer{background:var(--navy)!important}
 .ac-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .ac-panel{display:none}
 .ac-panel.active{display:block;animation:acFd .2s ease}
+.hub-imp-tab{padding:6px 13px;border:1.5px solid var(--border);border-radius:7px;background:var(--off);color:var(--muted);font-weight:600;font-size:.72rem;cursor:pointer;transition:all .15s}
+.hub-imp-tab:hover{border-color:var(--navy);color:var(--navy)}
+.hub-imp-tab.active{background:var(--navy);color:var(--gold2);border-color:var(--navy)}
+.hub-imp-pane{display:none}.hub-imp-pane.active{display:block}
 @keyframes acFd{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
 .ac-card{padding:14px 16px;border-radius:11px;border:1.5px solid var(--border);background:var(--white)}
 .ac-card-val{font-family:var(--ff-h);font-size:1.25rem;font-weight:900;margin-bottom:2px}
@@ -1264,6 +1269,7 @@ footer{background:var(--navy)!important}
         <button class="ac-tab" onclick="acShowTab('rules')">⚡ Rules</button>
         <button class="ac-tab" onclick="acShowTab('payroll')">💵 Payroll</button>
         <button class="ac-tab" onclick="acShowTab('bank')">🏦 Bank Linking</button>
+        <button class="ac-tab" onclick="acShowTab('import')">📥 Import</button>
       </div>
 
       <!-- ════════════════════════════════════════════
@@ -1938,6 +1944,85 @@ footer{background:var(--navy)!important}
       </div>
 
     </div>
+      <!-- ════════════════════════════════════════════
+           TAB: IMPORT
+           ════════════════════════════════════════════ -->
+      <div class="ac-panel" id="ac-tab-import">
+        <div style="font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:4px">📥 Import Transactions</div>
+        <div style="font-size:.76rem;color:var(--muted);margin-bottom:16px">Import from banks, QuickBooks, Xero, Wave, FreshBooks, investment accounts, and more.</div>
+
+        <!-- Source selector -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="hub-imp-tab active" id="himp-csv"     onclick="hubImpNav('csv')">📄 Bank CSV</button>
+          <button class="hub-imp-tab"        id="himp-qbo"     onclick="hubImpNav('qbo')">📊 QuickBooks</button>
+          <button class="hub-imp-tab"        id="himp-apps"    onclick="hubImpNav('apps')">🔗 Xero / Wave / FreshBooks</button>
+          <button class="hub-imp-tab"        id="himp-invest"  onclick="hubImpNav('invest')">📈 Investments</button>
+          <button class="hub-imp-tab"        id="himp-paste"   onclick="hubImpNav('paste')">✂️ Paste</button>
+        </div>
+
+        <!-- CSV pane -->
+        <div class="hub-imp-pane active" id="himppane-csv">
+          <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--border2);border-radius:12px;padding:24px;cursor:pointer;background:var(--off);margin-bottom:10px" ondragover="event.preventDefault()" ondrop="hubImpDrop(event,'auto')">
+            <div style="font-size:2rem;margin-bottom:6px">📄</div>
+            <div style="font-weight:700;font-size:.84rem;color:var(--navy)">Drop or click to upload bank CSV</div>
+            <div style="font-size:.7rem;color:var(--muted);margin-top:3px">Chase · Wells Fargo · BofA · Citi · Amex · any bank export</div>
+            <input type="file" accept=".csv,.txt,.xls,.xlsx" style="display:none" onchange="hubImpFile(this,'auto')">
+          </label>
+        </div>
+        <!-- QBO pane -->
+        <div class="hub-imp-pane" id="himppane-qbo">
+          <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--border2);border-radius:12px;padding:24px;cursor:pointer;background:var(--off);margin-bottom:10px" ondragover="event.preventDefault()" ondrop="hubImpDrop(event,'quickbooks')">
+            <div style="font-size:2rem;margin-bottom:6px">📊</div>
+            <div style="font-weight:700;font-size:.84rem;color:var(--navy)">Drop QuickBooks CSV / IIF / QBO</div>
+            <input type="file" accept=".csv,.iif,.qbo,.txt" style="display:none" onchange="hubImpFile(this,'quickbooks')">
+          </label>
+        </div>
+        <!-- Apps pane -->
+        <div class="hub-imp-pane" id="himppane-apps">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:12px">
+            ${['xero','wave','freshbooks','zoho','paypal','stripe','square','shopify'].map(app=>`
+            <label style="display:flex;flex-direction:column;align-items:center;gap:5px;border:1.5px solid var(--border);border-radius:9px;padding:12px 6px;cursor:pointer;font-size:.7rem;font-weight:700;color:var(--navy);text-align:center">
+              <span style="font-size:1.4rem">${{xero:'🟦',wave:'🌊',freshbooks:'🟩',zoho:'🔵',paypal:'🅿️',stripe:'🟣',square:'⬛',shopify:'🛒'}[app]}</span>
+              ${app.charAt(0).toUpperCase()+app.slice(1)}
+              <input type="file" accept=".csv,.txt" style="display:none" onchange="hubImpFile(this,'${app}')">
+            </label>`).join('')}
+          </div>
+        </div>
+        <!-- Investments pane -->
+        <div class="hub-imp-pane" id="himppane-invest">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:12px">
+            ${['fidelity','schwab','vanguard','robinhood','etrade','td_ameritrade','coinbase','crypto_com'].map(app=>`
+            <label style="display:flex;flex-direction:column;align-items:center;gap:5px;border:1.5px solid var(--border);border-radius:9px;padding:12px 6px;cursor:pointer;font-size:.7rem;font-weight:700;color:var(--navy);text-align:center">
+              <span style="font-size:1.4rem">${{fidelity:'🟢',schwab:'🔵',vanguard:'🟥',robinhood:'🐦',etrade:'📈',td_ameritrade:'🟠',coinbase:'₿',crypto_com:'🔷'}[app]}</span>
+              ${{fidelity:'Fidelity',schwab:'Schwab',vanguard:'Vanguard',robinhood:'Robinhood',etrade:'E*Trade',td_ameritrade:'TD Ameritrade',coinbase:'Coinbase',crypto_com:'Crypto.com'}[app]}
+              <input type="file" accept=".csv,.txt" style="display:none" onchange="hubImpFile(this,'${app}')">
+            </label>`).join('')}
+          </div>
+        </div>
+        <!-- Paste pane -->
+        <div class="hub-imp-pane" id="himppane-paste">
+          <textarea id="hub-paste-input" style="width:100%;height:140px;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:.72rem;resize:vertical" placeholder="Paste transactions: Date, Description, Amount (one per line or CSV format)"></textarea>
+          <button onclick="hubImpFromPaste()" style="margin-top:8px;padding:8px 20px;background:var(--navy);color:var(--gold2);border:none;border-radius:8px;font-weight:700;font-size:.76rem;cursor:pointer">Parse & Preview →</button>
+        </div>
+
+        <!-- Preview -->
+        <div id="hub-imp-preview" style="display:none;margin-top:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div style="font-weight:700;font-size:.84rem;color:var(--navy)"><span id="hub-imp-count">0</span> transactions ready</div>
+            <div style="display:flex;gap:8px">
+              <button onclick="hubImpConfirm()" style="background:#047857;color:#fff;border:none;border-radius:7px;padding:7px 18px;font-weight:700;font-size:.75rem;cursor:pointer">✅ Import All to Records</button>
+              <button onclick="document.getElementById('hub-imp-preview').style.display='none'" style="background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2);border-radius:7px;padding:7px 12px;font-weight:600;font-size:.74rem;cursor:pointer">✕ Cancel</button>
+            </div>
+          </div>
+          <div style="max-height:300px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px">
+            <table class="ac-table" id="hub-imp-table">
+              <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr></thead>
+              <tbody id="hub-imp-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     <!-- ══ END ACCOUNTING SUITE ══ -->
 
     <!-- ═══════════════════════════════════════════════════════════ -->
@@ -2138,7 +2223,7 @@ footer{background:var(--navy)!important}
       </div>
 
       <!-- Full Preview Modal (inside page) -->
-      <div id="dg-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.88);z-index:4000;flex-direction:column;backdrop-filter:blur(4px)">
+      <div id="dg-preview-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.88);z-index:4000;flex-direction:column;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)">
         <div style="background:var(--navy);padding:10px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0">
           <div style="display:flex;gap:6px">
             <div style="width:11px;height:11px;border-radius:50%;background:#FF5F57"></div>
@@ -2155,7 +2240,7 @@ footer{background:var(--navy)!important}
       </div>
 
       <!-- Send to Prospect Modal -->
-      <div id="dg-send-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.7);z-index:5000;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
+      <div id="dg-send-modal" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.7);z-index:5000;align-items:center;justify-content:center;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)">
         <div style="background:#fff;border-radius:14px;padding:24px;max-width:500px;width:90%;box-shadow:0 24px 60px rgba(11,17,32,.3)">
           <div style="font-family:var(--ff-h);font-size:1rem;font-weight:800;color:var(--navy);margin-bottom:4px">📧 Send Demo to Prospect</div>
           <div style="font-size:.74rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Fill in the prospect details. A personalized email will open pre-written and ready to send.</div>
@@ -3240,21 +3325,23 @@ async function accImportToHub(clientId){
   DATA.clients.unshift(clientRec);
 
   // ── 2. INVOICE RECORD ─────────────────────────────────────
+  // Subscription invoices are marked paid — card was tokenized at checkout
   const invType   = c.is_bundle ? 'setup-final' : 'retainer';
   const invAmount = c.is_bundle ? 599 : (c.monthly_rate||0);
   const inv = {
     client_name: clientRec.name, type: invType,
     amount: invAmount,
-    due_date: c.sub_start||new Date(Date.now()+30*864e5).toISOString().split('T')[0],
-    status: c.is_bundle ? 'paid' : 'pending',
+    due_date: c.sub_start||new Date().toISOString().split('T')[0],
+    status: 'paid',
+    paid_at: c.sub_start||new Date().toISOString(),
     notes: `${c.is_bundle?'Bundle Deal — $599 one-time':'Accounting Suite subscription'} · ${c.plan_name} · ${c.client_id}`,
     created_at: new Date().toISOString(), id:'local-'+Date.now()+1,
   };
   const savedI = await dbInsert('hub_invoices',{...inv,id:undefined});
   if(savedI) inv.id = savedI.id;
   DATA.invoices.unshift(inv);
-  // Auto-log bundle to accounting revenue
-  if(c.is_bundle) { try{ acctAutoLogFromInvoice({...inv, status:'paid', paid_at:new Date().toISOString()}, 'paid'); }catch(e){} }
+  // Log to accounting revenue for all imports (subscription + bundle)
+  try{ acctAutoLogFromInvoice({...inv, status:'paid', paid_at:inv.paid_at}, 'paid'); }catch(e){}
 
   // ── 3. PIPELINE PROSPECT (if not already present) ─────────
   const alreadyIn = DATA.prospects.some(p=>(p.email||'').toLowerCase()===(c.email||'').toLowerCase());
@@ -3780,8 +3867,16 @@ async function syncAll(){
     const tables=['hub_clients','hub_prospects','hub_builds','hub_invoices','hub_tasks','hub_library','hub_activity','hub_portfolio'];
     const keys  =['clients','prospects','builds','invoices','tasks','library','activity','portfolio'];
     const results = await Promise.all(tables.map(t=>DB.from(t).select('*').order('created_at',{ascending:false})));
-    // portfolio: keep the local copy if the table is missing or still empty
-    results.forEach((r,i)=>{ if(r.data && (keys[i]!=='portfolio' || r.data.length)) DATA[keys[i]]=r.data; });
+    results.forEach((r,i)=>{
+      if(r.data && r.data.length>0){
+        // Merge: Supabase records + any local-only records not yet pushed to Supabase
+        const supaIds=new Set(r.data.map(x=>String(x.id)));
+        // local-only = created offline ('local-…', or 'pf-…' portfolio companies) and not yet in Supabase
+        const localOnly=(DATA[keys[i]]||[]).filter(x=>/^(local|pf)-/.test(String(x.id||''))&&!supaIds.has(String(x.id)));
+        DATA[keys[i]]=[...r.data,...localOnly];
+      }
+      // If Supabase returns 0 rows, keep existing local data unchanged
+    });
     saveLocal();
     renderAll();
     setDBConnected(true);
@@ -4063,12 +4158,12 @@ function renderDashboard(){
       <div><div class="daily-item-name">${t.name}</div><div class="daily-item-sub">${t.related||''} · due ${t.due_date}</div></div>
     </div>`).join('') : '<div class="daily-empty">All clear this week! 🎉</div>';
 
-  // Revenue snapshot
-  const mrr=DATA.clients.filter(c=>c.status==='active').reduce((s,c)=>s+(+c.monthly||0),0);
-  const setup=DATA.invoices.filter(i=>i.type?.includes('setup')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  // Revenue snapshot — include trial clients in MRR (card on file, subscription started)
+  const mrr=DATA.clients.filter(c=>c.status==='active'||c.status==='trial').reduce((s,c)=>s+(+c.monthly||0),0);
+  const setup=DATA.invoices.filter(i=>(i.type?.includes('setup')||i.type==='retainer')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
   document.getElementById('dash-mrr').textContent='$'+mrr.toLocaleString();
   document.getElementById('dash-setup').textContent='$'+setup.toLocaleString();
-  document.getElementById('dash-clients').textContent=DATA.clients.filter(c=>c.status==='active').length;
+  document.getElementById('dash-clients').textContent=DATA.clients.filter(c=>c.status==='active'||c.status==='trial').length;
 
   // Pills
   const hotLeads=DATA.prospects.filter(p=>p.heat==='hot').length;
@@ -4986,11 +5081,12 @@ function renderInvoices(){
 //  REVENUE
 // ══════════════════════════════════════════════════════════
 function renderRevenue(){
-  const mrr=DATA.clients.filter(c=>c.status==='active').reduce((s,c)=>s+(+c.monthly||0),0);
-  const setup=DATA.invoices.filter(i=>i.type?.includes('setup')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  const mrr=DATA.clients.filter(c=>c.status==='active'||c.status==='trial').reduce((s,c)=>s+(+c.monthly||0),0);
+  const setup=DATA.invoices.filter(i=>(i.type?.includes('setup')||i.type==='setup-final')&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
+  const retainerPaid=DATA.invoices.filter(i=>i.type==='retainer'&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
   const addon=DATA.invoices.filter(i=>i.type==='addon'&&i.status==='paid').reduce((s,i)=>s+(+i.amount||0),0);
   setText('rev-mrr','$'+mrr.toLocaleString());
-  setText('rev-setup','$'+setup.toLocaleString());
+  setText('rev-setup','$'+(setup+retainerPaid).toLocaleString());
   setText('rev-addon','$'+addon.toLocaleString());
   setText('rev-arr','$'+(mrr*12).toLocaleString());
 
@@ -10738,7 +10834,7 @@ function acctMatchReceiptToInvoice(vendor, amount, date){
 .oe-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:#8A9AB2;margin-top:5px}
 
 /* Modal */
-.oe-modal-backdrop{position:fixed;inset:0;background:rgba(11,33,64,.45);z-index:5000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.oe-modal-backdrop{position:fixed;inset:0;background:rgba(11,33,64,.45);z-index:5000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .oe-modal{background:#fff;border-radius:14px;padding:24px;max-width:580px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(11,33,64,.25);animation:oeModalIn .2s ease}
 @keyframes oeModalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
 .oe-modal-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:800;color:#0B2140;margin-bottom:4px}
@@ -12934,5 +13030,136 @@ function openClientEdit(clientId) {
   openModal('modal-add-client');
 }
 
+
+// ══════════════════════════════════════════════════════════════════
+//  HUB IMPORT ENGINE — CSV / QuickBooks / Xero / Wave / Investments
+// ══════════════════════════════════════════════════════════════════
+
+const HUB_IMP_MAPS = {
+  quickbooks:    { date:'Date',         desc:'Memo/Description',   amount:'Amount',      cat:'Account' },
+  xero:          { date:'Date',         desc:'Description',        amount:'Unit Price',  cat:'Account' },
+  freshbooks:    { date:'Date',         desc:'Description',        amount:'Amount',      cat:'Category' },
+  wave:          { date:'Date',         desc:'Description',        credit:'Deposited',   debit:'Withdrawn' },
+  zoho:          { date:'Date',         desc:'Particulars',        amount:'Amount' },
+  paypal:        { date:'Date',         desc:'Name',               amount:'Net',         cat:'Type' },
+  stripe:        { date:'Created (UTC)',desc:'Description',        amount:'Amount',      cat:'Type' },
+  square:        { date:'Date',         desc:'Description',        amount:'Gross Sales' },
+  shopify:       { date:'Date',         desc:'Description',        amount:'Amount' },
+  fidelity:      { date:'Run Date',     desc:'Action',             amount:'Amount ($)',  sym:'Symbol' },
+  schwab:        { date:'Date',         desc:'Description',        amount:'Amount',      sym:'Symbol' },
+  vanguard:      { date:'Trade Date',   desc:'Transaction Description', amount:'Net Amount' },
+  robinhood:     { date:'Activity Date',desc:'Description',        amount:'Amount',      sym:'Instrument' },
+  etrade:        { date:'TransactionDate',desc:'Description',      amount:'Amount' },
+  td_ameritrade: { date:'DATE',         desc:'DESCRIPTION',        amount:'AMOUNT' },
+  coinbase:      { date:'Timestamp',    desc:'Transaction Type',   amount:'Total (inclusive of fees and/or spread)', sym:'Asset' },
+  crypto_com:    { date:'Timestamp (UTC)',desc:'Transaction Description', amount:'Native Amount' },
+};
+
+function hubImpDetect(headers){
+  const h=headers.map(s=>(s||'').toLowerCase().trim());
+  if(h.some(x=>x.includes('memo/description')))                return 'quickbooks';
+  if(h.some(x=>x==='tracking')||h.some(x=>x==='unit price'))  return 'xero';
+  if(h.includes('deposited')&&h.includes('withdrawn'))         return 'wave';
+  if(h.some(x=>x.includes('particulars')))                     return 'zoho';
+  if(h.some(x=>x==='net')&&h.some(x=>x==='balance'))           return 'paypal';
+  if(h.some(x=>x.includes('created (utc)')))                   return 'stripe';
+  if(h.some(x=>x.includes('gross sales')))                     return 'square';
+  if(h.some(x=>x==='run date'))                                return 'fidelity';
+  if(h.some(x=>x==='transactiondate'))                         return 'etrade';
+  if(h.some(x=>x==='activity date')&&h.some(x=>x==='trans code')) return 'robinhood';
+  if(h.some(x=>x==='timestamp')&&h.some(x=>x.includes('spot price'))) return 'coinbase';
+  if(h.some(x=>x.includes('timestamp (utc)')))                return 'crypto_com';
+  return 'generic';
+}
+
+function hubCSVRow(line){
+  const r=[];let f='',q=false;
+  for(const c of line){ if(c==='"'){q=!q;}else if(c===','&&!q){r.push(f.trim());f='';}else f+=c; }
+  r.push(f.trim()); return r;
+}
+function hubParseAmt(s){ if(!s)return 0;s=String(s).trim();const neg=s.startsWith('(')||s.startsWith('-')||s.startsWith('−');return(neg?-1:1)*parseFloat(s.replace(/[^0-9.]/g,'')||'0'); }
+function hubNormDate(s){ if(!s)return'';s=s.trim();if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.substring(0,10);const m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);if(m){const y=m[3].length===2?'20'+m[3]:m[3];return`${y}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`;}try{return new Date(s).toISOString().split('T')[0];}catch(e){return s;} }
+function hubAutoCategory(d){ d=(d||'').toLowerCase();if(/amazon|amzn|walmart|target|costco|best buy/.test(d))return'Shopping';if(/aws|google cloud|azure|heroku|adobe|slack|zoom|github/.test(d))return'Software & Tech';if(/restaurant|cafe|starbucks|grubhub|doordash|chipotle/.test(d))return'Meals & Entertainment';if(/hotel|airbnb|marriott|delta|united|southwest|uber|lyft/.test(d))return'Travel';if(/payroll|salary|gusto|adp|direct deposit/.test(d))return'Payroll';if(/linkedin|facebook ads|google ads|instagram/.test(d))return'Advertising';if(/fidelity|schwab|vanguard|robinhood|coinbase|dividend/.test(d))return'Investment';if(/client|invoice|payment|retainer|consulting/.test(d))return'Service Revenue';return'Other'; }
+
+function hubParseCSVText(text, sourceName){
+  const lines=text.replace(/\r/g,'').split('\n').filter(l=>l.trim()&&!l.startsWith('!'));
+  if(lines.length<2) return [];
+  const headers=hubCSVRow(lines[0]).map(h=>h.replace(/^"|"$/g,'').trim());
+  const src=sourceName==='auto'?hubImpDetect(headers):(sourceName||'generic');
+  const map=HUB_IMP_MAPS[src]||{};
+  const isInv=['fidelity','schwab','vanguard','robinhood','etrade','td_ameritrade','coinbase','crypto_com'].includes(src);
+  const colIdx=name=>{if(!name)return -1;return headers.findIndex(h=>h.toLowerCase()===name.toLowerCase());};
+  const records=[];
+  for(let i=1;i<lines.length;i++){
+    const cols=hubCSVRow(lines[i]).map(c=>c.replace(/^"|"$/g,'').trim());
+    if(cols.every(c=>!c)) continue;
+    let date='',desc='',amount=0,cat='';
+    if(src==='wave'){
+      date=cols[colIdx(map.date)]||'';desc=cols[colIdx(map.desc)]||'';
+      const cr=hubParseAmt(cols[colIdx(map.credit)]);const db=hubParseAmt(cols[colIdx(map.debit)]);amount=cr>0?cr:-db;
+    } else if(map.date){
+      date=cols[colIdx(map.date)]||'';desc=cols[colIdx(map.desc)]||'';
+      if(map.sym) desc=(cols[colIdx(map.sym)]||'')+' '+desc;
+      amount=hubParseAmt(cols[colIdx(map.amount)]);cat=map.cat?(cols[colIdx(map.cat)]||''):'';
+    } else {
+      date=cols[0]||'';desc=cols[1]||'';
+      if(cols.length>=4&&!isNaN(parseFloat(cols[3]))){const db=hubParseAmt(cols[2]),cr=hubParseAmt(cols[3]);amount=cr>0?cr:-db;}
+      else amount=hubParseAmt(cols[2]);
+    }
+    date=hubNormDate(date);
+    if(!date||isNaN(amount)||amount===0) continue;
+    const type=isInv?(desc.toLowerCase().includes('buy')||amount<0?'expense':'income'):(amount>=0?'income':'expense');
+    records.push({ id:'himp-'+Date.now()+'-'+i, date, description:desc.substring(0,80), vendor:desc.substring(0,80), category:cat||hubAutoCategory(desc), type, amount:Math.abs(amount), notes:'Imported·'+src, created_at:new Date().toISOString() });
+  }
+  return records;
+}
+
+let _hubImpRows=[];
+
+function hubImpNav(tab){
+  document.querySelectorAll('.hub-imp-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.hub-imp-pane').forEach(p=>p.classList.remove('active'));
+  const btn=document.getElementById('himp-'+tab);const pan=document.getElementById('himppane-'+tab);
+  if(btn)btn.classList.add('active');if(pan)pan.classList.add('active');
+  document.getElementById('hub-imp-preview').style.display='none';
+}
+function hubImpDrop(e,src){ e.preventDefault(); const f=e.dataTransfer?.files?.[0]; if(f) hubImpReadFile(f,src); }
+function hubImpFile(input,src){ const f=input.files?.[0]; if(f) hubImpReadFile(f,src); }
+function hubImpReadFile(file,src){ const r=new FileReader(); r.onload=e=>hubImpShowPreview(e.target.result,src); r.readAsText(file); }
+function hubImpFromPaste(){ const t=document.getElementById('hub-paste-input')?.value||''; if(!t.trim()){showToast('⚠ Paste data first');return;} hubImpShowPreview(t,'auto'); }
+
+function hubImpShowPreview(text, src){
+  _hubImpRows=hubParseCSVText(text,src);
+  const tbody=document.getElementById('hub-imp-tbody');
+  const preview=document.getElementById('hub-imp-preview');
+  const countEl=document.getElementById('hub-imp-count');
+  if(!_hubImpRows.length){ showToast('⚠ No transactions parsed — check file format'); return; }
+  if(countEl) countEl.textContent=_hubImpRows.length;
+  if(tbody) tbody.innerHTML=_hubImpRows.map((r,i)=>`
+    <tr>
+      <td style="color:var(--muted);font-size:.7rem">${r.date}</td>
+      <td style="font-size:.74rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.description}</td>
+      <td><input value="${r.category}" onchange="_hubImpRows[${i}].category=this.value" style="border:1px solid var(--border);border-radius:5px;padding:2px 6px;font-size:.7rem;width:110px"></td>
+      <td><select onchange="_hubImpRows[${i}].type=this.value" style="border:1px solid var(--border);border-radius:5px;padding:2px 4px;font-size:.7rem">
+        <option value="income"  ${r.type==='income' ?'selected':''}>income</option>
+        <option value="expense" ${r.type==='expense'?'selected':''}>expense</option>
+      </select></td>
+      <td style="font-weight:700;color:${r.type==='income'?'#047857':'#DC2626'}">$${r.amount.toFixed(2)}</td>
+    </tr>`).join('');
+  if(preview) preview.style.display='block';
+  showToast(`📋 ${_hubImpRows.length} rows ready — review & click Import All`);
+}
+
+function hubImpConfirm(){
+  if(!_hubImpRows.length) return;
+  const newRecs = _hubImpRows.map(r=>({...r, id:r.id||('himp-'+Date.now()+'-'+Math.random())}));
+  DATA.records = [...newRecs, ...(DATA.records||[])];
+  newRecs.forEach(r=>{ try{ dbInsert('accounting_records',{...r,id:undefined}); }catch(e){} });
+  saveLocal();
+  document.getElementById('hub-imp-preview').style.display='none';
+  _hubImpRows=[];
+  showToast(`✅ ${newRecs.length} transactions imported to Records`);
+  if(typeof acShowTab==='function') acShowTab('records');
+}
 </script>
 </html>
