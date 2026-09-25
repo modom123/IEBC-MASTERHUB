@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<!--
+  FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-09-25_1639 UTC — Added "Portfolio Companies" sidebar page listing
+              cecethepiece, 3 Lakes Logistics and Jacks of All Trades, with what IEBC
+              built, links to their live sites and hubs, and a Send to Prospect button.
+  UPDATED   : 2026-09-25_1745 UTC — Build Studio: Portfolio, Demo Gallery and Build Library
+              merged under one sidebar entry with shared tabs. Portfolio companies are
+              assembled from library Parts (reuse stats, custom work -> Part, clone as
+              Blueprint), link to their demos, and carry partner ownership cap tables
+              (new Ownership tab, hub_portfolio table). Cap tables are hub-only.
+-->
 <html lang="en">
 <head>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -742,6 +753,47 @@ footer{background:var(--navy)!important}
 .ac-table tr:hover td{background:var(--off)}
 
 </style>
+<!-- ═══ PORTFOLIO COMPANIES — added 2026-09-25_1639 UTC ═══ -->
+<style>
+.pfh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.pfh-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.pfh-top{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.pfh-logo{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.pfh-name{font-family:var(--ff-h);font-size:.98rem;font-weight:800;color:var(--navy);line-height:1.2}
+.pfh-ind{font-size:.68rem;color:var(--text3);margin-top:2px}
+.pfh-status{margin-left:auto;font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--green-lt);color:var(--green);white-space:nowrap}
+.pfh-blurb{font-size:.78rem;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.pfh-lbl{font-family:var(--ff-m);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:4px 0 6px}
+.pfh-list{list-style:none;margin:0 0 12px;padding:0}
+.pfh-list li{font-size:.74rem;color:var(--text2);line-height:1.5;padding:4px 0 4px 18px;position:relative;border-bottom:1px solid var(--off)}
+.pfh-list li:last-child{border-bottom:none}
+.pfh-list li::before{content:'✓';position:absolute;left:0;font-weight:800;color:var(--gold)}
+.pfh-links{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.pfh-links a{font-size:.72rem;color:var(--blue);text-decoration:none;font-family:var(--ff-m)}
+.pfh-links a:hover{text-decoration:underline}
+.pfh-foot{margin-top:auto;display:flex;gap:6px;flex-wrap:wrap}
+.pfh-foot a{text-decoration:none}
+/* Build Studio — 2026-09-25_1745 UTC */
+.bs-strip{display:flex;gap:4px;border-bottom:2px solid var(--border);margin:-4px 0 16px;flex-wrap:wrap}
+.bs-tab{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;padding:9px 14px;font-family:var(--ff-b);font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer}
+.bs-tab:hover{color:var(--navy)}
+.bs-tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+.bs-metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.bs-metric{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:11px 13px}
+.bs-metric b{display:block;font-family:var(--ff-h);font-size:1.15rem;color:var(--navy)}
+.bs-metric span{font-size:.64rem;color:var(--text3)}
+.bs-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.bs-chip{font-size:.64rem;padding:3px 8px;border-radius:12px;background:var(--gold-lt);color:var(--navy);border:1px solid var(--gold-md)}
+.bs-chip.custom{background:transparent;border:1px dashed var(--purple);color:var(--purple)}
+.bs-chip button{background:none;border:none;color:var(--purple);font-weight:700;cursor:pointer;font-size:.62rem;padding:0 0 0 4px}
+.bs-own{font-size:.7rem;padding:7px 10px;border-radius:8px;background:var(--off);margin-bottom:12px;color:var(--text2)}
+.bs-own b{color:var(--navy)}
+.bs-warn{color:var(--orange);font-weight:700}
+.bs-ok{color:var(--green);font-weight:700}
+.bs-parts-pick{max-height:220px;overflow:auto;border:1.5px solid var(--border);border-radius:8px;padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.bs-parts-pick label{font-size:.74rem;display:flex;gap:6px;align-items:flex-start;cursor:pointer}
+@media(max-width:1100px){.bs-metrics{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
 
@@ -842,8 +894,7 @@ footer{background:var(--navy)!important}
 <button class="nb" id="nb-accounting" onclick="nav('accounting')" style="position:relative"><span class="ni">📊</span> Accounting Suite <span style="font-size:.5rem;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:2px 6px;border-radius:20px;margin-left:4px;font-weight:700">AI</span><span id="nb-acct-badge" style="display:none;position:absolute;top:6px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.5s infinite"></span></button>
 
     <span class="nav-grp" style="margin-top:6px">Build Tools</span>
-    <button class="nb" onclick="nav('demos')"><span class="ni">🎯</span> Demo Gallery</button>
-    <button class="nb" onclick="nav('library')"><span class="ni">📚</span> Build Library</button>
+    <button class="nb" id="nb-studio" onclick="nav('portfolio')"><span class="ni">🏗️</span> Build Studio <span class="nb-badge badge-green" id="nb-portfolio">0</span></button>
     <button class="nb" onclick="nav('integrations')"><span class="ni">🔌</span> Vendor Integrations</button>
     <button class="nb" onclick="nav('tasks')"><span class="ni">📋</span> All Tasks</button>
 
@@ -1085,19 +1136,43 @@ footer{background:var(--navy)!important}
     </div>
 
     <!-- ══════════ BUILD LIBRARY ══════════ -->
-    <div class="page" id="page-library">
+    <!-- ══ BUILD STUDIO: PORTFOLIO (updated 2026-09-25_1745 UTC) ══ -->
+    <div class="page" id="page-portfolio">
+      <div class="bs-strip"></div>
       <div class="sec-hdr">
-        <div class="sec-title">📚 Build Library</div>
+        <div class="sec-title">🏆 Portfolio Companies</div>
+        <div style="display:flex;gap:8px"><button class="btn btn-blue btn-sm" onclick="pfOpenEdit()">+ Portfolio Company</button></div>
+      </div>
+      <div class="bs-metrics" id="pf-metrics"></div>
+      <div class="pfh-grid" id="portfolio-grid"></div>
+    </div>
+
+    <!-- ══ BUILD STUDIO: PARTNER OWNERSHIP (added 2026-09-25_1745 UTC) ══ -->
+    <div class="page" id="page-ownership">
+      <div class="bs-strip"></div>
+      <div class="sec-hdr">
+        <div class="sec-title">📊 Partner Ownership</div>
+        <div style="font-size:.72rem;color:var(--text3)">🔒 Confidential. Stays in the hub and is never shown on the public website.</div>
+      </div>
+      <div class="card" style="margin-bottom:16px"><div class="card-hd"><div class="card-hd-title">IEBC stake across the portfolio</div></div><div class="tbl-wrap" id="own-rollup"></div></div>
+      <div id="own-tables"></div>
+    </div>
+
+    <div class="page" id="page-library">
+      <div class="bs-strip"></div>
+      <div class="bs-metrics" id="lib-metrics"></div>
+      <div class="sec-hdr">
+        <div class="sec-title">🧩 Parts &amp; Blueprints</div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="openModal('modal-add-module')">+ Module</button>
-          <button class="btn btn-blue btn-sm" onclick="openModal('modal-add-template')">+ Template</button>
+          <button class="btn btn-ghost btn-sm" onclick="openModal('modal-add-module')">+ Part</button>
+          <button class="btn btn-blue btn-sm" onclick="openModal('modal-add-template')">+ Blueprint</button>
         </div>
       </div>
       <div class="filter-tabs" id="lib-filters">
         <div class="ftab active" onclick="setLibFilter('all',this)">All</div>
-        <div class="ftab" onclick="setLibFilter('template',this)">📐 Templates</div>
-        <div class="ftab" onclick="setLibFilter('demo',this)">🎯 Demos</div>
-        <div class="ftab" onclick="setLibFilter('module',this)">🧩 Modules</div>
+        <div class="ftab" onclick="setLibFilter('module',this)">🧩 Parts</div>
+        <div class="ftab" onclick="setLibFilter('template',this)">📐 Blueprints</div>
+        <div class="ftab" onclick="setLibFilter('service',this)">🛠️ Services</div>
       </div>
       <div id="library-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"></div>
     </div>
@@ -2020,6 +2095,7 @@ footer{background:var(--navy)!important}
 
     <!-- ══════════ DEMO GALLERY ══════════ -->
     <div class="page" id="page-demos">
+      <div class="bs-strip"></div>
 
       <!-- Tab bar -->
       <div style="display:flex;gap:0;border-bottom:2px solid var(--border);background:var(--surface);flex-shrink:0;padding:0 24px">
@@ -2728,6 +2804,52 @@ footer{background:var(--navy)!important}
 </div>
 
 <!-- Add Template/Demo to Library -->
+<!-- Build Studio modals — 2026-09-25_1745 UTC -->
+<div class="overlay" id="modal-pf">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-hd"><div class="modal-title" id="pf-modal-title">🏆 Portfolio Company</div><button class="modal-x" onclick="closeModal('modal-pf')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="pf-id">
+      <div class="form-row">
+        <div class="fg"><label class="fl">Company Name</label><input class="fi" id="pf-name"></div>
+        <div class="fg"><label class="fl">Industry</label><input class="fi" id="pf-industry" placeholder="Logistics & Trucking"></div>
+      </div>
+      <div class="form-row-3">
+        <div class="fg"><label class="fl">Location</label><input class="fi" id="pf-location"></div>
+        <div class="fg"><label class="fl">Website URL</label><input class="fi" id="pf-site" placeholder="https://"></div>
+        <div class="fg"><label class="fl">Hub / Admin URL</label><input class="fi" id="pf-hub" placeholder="https://"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">Linked Demo</label><select class="fsel" id="pf-demo"></select></div>
+        <div class="fg"><label class="fl">Status</label><select class="fsel" id="pf-status"><option>Live</option><option>In Build</option><option>Paused</option></select></div>
+      </div>
+      <div class="fg"><label class="fl">One-line Description</label><input class="fi" id="pf-blurb"></div>
+      <div class="fg"><label class="fl">Library Parts used in this build</label><div class="bs-parts-pick" id="pf-parts"></div></div>
+      <div class="fg"><label class="fl">Custom work not in the library yet (one per line)</label><textarea class="fta" id="pf-custom" rows="4"></textarea></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn btn-ghost" onclick="closeModal('modal-pf')">Cancel</button><button class="btn btn-blue" onclick="pfSaveEdit()">Save Company</button></div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="modal-own">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-hd"><div class="modal-title">📊 Ownership Holder</div><button class="modal-x" onclick="closeModal('modal-own')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="own-co"><input type="hidden" id="own-idx">
+      <div class="form-row">
+        <div class="fg"><label class="fl">Holder</label><input class="fi" id="own-holder" placeholder="IEBC Business Consultants"></div>
+        <div class="fg"><label class="fl">Role</label><select class="fsel" id="own-role"><option>IEBC</option><option>Founder</option><option>Managing Partner</option><option>Partner</option><option>Investor</option><option>Employee Pool</option><option>Other</option></select></div>
+      </div>
+      <div class="form-row-3">
+        <div class="fg"><label class="fl">Type</label><select class="fsel" id="own-kind"><option>Equity</option><option>Revenue Share</option><option>Profit Interest</option><option>Option / Warrant</option><option>Convertible Note</option></select></div>
+        <div class="fg"><label class="fl">Percent</label><input class="fi" id="own-pct" type="number" min="0" max="100" step="0.01"></div>
+        <div class="fg"><label class="fl">Effective Date</label><input class="fi" id="own-date" type="date"></div>
+      </div>
+      <div class="fg"><label class="fl">Vesting / Terms</label><input class="fi" id="own-vesting" placeholder="e.g. 4-yr vest, 1-yr cliff · in exchange for build services"></div>
+      <div class="fg"><label class="fl">Notes</label><textarea class="fta" id="own-notes" rows="2"></textarea></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn btn-ghost" onclick="closeModal('modal-own')">Cancel</button><button class="btn btn-blue" onclick="ownSave()">Save Holder</button></div>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="modal-add-template">
   <div class="modal">
     <div class="modal-hd"><div class="modal-title">📐 Add to Library</div><button class="modal-x" onclick="closeModal('modal-add-template')">✕</button></div>
@@ -3059,8 +3181,7 @@ function acClientsExport(){
   if(!list.length){ alert('No clients to export.'); return; }
   const headers=['Client ID','Full Name','Business','Email','Phone','Plan','Monthly','Status','Trial End','Sub End','Consultant','Card Last 4','Banks','Business Type','Created'];
   const rows = list.map(c=>[c.client_id,c.full_name,c.business_name,c.email,c.phone,c.plan_name,c.monthly_rate,c.status,c.trial_end,c.sub_end,c.consultant,c.card_last4,(c.connected_banks||[]).join(';'),c.business_type,c.created_at]);
-  const csv = [headers,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('
-');
+  const csv = [headers,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='IEBC_Accounting_Clients_'+new Date().toISOString().split('T')[0]+'.csv';
   a.click();
@@ -3299,6 +3420,20 @@ create table if not exists hub_library (
 alter table hub_library enable row level security;
 create policy if not exists "all" on hub_library for all using (true) with check (true);
 
+-- PORTFOLIO COMPANIES + OWNERSHIP (added 2026-09-25_1745 UTC)
+create table if not exists hub_portfolio (
+  id text primary key,
+  created_at timestamptz default now(),
+  name text not null,
+  industry text, location text, site text, hub text,
+  demo_id text, status text default 'Live', blurb text,
+  parts jsonb default '[]',
+  custom jsonb default '[]',
+  owners jsonb default '[]'
+);
+alter table hub_portfolio enable row level security;
+create policy if not exists "all" on hub_portfolio for all using (true) with check (true);
+
 -- ACTIVITY LOG
 create table if not exists hub_activity (
   id uuid primary key default gen_random_uuid(),
@@ -3403,7 +3538,7 @@ function clearSupabaseClient() {
 
 const DATA = {
   clients:[], prospects:[], builds:[],
-  invoices:[], tasks:[], library:[], activity:[],
+  invoices:[], tasks:[], library:[], activity:[], portfolio:[],
 };
 
 // ══════════════════════════════════════════════════════════
@@ -3424,7 +3559,7 @@ function saveLocal(){
 function loadLocal(){
   try{
     const d = JSON.parse(localStorage.getItem(LS_KEY)||'{}');
-    ['clients','prospects','builds','invoices','tasks','library','activity'].forEach(k=>{ if(d[k]) DATA[k]=d[k]; });
+    ['clients','prospects','builds','invoices','tasks','library','activity','portfolio'].forEach(k=>{ if(d[k]) DATA[k]=d[k]; });
   }catch(e){}
   try{
     const m = JSON.parse(localStorage.getItem('autosys_me')||'{}');
@@ -3642,10 +3777,11 @@ async function syncAll(){
   const syncBtn=document.getElementById('sync-btn');
   if(syncBtn){ syncBtn.textContent='⏳ Syncing...'; syncBtn.disabled=true; }
   try{
-    const tables=['hub_clients','hub_prospects','hub_builds','hub_invoices','hub_tasks','hub_library','hub_activity'];
-    const keys  =['clients','prospects','builds','invoices','tasks','library','activity'];
+    const tables=['hub_clients','hub_prospects','hub_builds','hub_invoices','hub_tasks','hub_library','hub_activity','hub_portfolio'];
+    const keys  =['clients','prospects','builds','invoices','tasks','library','activity','portfolio'];
     const results = await Promise.all(tables.map(t=>DB.from(t).select('*').order('created_at',{ascending:false})));
-    results.forEach((r,i)=>{ if(r.data) DATA[keys[i]]=r.data; });
+    // portfolio: keep the local copy if the table is missing or still empty
+    results.forEach((r,i)=>{ if(r.data && (keys[i]!=='portfolio' || r.data.length)) DATA[keys[i]]=r.data; });
     saveLocal();
     renderAll();
     setDBConnected(true);
@@ -3853,6 +3989,7 @@ function renderAll(){
   renderTasks();
   renderMyTasks();
   renderLibrary();
+  renderPortfolio();
   renderTeam();
   renderActivityFeed();
   renderIntakes();
@@ -3868,7 +4005,9 @@ const PAGE_LABELS = {
   invoices:'Invoices', revenue:'Revenue & MRR', library:'Build Library',
   integrations:'Vendor Integrations', tasks:'All Tasks',
   team:'Team View', workforce:'AI Workforce — 50 Employees', outreach:'Outreach Engine — Automated Campaigns', demos:'Demo Gallery — Send to Prospects', settings:'Settings & Database',
+  portfolio:'Build Studio — Portfolio', ownership:'Build Studio — Partner Ownership',
 };
+PAGE_LABELS.demos='Build Studio — Demos'; PAGE_LABELS.library='Build Studio — Parts & Blueprints';
 function nav(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const pg=document.getElementById('page-'+id); if(pg) pg.classList.add('active');
@@ -3887,6 +4026,7 @@ function nav(id){
   if(id==='demos') renderDemoGallery();
   if(id==='library') renderLibrary();
   if(id==='integrations') renderIntegrations();
+  if(BS_TABS.some(t=>t[0]===id)) bsEnter(id);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -5151,10 +5291,13 @@ function setLibFilter(f,el){
 
 function renderLibrary(){
   const grid=document.getElementById('library-grid'); if(!grid) return;
-  const items=LIB_FILTER.current==='all'?DATA.library:DATA.library.filter(i=>i.type===LIB_FILTER.current);
+  const metEl=document.getElementById('lib-metrics'); if(metEl) metEl.innerHTML=bsMetricsHTML();
+  // demo entries now live in the Demos tab, linked from portfolio companies
+  const lib=DATA.library.filter(i=>i.type!=='demo');
+  const items=LIB_FILTER.current==='all'?lib:lib.filter(i=>i.type===LIB_FILTER.current);
   if(!items.length){grid.innerHTML='<div style="grid-column:1/-1" class="empty-state"><div class="es-ico">📚</div>No items yet — add templates, demos, and modules</div>';return;}
   const typeColors={template:'b-blue',demo:'b-green',module:'b-purple'};
-  const typeLabels={template:'📐 Template',demo:'🎯 Demo',module:'🧩 Module'};
+  const typeLabels={template:'📐 Blueprint',demo:'🎯 Demo',module:'🧩 Part',service:'🛠️ Service'};
   grid.innerHTML=items.map(item=>`
     <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .2s" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
       <div style="height:90px;background:linear-gradient(135deg,#0d1b3e,#1a237e,#1565c0);display:flex;align-items:center;justify-content:center;font-size:2.2rem">
@@ -5167,12 +5310,13 @@ function renderLibrary(){
         </div>
         <div style="font-family:var(--ff-h);font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:4px">${item.name}</div>
         <div style="font-size:.72rem;color:var(--text2);line-height:1.5;margin-bottom:10px">${(item.description||'').substring(0,80)}${(item.description||'').length>80?'...':''}</div>
+        ${item.type==='module'?bsUsageHTML(item.name):''}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <span style="font-family:var(--ff-m);font-size:.62rem;color:var(--text2)">${item.build_time||''}</span>
           ${item.price?`<span style="font-family:var(--ff-m);font-size:.72rem;font-weight:700;color:var(--green)">$${Number(item.price).toLocaleString()}</span>`:''}
         </div>
         ${item.type==='template'?`
-          <button class="btn btn-blue" style="width:100%;justify-content:center;font-size:.75rem" onclick="openTemplateWizard('${item.id}')">🚀 Start Build with These Modules →</button>
+          <button class="btn btn-blue" style="width:100%;justify-content:center;font-size:.75rem" onclick="openTemplateWizard('${item.id}')">🚀 Start Build with These Parts →</button>
         `:item.type==='module'?`
           <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.75rem" onclick="openModuleDetail('${item.id}')">📋 View Details & Questions</button>
         `:`
@@ -7062,6 +7206,226 @@ const SERVICE_PACKAGES = [
 ];
 window.SERVICE_PACKAGES = SERVICE_PACKAGES;
 
+
+// ══════════════════════════════════════════════════════════
+//  BUILD STUDIO — Portfolio · Demos · Parts & Blueprints · Ownership
+//  Added 2026-09-25_1745 UTC. Portfolio companies are recorded as the
+//  library Parts they were assembled from, plus custom work that can be
+//  promoted into a new Part. Ownership lives on each company (owners[]).
+// ══════════════════════════════════════════════════════════
+const BS_TABS=[['portfolio','🏆 Portfolio'],['demos','🎯 Demos'],['library','🧩 Parts & Blueprints'],['ownership','📊 Ownership']];
+const SEED_PORTFOLIO=[
+  {id:'pf-cece',name:'cecethepiece',industry:'Creative · Original Art',location:'Renton, WA',status:'Live',
+   site:'https://cecethepiece.com',hub:'https://cece-hub.vercel.app',demo_id:'creative',
+   blurb:"Cece's original art business: resin, glass and mixed media, plus custom memorial keepsakes.",
+   parts:['Inventory Management','Booking & Deposit Management','Invoice Generator & Payment Tracker','Client & Contact Management (CRM)','Social Media Content Scheduler','Email Campaign & Outreach Manager','Revenue Dashboard & P&L'],
+   custom:['Art storefront with series filters and lightbox','Buy Now checkout with commission deposits','Online classes sign-up','Instagram feed and Studio Drop newsletter'],
+   owners:[]},
+  {id:'pf-3ll',name:'3 Lakes Logistics',industry:'Logistics & Trucking',location:'Nationwide',status:'Live',
+   site:'https://www.3lakeslogistics.com',hub:'https://admin.3lakeslogistics.com',demo_id:'logistics',
+   blurb:'An AI-run trucking carrier. We built everything from driver sign-up to weekly settlements.',
+   parts:['Load Board & Dispatch','Driver Management & HOS','IFTA Fuel & Mileage Log','Contract & E-Signature','Document & Contract Vault','Lead Pipeline Tracker','Revenue Dashboard & P&L','Reporting & Analytics Dashboard'],
+   custom:['Hawk driver app (PWA and Android)','AI agent workforce: onboarding, Shield safety, Settler settlements','Carrier and driver sign-up website'],
+   owners:[]},
+  {id:'pf-joat',name:'Jacks of All Trades Community Development',industry:'Nonprofit · Skilled Trades',location:'Detroit, MI',status:'Live',
+   site:'https://joatamp.org',hub:'https://joatamp.org/admin/',demo_id:'',
+   blurb:'A Detroit nonprofit that rebuilds neighborhoods through skilled-trades training.',
+   parts:['Lead Pipeline Tracker','Job Board & Task Management','Email Campaign & Outreach Manager','Reporting & Analytics Dashboard'],
+   custom:['50/50 raffle engine (Zeffy and QR codes)','Before-and-after renovation showcase','Program enrollment and volunteer forms','Merch shop','SMS outreach'],
+   owners:[]},
+];
+
+function bsEsc(x){ return String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function bsParts(){ return DATA.library.filter(m=>m.type==='module'); }
+function bsPartByName(n){ return bsParts().find(m=>m.name===n); }
+
+function bsEnter(id){
+  document.querySelectorAll('.bs-strip').forEach(el=>{
+    el.innerHTML=BS_TABS.map(t=>`<button class="bs-tab${t[0]===id?' active':''}" onclick="nav('${t[0]}')">${t[1]}</button>`).join('');
+  });
+  document.getElementById('nb-studio')?.classList.add('active');
+  if(id==='portfolio') renderPortfolio();
+  if(id==='ownership') renderOwnership();
+}
+
+// Economies of scale: how much of each build came off the shelf
+function bsStats(){
+  const use={}; let fromLib=0, custom=0, avoided=0;
+  (DATA.portfolio||[]).forEach(co=>{
+    (co.parts||[]).forEach(n=>{
+      use[n]=(use[n]||0)+1; fromLib++;
+      const p=bsPartByName(n);
+      if(use[n]>1 && p) avoided+=Number(p.price)||0;   // 2nd+ use of a part = build cost avoided
+    });
+    custom+=(co.custom||[]).length;
+  });
+  const reused=Object.values(use).filter(c=>c>1).length;
+  const total=fromLib+custom;
+  return {use,fromLib,custom,avoided,reused,parts:bsParts().length,rate:total?Math.round(fromLib/total*100):0};
+}
+function bsMetricsHTML(){
+  const st=bsStats();
+  const m=(v,l)=>`<div class="bs-metric"><b>${v}</b><span>${l}</span></div>`;
+  return m(st.parts,'Parts in library')+m(st.rate+'%','Of portfolio builds made from parts')+m(st.reused,'Parts reused in 2+ companies')
+        +m('$'+st.avoided.toLocaleString(),'Build cost avoided by reuse')+m(st.custom,'Custom items to turn into parts');
+}
+function bsUsageHTML(name){
+  const cos=(DATA.portfolio||[]).filter(co=>(co.parts||[]).includes(name));
+  if(!cos.length) return '<div style="font-size:.64rem;color:var(--text3);margin-bottom:8px">Not used in a portfolio build yet</div>';
+  return `<div class="bs-chips">${cos.map(co=>`<span class="bs-chip">🏆 ${bsEsc(co.name)}</span>`).join('')}</div>`;
+}
+function bsDemoBadge(demoId){
+  const co=(DATA.portfolio||[]).find(c=>c.demo_id===demoId);
+  if(!co) return '';
+  return `<div style="margin:2px 0 6px"><a href="${bsEsc(co.site)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="badge b-green" style="text-decoration:none">🏆 Portfolio company · live site ↗</a></div>`;
+}
+
+function bsOwnSummary(co){
+  const o=co.owners||[];
+  if(!o.length) return '<span class="bs-warn">Ownership not recorded</span>';
+  const sum=(k,f)=>o.filter(x=>x.kind===k&&(!f||f(x))).reduce((a,x)=>a+(Number(x.pct)||0),0);
+  const iebcEq=sum('Equity',x=>x.role==='IEBC'), iebcRev=sum('Revenue Share',x=>x.role==='IEBC'), eq=sum('Equity');
+  return `IEBC: <b>${iebcEq}% equity</b>${iebcRev?` · <b>${iebcRev}% revenue share</b>`:''} · ${o.length} holder${o.length>1?'s':''} · `
+    +(Math.abs(eq-100)<0.01?'<span class="bs-ok">Equity = 100%</span>':`<span class="bs-warn">Equity totals ${eq}%</span>`);
+}
+
+function renderPortfolio(){
+  const badge=document.getElementById('nb-portfolio'); if(badge) badge.textContent=(DATA.portfolio||[]).length;
+  const met=document.getElementById('pf-metrics'); if(met) met.innerHTML=bsMetricsHTML();
+  const grid=document.getElementById('portfolio-grid'); if(!grid) return;
+  const list=DATA.portfolio||[];
+  if(!list.length){ grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="es-ico">🏆</div>No portfolio companies yet</div>'; return; }
+  grid.innerHTML=list.map(co=>{
+    const parts=co.parts||[], custom=co.custom||[];
+    const demoBtn=co.demo_id
+      ? `<button class="btn btn-ghost btn-sm" onclick="nav('demos');dgOpenPreview('${bsEsc(co.demo_id)}','hub')">▶ Demo</button>`
+      : `<a class="btn btn-ghost btn-sm" href="${bsEsc(co.site)}" target="_blank" rel="noopener">▶ Live Demo ↗</a>`;
+    const body=encodeURIComponent(`Here's one of the businesses IEBC built for: ${co.name}. See it live at ${co.site}`);
+    return `<div class="pfh-card" style="border-top:3px solid var(--gold)">
+      <div class="pfh-top"><div><div class="pfh-name">${bsEsc(co.name)}</div><div class="pfh-ind">${bsEsc(co.industry)}${co.location?' · '+bsEsc(co.location):''}</div></div><span class="pfh-status">● ${bsEsc(co.status||'Live')}</span></div>
+      <div class="pfh-blurb">${bsEsc(co.blurb)}</div>
+      <div class="bs-own">${bsOwnSummary(co)} · <a href="#" onclick="nav('ownership');return false">Cap table →</a></div>
+      <div class="pfh-lbl">Built from ${parts.length} library parts</div>
+      <div class="bs-chips">${parts.map(n=>`<span class="bs-chip" title="${bsPartByName(n)?'In library':'Missing from library'}">${bsPartByName(n)?'🧩':'⚠️'} ${bsEsc(n)}</span>`).join('')||'<span style="font-size:.7rem;color:var(--text3)">None yet</span>'}</div>
+      ${custom.length?`<div class="pfh-lbl">Custom work (${custom.length}): promote to a part to reuse it</div>
+      <div class="bs-chips">${custom.map((c,i)=>`<span class="bs-chip custom">${bsEsc(c)}<button title="Add to library as a reusable part" onclick="pfProductize('${co.id}',${i})">→ Part</button></span>`).join('')}</div>`:''}
+      <div class="pfh-links">${co.site?`<a href="${bsEsc(co.site)}" target="_blank" rel="noopener">🌐 ${bsEsc(co.site.replace(/^https?:\/\//,''))} ↗</a>`:''}${co.hub?`<a href="${bsEsc(co.hub)}" target="_blank" rel="noopener">🏢 ${bsEsc(co.hub.replace(/^https?:\/\//,''))} ↗</a>`:''}</div>
+      <div class="pfh-foot">
+        <a class="btn btn-blue btn-sm" href="${bsEsc(co.site)}" target="_blank" rel="noopener">Visit Site ↗</a>${demoBtn}
+        <button class="btn btn-ghost btn-sm" onclick="pfCloneBlueprint('${co.id}')">🧬 Clone as Blueprint</button>
+        <a class="btn btn-ghost btn-sm" href="mailto:?subject=${encodeURIComponent('See our work: '+co.name)}&body=${body}">📧 Send</a>
+        <button class="btn btn-ghost btn-sm" onclick="pfOpenEdit('${co.id}')">✏️ Edit</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function pfPersist(co){
+  saveLocal();
+  if(!DB) return;
+  try{ const {error}=await DB.from('hub_portfolio').upsert(co); if(error) console.warn('hub_portfolio:',error.message); }catch(e){ console.warn(e); }
+}
+
+function pfOpenEdit(id){
+  const co=(DATA.portfolio||[]).find(c=>c.id===id)||{parts:[],custom:[]};
+  document.getElementById('pf-modal-title').textContent=id?'✏️ Edit Portfolio Company':'🏆 New Portfolio Company';
+  const set=(k,val)=>{ const el=document.getElementById(k); if(el) el.value=val||''; };
+  set('pf-id',co.id); set('pf-name',co.name); set('pf-industry',co.industry); set('pf-location',co.location);
+  set('pf-site',co.site); set('pf-hub',co.hub); set('pf-blurb',co.blurb); set('pf-custom',(co.custom||[]).join('\n'));
+  document.getElementById('pf-demo').innerHTML='<option value="">— None (use live site) —</option>'
+    +DG_HUBS.map(d=>`<option value="${d.id}"${d.id===co.demo_id?' selected':''}>${bsEsc(d.name)}</option>`).join('');
+  set('pf-status',co.status||'Live');
+  document.getElementById('pf-parts').innerHTML=bsParts().map((p,i)=>
+    `<label><input type="checkbox" data-part="${i}"${(co.parts||[]).includes(p.name)?' checked':''}> ${bsEsc(p.name)}</label>`).join('');
+  openModal('modal-pf');
+}
+async function pfSaveEdit(){
+  const name=v('pf-name'); if(!name){ alert('Enter a company name'); return; }
+  const id=v('pf-id')||('pf-'+Date.now());
+  let co=DATA.portfolio.find(c=>c.id===id);
+  if(!co){ co={id,owners:[],created_at:new Date().toISOString()}; DATA.portfolio.push(co); }
+  const all=bsParts();
+  Object.assign(co,{name,industry:v('pf-industry'),location:v('pf-location'),site:v('pf-site'),hub:v('pf-hub'),
+    blurb:v('pf-blurb'),demo_id:v('pf-demo'),status:v('pf-status')||'Live',
+    parts:[...document.querySelectorAll('#pf-parts input:checked')].map(el=>all[+el.dataset.part].name),
+    custom:(document.getElementById('pf-custom').value||'').split('\n').map(x=>x.trim()).filter(Boolean)});
+  closeModal('modal-pf'); await pfPersist(co); renderPortfolio(); renderLibrary();
+}
+
+// Custom work → reusable library part (the economies-of-scale step)
+async function pfProductize(coId,idx){
+  const co=DATA.portfolio.find(c=>c.id===coId); if(!co) return;
+  const name=prompt('Name this reusable part:', co.custom[idx]); if(!name) return;
+  const price=parseFloat(prompt('Standard price for this part ($):','0'))||0;
+  const cat=(prompt('Category (crm, jobs, finance, scheduling, inventory, docs, reporting, social):','jobs')||'jobs').trim().toLowerCase();
+  const mod={type:'module',name,category:cat,description:'Built first for '+co.name+'. Productized for reuse.',
+    build_time:'',price,notes:'',times_used:1,created_at:new Date().toISOString(),id:'local-'+Date.now()};
+  const saved=await dbInsert('hub_library',{...mod,id:undefined}); if(saved) mod.id=saved.id;
+  DATA.library.unshift(mod);
+  co.custom.splice(idx,1); if(!co.parts.includes(name)) co.parts.push(name);
+  await pfPersist(co); renderPortfolio(); renderLibrary();
+}
+
+// Re-assemble a portfolio build into a blueprint for the next client
+async function pfCloneBlueprint(coId){
+  const co=DATA.portfolio.find(c=>c.id===coId); if(!co) return;
+  const item={type:'template',name:co.name+' Blueprint',industry:(co.industry||'').split('·')[0].trim(),
+    description:'Re-assembled from the '+co.name+' build: '+(co.parts||[]).length+' library parts.',
+    modules:(co.parts||[]).join(', '),build_time:'',url:co.site||'',times_used:0,created_at:new Date().toISOString(),id:'local-'+Date.now()};
+  const saved=await dbInsert('hub_library',{...item,id:undefined}); if(saved) item.id=saved.id;
+  DATA.library.unshift(item); saveLocal();
+  LIB_FILTER.current='template'; nav('library');
+  document.querySelectorAll('#lib-filters .ftab').forEach(t=>t.classList.toggle('active',t.textContent.includes('Blueprints')));
+}
+
+// ── Ownership / cap tables ──
+function renderOwnership(){
+  const list=DATA.portfolio||[];
+  const roll=document.getElementById('own-rollup'), tables=document.getElementById('own-tables');
+  if(!roll||!tables) return;
+  const sum=(o,k,f)=>o.filter(x=>x.kind===k&&(!f||f(x))).reduce((a,x)=>a+(Number(x.pct)||0),0);
+  roll.innerHTML=`<table><thead><tr><th>Company</th><th>IEBC Equity</th><th>IEBC Revenue Share</th><th>IEBC Profit Interest</th><th>Total Equity Recorded</th><th>Holders</th></tr></thead><tbody>${list.map(co=>{
+    const o=co.owners||[], eq=sum(o,'Equity');
+    return `<tr><td class="td-name">${bsEsc(co.name)}</td><td>${sum(o,'Equity',x=>x.role==='IEBC')}%</td><td>${sum(o,'Revenue Share',x=>x.role==='IEBC')}%</td><td>${sum(o,'Profit Interest',x=>x.role==='IEBC')}%</td>
+      <td>${!o.length?'<span class="bs-warn">Not recorded</span>':Math.abs(eq-100)<0.01?'<span class="bs-ok">100% ✓</span>':`<span class="bs-warn">${eq}%</span>`}</td><td>${o.length}</td></tr>`;
+  }).join('')}</tbody></table>`;
+  tables.innerHTML=list.map(co=>{
+    const o=co.owners||[], eq=sum(o,'Equity');
+    return `<div class="card" style="margin-bottom:14px"><div class="card-hd"><div class="card-hd-title">🏆 ${bsEsc(co.name)}</div>
+      <div style="display:flex;gap:8px;align-items:center"><span style="font-size:.7rem">${!o.length?'':Math.abs(eq-100)<0.01?'<span class="bs-ok">Equity = 100%</span>':`<span class="bs-warn">Equity totals ${eq}%${eq>100?' (over-allocated)':''}</span>`}</span>
+      <button class="btn btn-blue btn-xs" onclick="ownOpen('${co.id}',-1)">+ Holder</button></div></div>
+      <div class="tbl-wrap">${o.length?`<table><thead><tr><th>Holder</th><th>Role</th><th>Type</th><th>%</th><th>Vesting / Terms</th><th>Effective</th><th>Notes</th><th></th></tr></thead><tbody>${o.map((x,i)=>`<tr>
+        <td class="td-name">${bsEsc(x.holder)}</td><td>${bsEsc(x.role)}</td><td>${bsEsc(x.kind)}</td><td><b>${Number(x.pct)||0}%</b></td><td>${bsEsc(x.vesting)}</td><td>${bsEsc(x.date)}</td><td style="font-size:.72rem">${bsEsc(x.notes)}</td>
+        <td style="white-space:nowrap"><button class="btn btn-ghost btn-xs" onclick="ownOpen('${co.id}',${i})">✏️</button> <button class="btn btn-ghost btn-xs" onclick="ownDelete('${co.id}',${i})">✕</button></td></tr>`).join('')}</tbody></table>`
+      :'<div style="padding:14px 16px;font-size:.78rem;color:var(--text3)">No holders recorded. Add IEBC, the founders and any partners with their percentages.</div>'}</div></div>`;
+  }).join('');
+}
+function ownOpen(coId,idx){
+  const co=DATA.portfolio.find(c=>c.id===coId); if(!co) return;
+  const x=idx>=0?co.owners[idx]:{role:'IEBC',kind:'Equity',holder:idx<0&&!co.owners.length?'IEBC Business Consultants':''};
+  const set=(k,val)=>{ const el=document.getElementById(k); if(el) el.value=val==null?'':val; };
+  set('own-co',coId); set('own-idx',idx); set('own-holder',x.holder); set('own-role',x.role||'IEBC'); set('own-kind',x.kind||'Equity');
+  set('own-pct',x.pct); set('own-date',x.date); set('own-vesting',x.vesting); set('own-notes',x.notes);
+  openModal('modal-own');
+}
+async function ownSave(){
+  const co=DATA.portfolio.find(c=>c.id===v('own-co')); if(!co) return;
+  const pct=parseFloat(v('own-pct'));
+  if(!v('own-holder')){ alert('Enter the holder'); return; }
+  if(isNaN(pct)||pct<0||pct>100){ alert('Enter a percent between 0 and 100'); return; }
+  const row={holder:v('own-holder'),role:v('own-role'),kind:v('own-kind'),pct,date:v('own-date'),vesting:v('own-vesting'),notes:v('own-notes')};
+  const idx=parseInt(v('own-idx'),10);
+  co.owners=co.owners||[];
+  if(idx>=0) co.owners[idx]=row; else co.owners.push(row);
+  const eq=co.owners.filter(x=>x.kind==='Equity').reduce((a,x)=>a+(Number(x.pct)||0),0);
+  if(eq>100.001 && !confirm(co.name+' equity would total '+eq+'%. Save anyway?')) { if(idx<0) co.owners.pop(); return; }
+  closeModal('modal-own'); await pfPersist(co); renderOwnership(); renderPortfolio();
+}
+async function ownDelete(coId,idx){
+  const co=DATA.portfolio.find(c=>c.id===coId); if(!co||!confirm('Remove this holder?')) return;
+  co.owners.splice(idx,1); await pfPersist(co); renderOwnership(); renderPortfolio();
+}
+
 const SEED_LIBRARY = [
 
   // ── INDUSTRY TEMPLATES ─────────────────────────────────────────────
@@ -7446,6 +7810,7 @@ loadLocal();
 
 // Seed library if empty
 if(!DATA.library.length) DATA.library = [...SEED_LIBRARY];
+if(!DATA.portfolio || !DATA.portfolio.length) DATA.portfolio = JSON.parse(JSON.stringify(SEED_PORTFOLIO));
 
 // Pre-fill login fields if creds saved
 const savedUrl=localStorage.getItem('hub-sb-url'), savedKey=localStorage.getItem('hub-sb-key');
@@ -11642,7 +12007,7 @@ function renderDGCards(containerId, demos, type) {
         ${demo.screen()}
       </div>
       <div class="dg-body">
-        <div class="dg-name">${demo.name}</div>
+        <div class="dg-name">${demo.name}</div>${bsDemoBadge(demo.id)}
         <div class="dg-desc">${demo.desc}</div>
         <div class="dg-modules">${modules.slice(0,5).map(function(m){return '<span class="dg-module">'+m+'</span>';}).join('')}</div>
         <div class="dg-actions">
