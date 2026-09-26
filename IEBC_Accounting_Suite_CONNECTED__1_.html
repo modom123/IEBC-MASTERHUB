@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!--
+  FILE      : IEBC_Accounting_Suite_CONNECTED__1_.html  (Efficient — IEBC accounting suite)
+  UPDATED   : 2026-09-26 UTC — Fixed load error "Cannot set properties of null": the
+              consultant picker markup was removed on 2026-04-10 but its startup code
+              still ran. pickCon() and the DOMContentLoaded handler are now null-safe.
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2667,7 +2673,7 @@ function pickPlanFromSelect(val){
   document.getElementById('mpd-cancel').textContent='⚠ '+p.cancel;
 }
 const conDetails={1:"Marcus specializes in freelancers, sole proprietors, and 1099 contractors. He'll have your books clean and your quarterly taxes estimated within your first week.",2:"Tanya focuses on LLCs and S-corps with employees. She'll set up payroll, onboarding workflows, and benefits tracking so your HR is fully automated.",3:"Derek works with agencies and startups. He'll build your billing cycles, time tracking, and multi-employee payroll system from the ground up."};
-function pickCon(n){[1,2,3].forEach(i=>{document.getElementById('cc'+i).classList.toggle('sel',i===n);});document.getElementById('con-detail').textContent=conDetails[n];}
+function pickCon(n){[1,2,3].forEach(i=>{document.getElementById('cc'+i)?.classList.toggle('sel',i===n);});const d=document.getElementById('con-detail');if(d)d.textContent=conDetails[n];}
 function toggleBank(id){document.getElementById(id).classList.toggle('sel');}
 function fmtCard(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1  ').trim();}
 function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+' / '+v.substring(2,4);el.value=v;}
@@ -3032,7 +3038,8 @@ async function sendChat() {
   document.getElementById('chat-input').focus();
 }
 
-document.addEventListener('DOMContentLoaded',()=>{document.getElementById('con-detail').textContent=conDetails[1];});
+// Consultant picker was replaced by "all 3 consultants" (2026-04-10); only fill it if present
+document.addEventListener('DOMContentLoaded',()=>{const d=document.getElementById('con-detail');if(d)d.textContent=conDetails[1];});
 
 function copyCreds(){
   const id=document.getElementById('sw-client-id').textContent;
