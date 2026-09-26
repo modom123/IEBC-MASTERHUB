@@ -2,8 +2,11 @@
 <!--
   FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
   UPDATED   : 2026-09-25_1639 UTC — Added "Portfolio Companies" sidebar page listing
-              cecethepiece, 3 Lakes Logistics and Jacks of All Trades, with what IEBC
+              Ceces Pieces, 3 Lakes Logistics and Jacks of All Trades, with what IEBC
               built, links to their live sites and hubs, and a Send to Prospect button.
+  UPDATED   : 2026-09-26 UTC — Display name cecethepiece -> "Ceces Pieces" (seed data, demos,
+              portfolio, plus an on-load rename of already-saved records). Domain, email
+              and file names unchanged.
   UPDATED   : 2026-09-25_1745 UTC — Build Studio: Portfolio, Demo Gallery and Build Library
               merged under one sidebar entry with shared tabs. Portfolio companies are
               assembled from library Parts (reuse stats, custom work -> Part, clone as
@@ -4074,7 +4077,17 @@ function updateClock(){
   document.getElementById('today-str').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric'});
 }
 
+// 2026-09-26: the business is now shown as "Ceces Pieces". Records saved earlier in
+// localStorage/Supabase still say "cecethepiece"; rename those display fields on render.
+// Domains, emails and file names are left alone.
+function migrateCecesPiecesName(){
+  const re=/(^|[^@\/#\w.])cecethepiece(?![\w.@-])/gi, fields=['name','client_name','business_name','notes','entity','description'];
+  Object.keys(DATA).forEach(k=>{ if(!Array.isArray(DATA[k])) return;
+    DATA[k].forEach(r=>{ if(!r||typeof r!=='object') return;
+      fields.forEach(f=>{ if(typeof r[f]==='string' && re.test(r[f])){ re.lastIndex=0; r[f]=r[f].replace(re,'$1Ceces Pieces'); } re.lastIndex=0; }); }); });
+}
 function renderAll(){
+  migrateCecesPiecesName();
   renderDashboard();
   renderClients();
   renderPipeline();
@@ -7311,7 +7324,7 @@ window.SERVICE_PACKAGES = SERVICE_PACKAGES;
 // ══════════════════════════════════════════════════════════
 const BS_TABS=[['portfolio','🏆 Portfolio'],['demos','🎯 Demos'],['library','🧩 Parts & Blueprints'],['ownership','📊 Ownership']];
 const SEED_PORTFOLIO=[
-  {id:'pf-cece',name:'cecethepiece',industry:'Creative · Original Art',location:'Renton, WA',status:'Live',
+  {id:'pf-cece',name:'Ceces Pieces',industry:'Creative · Original Art',location:'Renton, WA',status:'Live',
    site:'https://cecethepiece.com',hub:'https://cece-hub.vercel.app',demo_id:'creative',
    blurb:"Cece's original art business: resin, glass and mixed media, plus custom memorial keepsakes.",
    parts:['Inventory Management','Booking & Deposit Management','Invoice Generator & Payment Tracker','Client & Contact Management (CRM)','Social Media Content Scheduler','Email Campaign & Outreach Manager','Revenue Dashboard & P&L'],
@@ -7565,7 +7578,7 @@ const SEED_LIBRARY = [
   {id:'s5',type:'demo',name:'3 Lakes Logistics — Full Operations Suite',industry:'Logistics',build_time:'6 weeks',
    description:'Complete dispatch and operations system built for a real carrier. Load board, driver management, fleet maintenance, broker CRM, IFTA log, and revenue tracking.',
    modules:'Load Board & Dispatch, Driver Management, Fleet Maintenance, Broker CRM, Rate Tracking, Document Vault, IFTA Fuel & Mileage Log',price:0,times_used:1},
-  {id:'s6',type:'demo',name:'cecethepiece — Artist Business Hub',industry:'Creative',build_time:'5 weeks',
+  {id:'s6',type:'demo',name:'Ceces Pieces — Artist Business Hub',industry:'Creative',build_time:'5 weeks',
    description:'Full business hub built for a working visual artist. Artwork inventory, commissions, rental bookings, social scheduler, and income dashboard.',
    modules:'Artwork Inventory, Commission Tracker, Rental Booking, Client Sales Pipeline, Social Post Scheduler, Income Dashboard',price:0,times_used:1},
 
@@ -8792,9 +8805,9 @@ function wfToast(msg){const el=document.createElement('div');el.style.cssText='p
 const PLAN_DATA = [
   // PHASE 1 - FOUNDATION
   {w:1,phase:'Phase 1: Foundation',title:'Register Business & Setup Tools',win:'LLC filed. Business is legally real.',tasks:['Decide on business name — IEBC (Integrated Efficiency Business Consultants)','Register LLC at your state Secretary of State ($50–$200)','Apply for EIN free at IRS.gov','Open Mercury or Relay free business checking account','Set up Google Workspace (Gmail, Drive, Docs, Calendar)','Set up Wave.com free invoicing & bookkeeping','Create Calendly for scheduling discovery calls','Create Notion/Trello for project tracking'],income:'Offer your first $500 "Business Automation Audit" to 3 local businesses TODAY — no tech needed, just 1-hour consultation',consultants:['victoria','sterling','evelyn'],revenue:'$0 → First $1,500'},
-  {w:2,phase:'Phase 1: Foundation',title:'Build Online Presence & Demo Systems',win:'Website live. Both demo systems visible.',tasks:['Buy domain at Namecheap (~$12/year)','Launch website on Carrd or Webflow (free)','Embed cecethepiece demo system link','Embed 3 Lakes Logistics demo system link','Add pricing: Starter ($1,500) / Business Suite ($4,000) / Enterprise ($8,000)','Add Calendly booking link and contact form','Create LinkedIn profile with "Business Automation Specialist" title','Post intro on LinkedIn with both demo walkthroughs'],income:'DM 10 business owners your demo video — 1 conversion = $1,500 setup fee',consultants:['samantha','benjamin','zara'],revenue:'First client deposit target: $750'},
+  {w:2,phase:'Phase 1: Foundation',title:'Build Online Presence & Demo Systems',win:'Website live. Both demo systems visible.',tasks:['Buy domain at Namecheap (~$12/year)','Launch website on Carrd or Webflow (free)','Embed Ceces Pieces demo system link','Embed 3 Lakes Logistics demo system link','Add pricing: Starter ($1,500) / Business Suite ($4,000) / Enterprise ($8,000)','Add Calendly booking link and contact form','Create LinkedIn profile with "Business Automation Specialist" title','Post intro on LinkedIn with both demo walkthroughs'],income:'DM 10 business owners your demo video — 1 conversion = $1,500 setup fee',consultants:['samantha','benjamin','zara'],revenue:'First client deposit target: $750'},
   {w:3,phase:'Phase 1: Foundation',title:'Build Prospect List & Start Outreach',win:'30 prospects identified. Outreach started.',tasks:['Create Google Sheet CRM: Name/Business/Industry/Email/Phone/Status/Notes','List every business owner you personally know (25+)','Search LinkedIn for logistics companies — add 10','Search LinkedIn for creative professionals — add 10','Search Google for local restaurants, trucking, retail — add 10','Write outreach message: "I build automation systems that save [X] hrs/week"','Message 10 warm contacts: ask for 20-min call','Join 3 Facebook Groups in target industries'],income:'Follow up with Audit prospects from Week 1. First money in.',consultants:['isabella','clara','naomi'],revenue:'Target: First $500–$1,500 audit closed'},
-  {w:4,phase:'Phase 1: Foundation',title:'Book Discovery Calls',win:'At least 3 discovery calls booked.',tasks:['Message 10 more prospects from your list','Send 15 LinkedIn connection requests to small business owners','Post LinkedIn: video walkthrough of cecethepiece or logistics demo','Ask 3 warm contacts to refer you to a business owner','Follow up Week 3 contacts who haven\'t responded','Write your 5-question discovery call script (listen, don\'t pitch)','Prepare 3-min demo walkthrough of each system','Set Calendly to 30-min discovery call blocks'],income:'Book calls. Every call = potential $1,500–$4,000 setup + retainer',consultants:['sterling','veronica','james'],revenue:'Pipeline value: $4,500–$12,000 if all close'},
+  {w:4,phase:'Phase 1: Foundation',title:'Book Discovery Calls',win:'At least 3 discovery calls booked.',tasks:['Message 10 more prospects from your list','Send 15 LinkedIn connection requests to small business owners','Post LinkedIn: video walkthrough of Ceces Pieces or logistics demo','Ask 3 warm contacts to refer you to a business owner','Follow up Week 3 contacts who haven\'t responded','Write your 5-question discovery call script (listen, don\'t pitch)','Prepare 3-min demo walkthrough of each system','Set Calendly to 30-min discovery call blocks'],income:'Book calls. Every call = potential $1,500–$4,000 setup + retainer',consultants:['sterling','veronica','james'],revenue:'Pipeline value: $4,500–$12,000 if all close'},
   // PHASE 2 - FIRST CLIENTS
   {w:5,phase:'Phase 2: First Clients',title:'Run Discovery Calls & Send Proposals',win:'At least 1 proposal sent.',tasks:['Run all booked discovery calls — ask about biggest pain points','Show demo during call: "Does something like this help your business?"','End every call: "Can I put together a quick proposal?"','Send custom 1-page proposal within 24 hours of each call','Price first client lower to win the testimonial','Add 10 new prospects to sheet','Message 10 prospects','Post once on LinkedIn'],income:'1 signed client this week = $750 deposit in your account',consultants:['sterling','veronica','james','eleanor'],revenue:'First $750–$2,000 deposit',milestone:false},
   {w:6,phase:'Phase 2: First Clients',title:'Close First Client — FIRST MONEY',win:'First signed contract and deposit collected.',tasks:['Follow up ALL open proposals — call if email gets no response','Offer 3-month trial to hesitant prospects','When yes: DocuSign contract immediately','Collect 50% deposit via Wave before any work begins','Send welcome email with timeline and what you need from them','Contract must have: scope, payment terms, IP, cancellation, revisions','Add 10 new prospects','Post on LinkedIn'],income:'$750–$2,000 deposit hits your account. THIS IS DAY 1 OF REAL REVENUE.',consultants:['sterling','eleanor','sofia'],revenue:'$750–$2,000 in bank',milestone:true},
@@ -11762,7 +11775,7 @@ const DG_HUBS = [
   {
     id:'creative',
     industry:'creative',
-    name:'Cecethepiece — Creative Business Hub',
+    name:'Ceces Pieces — Creative Business Hub',
     tag:'🎨 Creative',
     tagColor:'rgba(124,58,237,.85)',
     tagText:'#fff',
@@ -11774,7 +11787,7 @@ const DG_HUBS = [
     screen: function() {
       return `<div style="display:flex;height:100%;background:#FAF8F5;font-family:sans-serif">
         <div style="width:110px;background:#1A1A2E;padding:8px 0;flex-shrink:0">
-          <div style="padding:8px 10px 10px;font-family:serif;font-size:9px;font-weight:700;color:#E9D5C8;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:5px;font-style:italic">cecethepiece</div>
+          <div style="padding:8px 10px 10px;font-family:serif;font-size:9px;font-weight:700;color:#E9D5C8;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:5px;font-style:italic">Ceces Pieces</div>
           <div style="font-size:5px;color:rgba(255,255,255,.2);letter-spacing:2px;text-transform:uppercase;padding:5px 10px 2px">Studio</div>
           <div style="padding:4px 10px;font-size:6.5px;color:#C084FC;font-weight:600;background:rgba(192,132,252,.1)">📊 Dashboard</div>
           <div style="padding:4px 10px;font-size:6.5px;color:rgba(255,255,255,.35)">🖼️ Collection</div>
@@ -12542,7 +12555,7 @@ function iebcAssignMeId() {
 // ═══════════════════════════════════════════════════════════════
 //  MARK ODOM SEED DATA
 //  Pre-loads: Mark as Employee IEBC-E-0001 + Owner
-//             cecethepiece as Client IEBC-C-0001
+//             Ceces Pieces as Client IEBC-C-0001
 //             3 completed builds with IDs IEBC-B-0001/0002/0003
 // ═══════════════════════════════════════════════════════════════
 
@@ -12578,11 +12591,11 @@ function iebcSeedMarkOdom() {
 
   var now = new Date().toISOString();
 
-  // ── CLIENT: CECETHEPIECE ──
+  // ── CLIENT: CECES PIECES ──
   var ceceClient = {
     id: 'seed-client-cece-001',
     client_id: 'IEBC-C-0001',
-    name: 'cecethepiece',
+    name: 'Ceces Pieces',
     contact: 'Cece',
     email: 'hello@cecethepiece.com',
     phone: '',
@@ -12608,7 +12621,7 @@ function iebcSeedMarkOdom() {
     {
       id: 'seed-build-cece-hub',
       build_id: 'IEBC-B-0001',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       contact: 'Cece',
       client_email: 'hello@cecethepiece.com',
       industry: 'Creative / Artist',
@@ -12634,7 +12647,7 @@ function iebcSeedMarkOdom() {
     {
       id: 'seed-build-cece-web',
       build_id: 'IEBC-B-0002',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       contact: 'Cece',
       client_email: 'hello@cecethepiece.com',
       industry: 'Creative / Artist',
@@ -12689,52 +12702,52 @@ function iebcSeedMarkOdom() {
   var invoices = [
     {
       id: 'seed-inv-001',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       type: 'setup-deposit',
       amount: 1500,
       due_date: '2024-11-15',
       status: 'paid',
-      notes: 'IEBC-B-0001 cecethepiece Hub — Setup Deposit (50%)',
+      notes: 'IEBC-B-0001 Ceces Pieces Hub — Setup Deposit (50%)',
       created_at: '2024-11-01T00:00:00.000Z'
     },
     {
       id: 'seed-inv-002',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       type: 'setup-final',
       amount: 1500,
       due_date: '2024-12-15',
       status: 'paid',
-      notes: 'IEBC-B-0001 cecethepiece Hub — Final Payment (50%)',
+      notes: 'IEBC-B-0001 Ceces Pieces Hub — Final Payment (50%)',
       created_at: '2024-12-01T00:00:00.000Z'
     },
     {
       id: 'seed-inv-003',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       type: 'setup-deposit',
       amount: 750,
       due_date: '2024-10-25',
       status: 'paid',
-      notes: 'IEBC-B-0002 cecethepiece Website — Setup Deposit (50%)',
+      notes: 'IEBC-B-0002 Ceces Pieces Website — Setup Deposit (50%)',
       created_at: '2024-10-15T00:00:00.000Z'
     },
     {
       id: 'seed-inv-004',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       type: 'setup-final',
       amount: 750,
       due_date: '2024-11-30',
       status: 'paid',
-      notes: 'IEBC-B-0002 cecethepiece Website — Final Payment (50%)',
+      notes: 'IEBC-B-0002 Ceces Pieces Website — Final Payment (50%)',
       created_at: '2024-11-15T00:00:00.000Z'
     },
     {
       id: 'seed-inv-005',
-      client_name: 'cecethepiece',
+      client_name: 'Ceces Pieces',
       type: 'retainer',
       amount: 600,
       due_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString().split('T')[0],
       status: 'pending',
-      notes: 'IEBC-C-0001 cecethepiece — Monthly Operations Hub Retainer',
+      notes: 'IEBC-C-0001 Ceces Pieces — Monthly Operations Hub Retainer',
       created_at: new Date().toISOString()
     }
   ];
@@ -12742,9 +12755,9 @@ function iebcSeedMarkOdom() {
   // ── ACTIVITY LOG ──
   var activity = [
     { id:'seed-act-001', user_name:'Mark Odom', action:'Build approved & shipped', entity:'Build: IEBC-B-0003 — IEBC Internal Hub', created_at:'2025-01-01T00:00:00.000Z' },
-    { id:'seed-act-002', user_name:'Mark Odom', action:'Build approved & shipped', entity:'Build: IEBC-B-0001 — cecethepiece Hub', created_at:'2024-12-15T00:00:00.000Z' },
-    { id:'seed-act-003', user_name:'Mark Odom', action:'Build approved & shipped', entity:'Build: IEBC-B-0002 — cecethepiece Website', created_at:'2024-11-30T00:00:00.000Z' },
-    { id:'seed-act-004', user_name:'Mark Odom', action:'Client added', entity:'Client: cecethepiece (IEBC-C-0001)', created_at:'2024-11-01T00:00:00.000Z' },
+    { id:'seed-act-002', user_name:'Mark Odom', action:'Build approved & shipped', entity:'Build: IEBC-B-0001 — Ceces Pieces Hub', created_at:'2024-12-15T00:00:00.000Z' },
+    { id:'seed-act-003', user_name:'Mark Odom', action:'Build approved & shipped', entity:'Build: IEBC-B-0002 — Ceces Pieces Website', created_at:'2024-11-30T00:00:00.000Z' },
+    { id:'seed-act-004', user_name:'Mark Odom', action:'Client added', entity:'Client: Ceces Pieces (IEBC-C-0001)', created_at:'2024-11-01T00:00:00.000Z' },
     { id:'seed-act-005', user_name:'Mark Odom', action:'Hub initialized', entity:'Employee: Mark Odom (IEBC-E-0001) — Owner', created_at:'2024-09-01T00:00:00.000Z' }
   ];
 
@@ -12772,7 +12785,7 @@ function iebcSeedMarkOdom() {
   saveLocal();
   localStorage.setItem(SEED_KEY, '1');
 
-  console.log('[IEBC] Seed loaded: Mark Odom (IEBC-E-0001), cecethepiece (IEBC-C-0001), 3 builds (IEBC-B-0001/0002/0003)');
+  console.log('[IEBC] Seed loaded: Mark Odom (IEBC-E-0001), Ceces Pieces (IEBC-C-0001), 3 builds (IEBC-B-0001/0002/0003)');
 }
 
 // ── INIT: show connected tag if creds saved ──
