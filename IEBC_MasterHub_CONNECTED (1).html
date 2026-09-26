@@ -4,6 +4,8 @@
   UPDATED   : 2026-09-25_1639 UTC — Added "Portfolio Companies" sidebar page listing
               Ceces Pieces, 3 Lakes Logistics and Jacks of All Trades, with what IEBC
               built, links to their live sites and hubs, and a Send to Prospect button.
+  UPDATED   : 2026-09-26 UTC — Ceces Pieces website corrected to https://www.cecespieces.shop/
+              (seed + saved portfolio rows). Email left as-is.
   UPDATED   : 2026-09-26 UTC — Display name cecethepiece -> "Ceces Pieces" (seed data, demos,
               portfolio, plus an on-load rename of already-saved records). Domain, email
               and file names unchanged.
@@ -4084,7 +4086,8 @@ function migrateCecesPiecesName(){
   const re=/(^|[^@\/#\w.])cecethepiece(?![\w.@-])/gi, fields=['name','client_name','business_name','notes','entity','description'];
   Object.keys(DATA).forEach(k=>{ if(!Array.isArray(DATA[k])) return;
     DATA[k].forEach(r=>{ if(!r||typeof r!=='object') return;
-      fields.forEach(f=>{ if(typeof r[f]==='string' && re.test(r[f])){ re.lastIndex=0; r[f]=r[f].replace(re,'$1Ceces Pieces'); } re.lastIndex=0; }); }); });
+      fields.forEach(f=>{ if(typeof r[f]==='string' && re.test(r[f])){ re.lastIndex=0; r[f]=r[f].replace(re,'$1Ceces Pieces'); } re.lastIndex=0; });
+      if(/^https?:\/\/(www\.)?cecethepiece\.com\/?$/i.test(r.site||'')) r.site='https://www.cecespieces.shop/'; }); });
 }
 function renderAll(){
   migrateCecesPiecesName();
@@ -7325,7 +7328,7 @@ window.SERVICE_PACKAGES = SERVICE_PACKAGES;
 const BS_TABS=[['portfolio','🏆 Portfolio'],['demos','🎯 Demos'],['library','🧩 Parts & Blueprints'],['ownership','📊 Ownership']];
 const SEED_PORTFOLIO=[
   {id:'pf-cece',name:'Ceces Pieces',industry:'Creative · Original Art',location:'Renton, WA',status:'Live',
-   site:'https://cecethepiece.com',hub:'https://cece-hub.vercel.app',demo_id:'creative',
+   site:'https://www.cecespieces.shop/',hub:'https://cece-hub.vercel.app',demo_id:'creative',
    blurb:"Cece's original art business: resin, glass and mixed media, plus custom memorial keepsakes.",
    parts:['Inventory Management','Booking & Deposit Management','Invoice Generator & Payment Tracker','Client & Contact Management (CRM)','Social Media Content Scheduler','Email Campaign & Outreach Manager','Revenue Dashboard & P&L'],
    custom:['Art storefront with series filters and lightbox','Buy Now checkout with commission deposits','Online classes sign-up','Instagram feed and Studio Drop newsletter'],
