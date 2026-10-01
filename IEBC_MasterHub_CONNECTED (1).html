@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <!--
   FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-10-01_1950 UTC — New "Handled Ops" page (Team): connects to the Handled
+              (myhumanai) business through its IEBC Workforce API. Live KPIs, unassigned jobs,
+              alerts and pro scorecards; roster of the 9 assigned IEBC employees with autonomy
+              and scopes; run any permitted action as an employee (risky ones land in the
+              Handled Hub approval queue). Saving the connection marks the portfolio card Live.
   UPDATED   : 2026-10-01_1800 UTC — Portfolio: added "Handled" (repo modom123/myhumanai), an AI-run
               home & business services company staffed by the IEBC AI Workforce (9 agents via
               the IEBC Workforce API, own Command Center at /hub). Added once to hubs whose
@@ -923,6 +928,7 @@ footer{background:var(--navy)!important}
     <span class="nav-grp" style="margin-top:6px">Team</span>
     <button class="nb" onclick="nav('team')"><span class="ni">🧑‍💻</span> Team View</button>
     <button class="nb" onclick="nav('workforce')"><span class="ni">🤖</span> AI Workforce <span class="nb-badge badge-green">60</span></button>
+    <button class="nb" onclick="nav('handled')"><span class="ni">🧽</span> Handled Ops <span class="nb-badge badge-green" id="nb-handled" style="display:none">0</span></button>
 
     <span class="nav-grp" style="margin-top:6px">System</span>
     <button class="nb" onclick="nav('settings')"><span class="ni">⚙️</span> Settings & DB</button>
@@ -1160,6 +1166,45 @@ footer{background:var(--navy)!important}
     <!-- ══════════ BUILD LIBRARY ══════════ -->
 
     <!-- ══ ACADEMY ENROLLMENTS (added 2026-10-01_1538 UTC) ══ -->
+    <div class="page" id="page-handled">
+      <div class="sec-hdr">
+        <div class="sec-title">🧽 Handled Ops — IEBC Workforce at work</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn btn-ghost btn-sm" id="ho-hub-link" target="_blank" rel="noopener" style="text-decoration:none">Open Handled Hub ↗</a>
+          <button class="btn btn-blue btn-sm" onclick="hoInit()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd"><div class="card-hd-title">Connection</div><div id="ho-conn" style="font-size:.7rem"></div></div>
+        <div class="card-body" style="display:grid;grid-template-columns:2fr 2fr auto;gap:10px;align-items:end">
+          <div class="fg" style="margin:0"><label class="fl">Handled site URL</label><input class="fi" id="ho-url" placeholder="https://your-handled-domain"></div>
+          <div class="fg" style="margin:0"><label class="fl">IEBC API key (same as IEBC_API_KEY in Vercel)</label><input class="fi" id="ho-key" type="password" placeholder="paste key"></div>
+          <button class="btn btn-blue" onclick="hoSave()">Save & connect</button>
+        </div>
+      </div>
+      <div class="bs-metrics" id="ho-metrics"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+        <div class="card"><div class="card-hd"><div class="card-hd-title">Jobs needing a pro</div></div><div class="card-body" style="padding:0"><div class="tbl-wrap"><table><thead><tr><th>Job</th><th>Service</th><th>Date</th><th>ZIP</th><th>Status</th></tr></thead><tbody id="ho-jobs"></tbody></table></div></div></div>
+        <div class="card"><div class="card-hd"><div class="card-hd-title">Open alerts</div></div><div class="card-body" id="ho-alerts"></div></div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="card-hd"><div class="card-hd-title">IEBC employees assigned to Handled</div></div><div class="card-body" style="padding:0"><div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Runs</th><th>Autonomy</th><th>Scopes</th><th>Actions available</th></tr></thead><tbody id="ho-roster"></tbody></table></div></div></div>
+      <div class="card" style="margin-top:16px"><div class="card-hd"><div class="card-hd-title">Pro network (scorecards)</div></div><div class="card-body" style="padding:0"><div class="tbl-wrap"><table><thead><tr><th>Pro</th><th>Status</th><th>Jobs</th><th>Take (90d)</th><th>Rating</th><th>Onboarding</th></tr></thead><tbody id="ho-pros"></tbody></table></div></div></div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-hd"><div class="card-hd-title">⚡ Run an action as an IEBC employee</div></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="fg"><label class="fl">Employee</label><select class="fsel" id="ho-agent" onchange="hoLoadActions()"></select></div>
+            <div class="fg"><label class="fl">Action</label><select class="fsel" id="ho-action" onchange="hoPrefill()"></select></div>
+          </div>
+          <div class="fg"><label class="fl">Params (JSON)</label><textarea class="fta" id="ho-params" rows="4" style="font-family:monospace">{}</textarea></div>
+          <div class="fg"><label class="fl">Reason (shown to the Handled team)</label><input class="fi" id="ho-reason" placeholder="Why the employee is doing this"></div>
+          <button class="btn btn-blue" onclick="hoRun()">Run</button>
+          <pre id="ho-result" style="margin-top:12px;white-space:pre-wrap;font-size:.7rem;background:var(--bg2,#f5f5f5);padding:10px;border-radius:8px;max-height:280px;overflow:auto"></pre>
+          <div style="font-size:.66rem;color:var(--text3)">Reads run instantly. Writes run instantly only for autonomous employees on low-risk actions; everything else waits in Handled Hub → IEBC Workforce for a human to approve. Every call is logged and counted for billing.</div>
+        </div>
+      </div>
+    </div>
+
     <div class="page" id="page-academy">
       <div class="sec-hdr">
         <div class="sec-title">🎓 Academy Enrollments</div>
@@ -4182,6 +4227,7 @@ const PAGE_LABELS = {
   team:'Team View', workforce:'AI Workforce — 50 Employees', outreach:'Outreach Engine — Automated Campaigns', demos:'Demo Gallery — Send to Prospects', settings:'Settings & Database',
   portfolio:'Build Studio — Portfolio', ownership:'Build Studio — Partner Ownership',
   academy:'Academy Enrollments',
+  handled:'Handled Ops — IEBC Workforce at Work',
 };
 PAGE_LABELS.demos='Build Studio — Demos'; PAGE_LABELS.library='Build Studio — Parts & Blueprints';
 function nav(id){
@@ -4199,6 +4245,7 @@ function nav(id){
   if(id==='revenue') renderRevenue();
   if(id==='team') renderTeam();
   if(id==='workforce') initWorkforce();
+  if(id==='handled' && typeof hoInit==='function') hoInit();
   if(id==='outreach') initOutreach();
   if(id==='demos') renderDemoGallery();
   if(id==='library') renderLibrary();
@@ -10819,6 +10866,89 @@ function acctMatchReceiptToInvoice(vendor, amount, date){
   else init();
 })();
 
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   HANDLED OPS — IEBC Workforce API client (added 2026-10-01_1950 UTC)
+   Talks to <Handled site>/api/iebc/v1 with the shared IEBC_API_KEY. Settings are kept in
+   this browser only (localStorage). The Handled server enforces each employee's scopes,
+   autonomy and approvals — this page can't bypass them.
+   ══════════════════════════════════════════════════════════ */
+const HO_AGENTS=[['evelyn','Dr. Evelyn Sterling'],['arthur','Arthur Vance'],['katerina','Katerina Rostova'],['eleanor','Eleanor Wei'],['tylerw','Tyler Walsh'],['marcushr','Marcus Hill'],['diego','Diego Martinez'],['elenam','Elena Markov'],['clara','Clara Dubois']];
+const HO_MANIFEST={};
+const hoUrl=()=>(localStorage.getItem('handled-api-url')||'').replace(/\/$/,'');
+const hoKey=()=>localStorage.getItem('handled-api-key')||'';
+const hoMoney=v=>v==null?'—':'$'+Math.round(Number(v)).toLocaleString('en-US');
+async function hoCall(agent,method,body){
+  try{
+    const r=await fetch(hoUrl()+'/api/iebc/v1',{method,headers:{'Authorization':'Bearer '+hoKey(),'X-IEBC-Agent':agent,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+    const j=await r.json().catch(()=>({}));
+    return Object.assign({http:r.status},j);
+  }catch(e){ return {http:0,error:'Network/CORS error — check the URL and IEBC_ALLOWED_ORIGIN. '+e}; }
+}
+function hoSave(){
+  localStorage.setItem('handled-api-url',document.getElementById('ho-url').value.trim());
+  localStorage.setItem('handled-api-key',document.getElementById('ho-key').value.trim());
+  const co=(DATA.portfolio||[]).find(c=>c.id==='pf-handled');
+  if(co && hoUrl()){ co.site=hoUrl(); co.hub=hoUrl()+'/hub'; co.status='Live'; try{ pfPersist(co); }catch(e){} }
+  hoInit();
+}
+async function hoInit(){
+  const u=document.getElementById('ho-url'), k=document.getElementById('ho-key'), conn=document.getElementById('ho-conn');
+  if(!u) return;
+  u.value=hoUrl(); k.value=hoKey();
+  const link=document.getElementById('ho-hub-link'); link.href=hoUrl()?hoUrl()+'/hub':'#';
+  if(!hoUrl()||!hoKey()){ conn.innerHTML='<span style="color:var(--text3)">Not connected — enter the Handled URL and key.</span>'; return; }
+  conn.textContent='Connecting…';
+  const ag=document.getElementById('ho-agent');
+  if(!ag.options.length) ag.innerHTML=HO_AGENTS.map(([id,n])=>`<option value="${id}">${bsEsc(n)}</option>`).join('');
+  const roster=await Promise.all(HO_AGENTS.map(async([id,n])=>[id,n,await hoCall(id,'GET')]));
+  const ok=roster.filter(r=>r[2].http===200);
+  conn.innerHTML=ok.length?`<span style="color:var(--success)">● Connected · ${bsEsc(ok[0][2].business||'Handled')} · ${ok.length} employees assigned</span>`:`<span style="color:#c0392b">● ${bsEsc(roster[0][2].error||'Not connected')}</span>`;
+  roster.forEach(([id,,r])=>{ if(r.http===200) HO_MANIFEST[id]=r.actions||[]; });
+  document.getElementById('ho-roster').innerHTML=roster.map(([id,n,r])=>r.http===200
+    ?`<tr><td><b>${bsEsc(n)}</b><div style="font-size:.6rem;color:var(--text3)">${bsEsc(r.agent.title)}</div></td><td>${bsEsc(r.agent.role_here)}</td><td>${bsEsc(r.agent.autonomy)}${r.agent.active?'':' (paused)'}</td><td>${bsEsc((r.agent.scopes||[]).join(', '))}</td><td>${(r.actions||[]).length}</td></tr>`
+    :`<tr><td><b>${bsEsc(n)}</b></td><td colspan="4" style="color:var(--text3)">${bsEsc(r.error||'not assigned')}</td></tr>`).join('');
+  if(!ok.length) return;
+  hoLoadActions();
+  const [k1,jobs,alerts,pros]=await Promise.all([
+    hoCall('evelyn','POST',{action:'read.kpis',params:{},reason:'MasterHub dashboard'}),
+    hoCall('arthur','POST',{action:'read.jobs',params:{unassigned_only:true,status:['scheduled','dispatched','site_visit']},reason:'MasterHub dashboard'}),
+    hoCall('arthur','POST',{action:'read.alerts',params:{},reason:'MasterHub dashboard'}),
+    hoCall('marcushr','POST',{action:'read.pro_scorecards',params:{},reason:'MasterHub dashboard'}),
+  ]);
+  const K=k1.result||{};
+  const m=(v,l)=>`<div class="bs-metric"><b>${v}</b><span>${l}</span></div>`;
+  document.getElementById('ho-metrics').innerHTML=m(K.bookings??'—','Bookings (30d)')+m(K.completed??'—','Completed')+m(hoMoney(K.gross_bookings),'Bookings $')+m(hoMoney(K.our_take),'Our take')+m(K.avg_rating??'—','Avg rating');
+  const J=jobs.result||[];
+  const badge=document.getElementById('nb-handled'); if(badge){ badge.textContent=J.length; badge.style.display=J.length?'':'none'; }
+  document.getElementById('ho-jobs').innerHTML=J.length?J.map(j=>`<tr><td>${bsEsc(j.ref)}</td><td>${bsEsc(j.service_slug)}</td><td>${bsEsc(j.scheduled_date||'—')}</td><td>${bsEsc(j.zip)}</td><td>${bsEsc(j.status)}</td></tr>`).join(''):'<tr><td colspan="5" class="empty-state">Every job has a pro 🎉</td></tr>';
+  const A=alerts.result||[];
+  document.getElementById('ho-alerts').innerHTML=A.length?A.slice(0,12).map(a=>`<div style="padding:6px 0;border-bottom:1px solid var(--border,#eee)"><b>${bsEsc(a.severity)}</b> · ${bsEsc(a.title)}</div>`).join(''):'<div class="empty-state">No open alerts</div>';
+  const P=pros.result||[];
+  document.getElementById('ho-pros').innerHTML=P.length?P.map(p=>`<tr><td>${bsEsc(p.business_name)}</td><td>${bsEsc(p.status)}</td><td>${p.jobs_completed??0}</td><td>${hoMoney(p.take_90d)}</td><td>${p.rating??'—'}★</td><td>${p.onboarding_complete?'✅ complete':'⚠️ '+bsEsc((p.missing||[]).join(', '))}</td></tr>`).join(''):'<tr><td colspan="6" class="empty-state">No pros yet</td></tr>';
+}
+function hoLoadActions(){
+  const id=document.getElementById('ho-agent').value, sel=document.getElementById('ho-action');
+  const acts=HO_MANIFEST[id]||[];
+  sel.innerHTML=acts.map(a=>`<option value="${bsEsc(a.name)}">${bsEsc(a.name)} — ${a.write?'write · '+bsEsc(a.runs):'read'}</option>`).join('')||'<option value="">(no actions — not assigned)</option>';
+  hoPrefill();
+}
+function hoPrefill(){
+  const id=document.getElementById('ho-agent').value, name=document.getElementById('ho-action').value;
+  const a=(HO_MANIFEST[id]||[]).find(x=>x.name===name); const props=(a&&a.params&&a.params.properties)||{};
+  const ex={}; Object.keys(props).forEach(k=>{ const t=props[k].type; ex[k]=props[k].default??(t==='number'||t==='integer'?0:t==='boolean'?false:t==='array'?[]:''); });
+  document.getElementById('ho-params').value=JSON.stringify(ex,null,2);
+  document.getElementById('ho-result').textContent=a?a.description:'';
+}
+async function hoRun(){
+  const out=document.getElementById('ho-result');
+  let params; try{ params=JSON.parse(document.getElementById('ho-params').value||'{}'); }catch(e){ out.textContent='Params must be valid JSON'; return; }
+  out.textContent='Running…';
+  const r=await hoCall(document.getElementById('ho-agent').value,'POST',{action:document.getElementById('ho-action').value,params,reason:document.getElementById('ho-reason').value||null});
+  out.textContent=(r.status==='pending_approval'?'⏳ Sent to Handled Hub for approval\n\n':r.status==='executed'?'✅ Done\n\n':'⚠️ '+(r.status||'error')+'\n\n')+JSON.stringify(r.result??r.error??r,null,2);
+}
 </script>
 </body>
 <!-- ══════════════════════════════════════════════════════════════════
