@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <!--
   FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-10-01_1702 UTC — Academy page: Teacher Guides library linking the PDF lesson
+              plans in academy/teacher-guides/pdf/ (each guide + complete manual).
   UPDATED   : 2026-10-01_1538 UTC — Added "Academy" sidebar page for enrollments from the website
               Academy page (source academy_enrollment): status tracking (new, payment link
               sent, enrolled, completed, cancelled) synced to the pipeline, email-the-student
@@ -1186,7 +1188,17 @@ footer{background:var(--navy)!important}
         <div class="card-hd"><div class="card-hd-title">Enrollments by class</div></div>
         <div class="card-body" id="acad-by-class"></div>
       </div>
-      <div style="font-size:.7rem;color:var(--text3);margin-top:12px;line-height:1.6">Enrollments come from the Academy page on the IEBC website (source <code>academy_enrollment</code>). New ones also show in the Pipeline's New Lead column until you mark them Enrolled. Changing a status here updates the pipeline.</div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-hd">
+          <div class="card-hd-title">📚 Teacher Guides (lesson plans)</div>
+          <a class="btn btn-blue btn-sm" style="text-decoration:none" id="acad-manual-link" target="_blank" rel="noopener">⬇ Complete Teacher Manual (PDF)</a>
+        </div>
+        <div class="card-body" style="padding:0"><div class="tbl-wrap"><table>
+          <thead><tr><th style="width:90px">Guide</th><th>Class</th><th style="width:200px"></th></tr></thead>
+          <tbody id="acad-guides"></tbody>
+        </table></div></div>
+      </div>
+      <div style="font-size:.7rem;color:var(--text3);margin-top:12px;line-height:1.6">Enrollments come from the Academy page on the IEBC website (source <code>academy_enrollment</code>). New ones also show in the Pipeline's New Lead column until you mark them Enrolled. Changing a status here updates the pipeline. Teacher guides live in <code>academy/teacher-guides/</code> in the IEBC-MASTERHUB repository (Markdown source + PDFs); start every new teacher with the Playbook.</div>
     </div>
 
     <!-- ══ BUILD STUDIO: PORTFOLIO (updated 2026-09-25_1745 UTC) ══ -->
@@ -13370,8 +13382,44 @@ function acadExportCsv(){
   document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
 }
 
+// ── Teacher guides (added 2026-10-01_1702 UTC) ──
+// PDFs sit next to this hub file in academy/teacher-guides/pdf/. "Open" works when the hub is
+// opened from the repository folder or served from it; "GitHub" works anywhere for signed-in users.
+const ACAD_GUIDE_DIR = 'academy/teacher-guides/pdf/';
+const ACAD_GUIDE_GH  = 'https://github.com/modom123/IEBC-MASTERHUB/blob/main/academy/teacher-guides/pdf/';
+const ACAD_GUIDE_MANUAL = 'IEBC_Academy_Teacher_Manual_COMPLETE_2026-10-01_1702.pdf';
+const ACAD_GUIDES = [
+  ['Playbook','IEBC Academy Teaching Playbook','00_IEBC_Teaching_Playbook_2026-10-01_1649.pdf'],
+  ['T01','AI for Small Business Owners in 60 Minutes','T01_AI_Intro_Webinar_2026-10-01_1649.pdf'],
+  ['T02','AI Admin Automation: Get Your Week Back','T02_AI_Admin_Automation_2026-10-01_1649.pdf'],
+  ['T03','AI Bookkeeping: Receipts to Tax Export','T03_AI_Bookkeeping_2026-10-01_1649.pdf'],
+  ['T04','Start It Right','T04_Start_It_Right_2026-10-01_1649.pdf'],
+  ['T05','Build a Website That Sells, with AI','T05_Website_With_AI_2026-10-01_1649.pdf'],
+  ['T06','AI Marketing and Social Content Engine','T06_AI_Marketing_2026-10-01_1649.pdf'],
+  ['T07','AI for Trucking and Logistics','T07_AI_Trucking_2026-10-01_1649.pdf'],
+  ['T08','AI for Contractors and the Trades','T08_AI_Trades_2026-10-01_1649.pdf'],
+  ['T09','AI for Creatives and Makers','T09_AI_Creatives_2026-10-01_1649.pdf'],
+  ['T10','AI for Nonprofits','T10_AI_Nonprofits_2026-10-01_1649.pdf'],
+  ['T11','AI Automation for Small Business Owners (4-Week Live Cohort)','T11_Cohort_AI_Automation_2026-10-01_1649.pdf'],
+  ['T12','Build Your Business Hub in 6 Weeks','T12_Cohort_Business_Hub_2026-10-01_1649.pdf'],
+  ['T13','Build Your AI Workforce: AI Agents for Operations','T13_Cohort_AI_Agents_2026-10-01_1649.pdf'],
+  ['T14','AI Readiness Workshop for Teams','T14_Team_AI_Readiness_Workshop_2026-10-01_1649.pdf'],
+  ['T15','AI at Work: Department Bootcamp','T15_Team_Department_Bootcamp_2026-10-01_1649.pdf'],
+  ['T16','Responsible AI Policy and Safe-Use Training','T16_Team_AI_Policy_2026-10-01_1649.pdf'],
+  ['T17','IEBC Certified Integrated Efficiency Consultant','T17_Certification_2026-10-01_1649.pdf']
+];
+function acadRenderGuides(){
+  const tb=document.getElementById('acad-guides'); if(!tb) return;
+  const ml=document.getElementById('acad-manual-link'); if(ml) ml.href=ACAD_GUIDE_DIR+encodeURIComponent(ACAD_GUIDE_MANUAL);
+  tb.innerHTML=ACAD_GUIDES.map(g=>`<tr>
+    <td style="font-family:var(--ff-m);font-size:.66rem;font-weight:700;color:var(--gold)">${acadEsc(g[0])}</td>
+    <td>${acadEsc(g[1])}${g[0]==='Playbook'?' <span class="badge" style="background:var(--gold-lt);color:var(--navy)">Read first</span>':''}</td>
+    <td style="white-space:nowrap;text-align:right"><a class="btn btn-ghost btn-xs" style="text-decoration:none" href="${ACAD_GUIDE_DIR+encodeURIComponent(g[2])}" target="_blank" rel="noopener">📄 Open PDF</a> <a class="btn btn-ghost btn-xs" style="text-decoration:none" href="${ACAD_GUIDE_GH+encodeURIComponent(g[2])}" target="_blank" rel="noopener">GitHub ↗</a></td>
+  </tr>`).join('');
+}
+
 (function acadInit(){
-  const run=()=>{ acadImportLocal(); acadRender(); };
+  const run=()=>{ acadImportLocal(); acadRender(); acadRenderGuides(); };
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
   // Same-browser enrollments arrive via localStorage; pick them up when the website tab writes.
   window.addEventListener('storage',e=>{ if(e.key==='iebc_academy_enrollments'){ if(acadImportLocal()){ acadRender(); if(typeof renderPipeline==='function') renderPipeline(); } } });
