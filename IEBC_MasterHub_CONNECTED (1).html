@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <!--
   FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-10-01_1800 UTC — Portfolio: added "Handled" (repo modom123/myhumanai), an AI-run
+              home & business services company staffed by the IEBC AI Workforce (9 agents via
+              the IEBC Workforce API, own Command Center at /hub). Added once to hubs whose
+              portfolio was saved before it existed. Set its site/hub URLs after the Vercel deploy.
   UPDATED   : 2026-10-01_1702 UTC — Academy page: Teacher Guides library linking the PDF lesson
               plans in academy/teacher-guides/pdf/ (each guide + complete manual).
   UPDATED   : 2026-10-01_1538 UTC — Added "Academy" sidebar page for enrollments from the website
@@ -7407,6 +7411,12 @@ const SEED_PORTFOLIO=[
    parts:['Lead Pipeline Tracker','Job Board & Task Management','Email Campaign & Outreach Manager','Reporting & Analytics Dashboard'],
    custom:['50/50 raffle engine (Zeffy and QR codes)','Before-and-after renovation showcase','Program enrollment and volunteer forms','Merch shop','SMS outreach'],
    owners:[]},
+  {id:'pf-handled',name:'Handled (myhumanai)',industry:'Home & Business Services',location:'Metro Detroit, MI',status:'In Build',
+   site:'',hub:'',demo_id:'',
+   blurb:'An 80% AI-driven services company: cleaning, lawn, trees, hauling, handyman and remodels done by vetted subcontractors and run by the IEBC AI Workforce.',
+   parts:['Job Board & Task Management','Booking & Deposit Management','Invoice Generator & Payment Tracker','Client & Contact Management (CRM)','Lead Pipeline Tracker','Email Campaign & Outreach Manager','Revenue Dashboard & P&L','Reporting & Analytics Dashboard'],
+   custom:['Instant AI pricing engine for 13 services','AI dispatch to subcontractors with photo QA','Customer + pro mobile app (Expo)','Command Center with AI-driven-rate KPI','IEBC Workforce API: 9 AI employees with scoped permissions and approvals'],
+   owners:[]},
 ];
 
 function bsEsc(x){ return String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -7985,6 +7995,13 @@ loadLocal();
 // Seed library if empty
 if(!DATA.library.length) DATA.library = [...SEED_LIBRARY];
 if(!DATA.portfolio || !DATA.portfolio.length) DATA.portfolio = JSON.parse(JSON.stringify(SEED_PORTFOLIO));
+// One-time: add Handled to hubs that saved their portfolio before it was seeded (won't re-add if deleted later)
+try{
+  if(!localStorage.getItem('iebc-pf-handled-seeded')){
+    if(!DATA.portfolio.some(c=>c.id==='pf-handled')) DATA.portfolio.push(JSON.parse(JSON.stringify(SEED_PORTFOLIO.find(c=>c.id==='pf-handled'))));
+    localStorage.setItem('iebc-pf-handled-seeded','1');
+  }
+}catch(e){ console.warn('pf-handled seed',e); }
 
 // Pre-fill login fields if creds saved
 const savedUrl=localStorage.getItem('hub-sb-url'), savedKey=localStorage.getItem('hub-sb-key');
