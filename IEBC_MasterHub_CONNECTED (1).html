@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <!--
   FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-10-01_1538 UTC — Added "Academy" sidebar page for enrollments from the website
+              Academy page (source academy_enrollment): status tracking (new, payment link
+              sent, enrolled, completed, cancelled) synced to the pipeline, email-the-student
+              button, per-class totals and CSV export. The 60s website-lead poll now also
+              picks up academy_enrollment and demo_request leads.
   UPDATED   : 2026-09-25_1639 UTC — Added "Portfolio Companies" sidebar page listing
               Ceces Pieces, 3 Lakes Logistics and Jacks of All Trades, with what IEBC
               built, links to their live sites and hubs, and a Send to Prospect button.
@@ -894,6 +899,7 @@ footer{background:var(--navy)!important}
     <button class="nb" onclick="nav('clients')"><span class="ni">👥</span> Clients <span class="nb-badge badge-green" id="nb-clients">0</span></button>
     <button class="nb" onclick="nav('pipeline')"><span class="ni">🔥</span> Pipeline <span class="nb-badge badge-red" id="nb-pipeline">0</span></button>
     <button class="nb" onclick="nav('intakes')"><span class="ni">📥</span> New Intakes <span class="nb-badge badge-green" id="nb-intakes" style="display:none">0</span></button>
+    <button class="nb" onclick="nav('academy')"><span class="ni">🎓</span> Academy <span class="nb-badge badge-orange" id="nb-academy" style="display:none">0</span></button>
     <button class="nb" onclick="nav('builds')"><span class="ni">🛠️</span> Active Builds <span class="nb-badge badge-orange" id="nb-builds">0</span></button>
     <button class="nb" onclick="nav('invoices')"><span class="ni">🧾</span> Invoices</button>
     <button class="nb" onclick="nav('outreach')"><span class="ni">📡</span> Outreach Engine <span class="nb-badge badge-orange" id="nb-outreach">AUTO</span></button>
@@ -1146,6 +1152,43 @@ footer{background:var(--navy)!important}
     </div>
 
     <!-- ══════════ BUILD LIBRARY ══════════ -->
+
+    <!-- ══ ACADEMY ENROLLMENTS (added 2026-10-01_1538 UTC) ══ -->
+    <div class="page" id="page-academy">
+      <div class="sec-hdr">
+        <div class="sec-title">🎓 Academy Enrollments</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="acadExportCsv()">⬇ Export CSV</button>
+          <button class="btn btn-blue btn-sm" onclick="acadRefresh()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="bs-metrics" id="acad-metrics"></div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd">
+          <div class="card-hd-title">Students and team requests</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select class="fi" id="acad-f-status" onchange="acadRender()" style="font-size:.72rem;padding:5px 8px">
+              <option value="">All statuses</option>
+            </select>
+            <input class="fi" id="acad-f-q" placeholder="Search name, email or class" oninput="acadRender()" style="font-size:.72rem;padding:5px 8px;min-width:200px">
+          </div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Student</th><th>Class</th><th>Type</th><th>Seats</th><th>Value</th><th>Status</th><th></th></tr></thead>
+              <tbody id="acad-tbody"><tr><td colspan="8" class="empty-state">No Academy enrollments yet</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-hd-title">Enrollments by class</div></div>
+        <div class="card-body" id="acad-by-class"></div>
+      </div>
+      <div style="font-size:.7rem;color:var(--text3);margin-top:12px;line-height:1.6">Enrollments come from the Academy page on the IEBC website (source <code>academy_enrollment</code>). New ones also show in the Pipeline's New Lead column until you mark them Enrolled. Changing a status here updates the pipeline.</div>
+    </div>
+
     <!-- ══ BUILD STUDIO: PORTFOLIO (updated 2026-09-25_1745 UTC) ══ -->
     <div class="page" id="page-portfolio">
       <div class="bs-strip"></div>
@@ -4007,7 +4050,7 @@ function initApp(){
       const {data} = await DB.from('hub_prospects')
         .select('*')
         .gte('created_at', since)
-        .in('source', ['calendly_booking','website_form','consultant_application'])
+        .in('source', ['calendly_booking','website_form','consultant_application','demo_request','academy_enrollment'])
         .order('created_at', {ascending:false});
       if(!data || !data.length) return;
       let added = 0;
@@ -4021,7 +4064,11 @@ function initApp(){
         saveLocal();
         renderPipeline();
         updateBadges();
-        showTaskNotification('📅 ' + added + ' new lead' + (added>1?'s':'') + ' from website — check Pipeline', 'success');
+        const acadNew = data.filter(p => p.source==='academy_enrollment').length;
+        if(acadNew && typeof acadRender==='function') acadRender();
+        showTaskNotification(acadNew===added
+          ? '🎓 ' + added + ' new Academy enrollment' + (added>1?'s':'') + ' — check Academy'
+          : '📅 ' + added + ' new lead' + (added>1?'s':'') + ' from website — check Pipeline', 'success');
       }
     }catch(e){}
   }, 60000);
@@ -4104,6 +4151,7 @@ function renderAll(){
   renderTeam();
   renderActivityFeed();
   renderIntakes();
+  if(typeof acadRender==='function') acadRender();
   updateBadges();
 }
 
@@ -4117,6 +4165,7 @@ const PAGE_LABELS = {
   integrations:'Vendor Integrations', tasks:'All Tasks',
   team:'Team View', workforce:'AI Workforce — 50 Employees', outreach:'Outreach Engine — Automated Campaigns', demos:'Demo Gallery — Send to Prospects', settings:'Settings & Database',
   portfolio:'Build Studio — Portfolio', ownership:'Build Studio — Partner Ownership',
+  academy:'Academy Enrollments',
 };
 PAGE_LABELS.demos='Build Studio — Demos'; PAGE_LABELS.library='Build Studio — Parts & Blueprints';
 function nav(id){
@@ -4130,6 +4179,7 @@ function nav(id){
   if(id==='settings') { hcRenderRoster(); }
   if(id==='pipeline') renderPipeline();
   if(id==='intakes') renderIntakes();
+  if(id==='academy' && typeof acadRefresh==='function') acadRefresh();
   if(id==='revenue') renderRevenue();
   if(id==='team') renderTeam();
   if(id==='workforce') initWorkforce();
@@ -13177,5 +13227,154 @@ function hubImpConfirm(){
   showToast(`✅ ${newRecs.length} transactions imported to Records`);
   if(typeof acShowTab==='function') acShowTab('records');
 }
+</script>
+
+<!-- ═══ ACADEMY ENROLLMENTS SCRIPT — added 2026-10-01_1538 UTC ═══ -->
+<script>
+// Academy enrollments are hub_prospects rows from the website's Academy page
+// (source 'academy_enrollment', industry 'Academy'). Status lives in `stage`:
+// new / contacted stay on the Pipeline board; enrolled, completed and cancelled leave it.
+const ACAD_STATUS = [
+  ['new','New: needs reply','var(--orange)'],
+  ['contacted','Payment link sent','var(--blue)'],
+  ['enrolled','Paid / enrolled','var(--green)'],
+  ['completed','Completed','var(--navy3)'],
+  ['cancelled','Cancelled','var(--red)'],
+];
+function acadEsc(x){ return String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function acadIs(p){ return p && (p.source==='academy_enrollment' || p.industry==='Academy'); }
+function acadField(p,label){ const m=String(p.notes||'').match(new RegExp('^'+label+': (.*)$','m')); return m?m[1].trim():''; }
+function acadInfo(p){
+  return {
+    cls:   p.course || acadField(p,'Class') || '—',
+    type:  p.enroll_type || acadField(p,'Enrolling as') || 'individual',
+    seats: parseInt(p.seats || acadField(p,'Seats'),10) || 1,
+    goal:  acadField(p,'Goal'),
+  };
+}
+function acadList(){ return (DATA.prospects||[]).filter(acadIs); }
+
+// Same-browser fallback: enrollments saved by the website when Supabase isn't connected.
+function acadImportLocal(){
+  let added=0;
+  try{
+    const local=JSON.parse(localStorage.getItem('iebc_academy_enrollments')||'[]');
+    local.forEach(r=>{
+      const dup=DATA.prospects.find(p=>p.id===r.id || (acadIs(p)&&p.email===r.email&&acadInfo(p).cls===r.course));
+      if(!dup){ DATA.prospects.unshift({...r}); added++; }
+    });
+  }catch(e){}
+  if(added) saveLocal();
+  return added;
+}
+
+async function acadRefresh(){
+  acadImportLocal();
+  if(DB){
+    try{
+      const {data,error}=await DB.from('hub_prospects').select('*').or('source.eq.academy_enrollment,industry.eq.Academy').order('created_at',{ascending:false});
+      if(!error && data){
+        data.forEach(r=>{
+          const i=DATA.prospects.findIndex(p=>String(p.id)===String(r.id));
+          if(i>=0){ DATA.prospects[i]={...DATA.prospects[i],...r}; return; }
+          // A same-browser copy saved before the database assigned an id: replace it with the database row.
+          const j=DATA.prospects.findIndex(p=>acadIs(p)&&!/^[0-9a-f-]{36}$/i.test(String(p.id))&&p.email===r.email&&acadInfo(p).cls===acadInfo(r).cls);
+          if(j>=0) DATA.prospects[j]=r; else DATA.prospects.unshift(r);
+        });
+        saveLocal();
+      }
+    }catch(e){ console.warn('[Academy] refresh failed', e); }
+  }
+  acadRender();
+  if(typeof renderPipeline==='function') renderPipeline();
+}
+
+async function acadSetStatus(id,stage){
+  const p=DATA.prospects.find(x=>String(x.id)===String(id)); if(!p) return;
+  p.stage=stage;
+  if(stage==='enrolled'||stage==='completed') p.heat='warm';
+  saveLocal();
+  if(!/^local-/.test(String(id))) await dbUpdate('hub_prospects',id,{stage:p.stage,heat:p.heat});
+  acadRender();
+  if(typeof renderPipeline==='function') renderPipeline();
+  if(typeof updateBadges==='function') updateBadges();
+}
+
+function acadEmail(id){
+  const p=DATA.prospects.find(x=>String(x.id)===String(id)); if(!p||!p.email) return;
+  const i=acadInfo(p), first=(p.contact||p.name||'there').split(' ')[0];
+  const subj=`Your IEBC Academy seat: ${i.cls}`;
+  const body=`Hi ${first},\n\nThanks for enrolling in ${i.cls}${i.seats>1?` (${i.seats} seats)`:''}. Your seat is reserved.\n\nTo confirm it, please complete payment here:\n[PAYMENT LINK]\n\nStart date: [START DATE]\nHow to join: [ACCESS DETAILS]\n\nIf you buy an IEBC website, hub or bundle within 90 days of finishing the class, your course fee is credited toward the build.\n\nQuestions? Just reply to this email.\n\n${(ME&&ME.name&&ME.name!=='Guest')?ME.name:'The IEBC team'}\nIntegrated Efficiency Business Consultants`;
+  window.location.href=`mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+  if(p.stage==='new') acadSetStatus(id,'contacted');
+}
+
+function acadRender(){
+  const list=acadList();
+  const sel=document.getElementById('acad-f-status');
+  if(sel && sel.options.length<=1) ACAD_STATUS.forEach(s=>sel.add(new Option(s[1],s[0])));
+  const fs=sel?sel.value:'', q=(document.getElementById('acad-f-q')?.value||'').toLowerCase();
+  const money=n=>'$'+Math.round(+n||0).toLocaleString();
+  const cnt=st=>list.filter(p=>(p.stage||'new')===st).length;
+  const seats=list.filter(p=>p.stage!=='cancelled').reduce((s,p)=>s+acadInfo(p).seats,0);
+  const booked=list.filter(p=>p.stage==='enrolled'||p.stage==='completed').reduce((s,p)=>s+(+p.est_value||0),0);
+  const pending=list.filter(p=>(p.stage||'new')==='new'||p.stage==='contacted').reduce((s,p)=>s+(+p.est_value||0),0);
+  const m=document.getElementById('acad-metrics');
+  if(m) m.innerHTML=[
+    [list.length,'Total enrollments'],[cnt('new'),'Need a reply'],[cnt('contacted'),'Payment link sent'],
+    [seats,'Seats (active)'],[money(booked),'Booked revenue · '+money(pending)+' pending'],
+  ].map(x=>`<div class="bs-metric"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');
+
+  const rows=list.filter(p=>{
+    if(fs && (p.stage||'new')!==fs) return false;
+    if(!q) return true;
+    return [p.name,p.contact,p.email,acadInfo(p).cls].join(' ').toLowerCase().includes(q);
+  });
+  const tb=document.getElementById('acad-tbody');
+  if(tb) tb.innerHTML = rows.length ? rows.map(p=>{
+    const i=acadInfo(p), st=p.stage||'new';
+    const known=ACAD_STATUS.some(s=>s[0]===st);
+    const opts=(known?'':`<option value="${acadEsc(st)}" selected>${acadEsc(st)}</option>`)+ACAD_STATUS.map(s=>`<option value="${s[0]}"${s[0]===st?' selected':''}>${s[1]}</option>`).join('');
+    const color=(ACAD_STATUS.find(s=>s[0]===st)||[0,0,'var(--text3)'])[2];
+    return `<tr>
+      <td style="white-space:nowrap">${p.created_at?new Date(p.created_at).toLocaleDateString():'—'}</td>
+      <td><div style="font-weight:600">${acadEsc(p.contact||p.name)}</div><div style="font-size:.66rem;color:var(--text3)">${acadEsc(p.email||'')}${p.phone?' · '+acadEsc(p.phone):''}</div>${i.goal?`<div style="font-size:.64rem;color:var(--text2);margin-top:2px" title="${acadEsc(i.goal)}">🎯 ${acadEsc(i.goal.length>60?i.goal.slice(0,60)+'…':i.goal)}</div>`:''}</td>
+      <td>${acadEsc(i.cls)}</td>
+      <td style="text-transform:capitalize">${acadEsc(i.type)}</td>
+      <td>${i.seats}</td>
+      <td>${money(p.est_value)}</td>
+      <td><select class="fi" style="font-size:.68rem;padding:3px 6px;border-left:3px solid ${color}!important" onchange="acadSetStatus('${acadEsc(p.id)}',this.value)">${opts}</select></td>
+      <td style="white-space:nowrap">${p.email?`<button class="btn btn-ghost btn-xs" onclick="acadEmail('${acadEsc(p.id)}')" title="Email payment link">✉ Email</button>`:''}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="8" class="empty-state">${list.length?'No enrollments match this filter':'No Academy enrollments yet. They appear here when someone enrolls on the website Academy page.'}</td></tr>`;
+
+  const by={};
+  list.filter(p=>p.stage!=='cancelled').forEach(p=>{ const i=acadInfo(p); by[i.cls]=by[i.cls]||{n:0,seats:0,val:0}; by[i.cls].n++; by[i.cls].seats+=i.seats; by[i.cls].val+=(+p.est_value||0); });
+  const bc=document.getElementById('acad-by-class');
+  const ent=Object.entries(by).sort((a,b)=>b[1].seats-a[1].seats);
+  if(bc) bc.innerHTML = ent.length ? `<div class="tbl-wrap"><table><thead><tr><th>Class</th><th>Enrollments</th><th>Seats</th><th>Value</th></tr></thead><tbody>${ent.map(([k,v])=>`<tr><td>${acadEsc(k)}</td><td>${v.n}</td><td>${v.seats}</td><td>${money(v.val)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state" style="padding:20px">No active enrollments yet</div>';
+
+  const badge=document.getElementById('nb-academy');
+  const n=cnt('new'); if(badge){ badge.textContent=n||''; badge.style.display=n?'':'none'; }
+}
+
+function acadExportCsv(){
+  const rows=[['Date','Name','Email','Phone','Class','Type','Seats','Value','Status','Goal']];
+  acadList().forEach(p=>{ const i=acadInfo(p); rows.push([p.created_at?new Date(p.created_at).toISOString().slice(0,10):'',p.contact||p.name||'',p.email||'',p.phone||'',i.cls,i.type,i.seats,+p.est_value||0,p.stage||'new',i.goal]); });
+  const csv=rows.map(r=>r.map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const d=new Date(), pad=n=>String(n).padStart(2,'0');
+  const stamp=`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`IEBC_Academy_Enrollments_${stamp}.csv`;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+
+(function acadInit(){
+  const run=()=>{ acadImportLocal(); acadRender(); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
+  // Same-browser enrollments arrive via localStorage; pick them up when the website tab writes.
+  window.addEventListener('storage',e=>{ if(e.key==='iebc_academy_enrollments'){ if(acadImportLocal()){ acadRender(); if(typeof renderPipeline==='function') renderPipeline(); } } });
+})();
 </script>
 </html>
