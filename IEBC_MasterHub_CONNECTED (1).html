@@ -1189,6 +1189,7 @@ footer{background:var(--navy)!important}
       </div>
       <div class="card" style="margin-top:16px"><div class="card-hd"><div class="card-hd-title">IEBC employees assigned to Handled</div></div><div class="card-body" style="padding:0"><div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Runs</th><th>Autonomy</th><th>Scopes</th><th>Actions available</th></tr></thead><tbody id="ho-roster"></tbody></table></div></div></div>
       <div class="card" style="margin-top:16px"><div class="card-hd"><div class="card-hd-title">Pro network (scorecards)</div></div><div class="card-body" style="padding:0"><div class="tbl-wrap"><table><thead><tr><th>Pro</th><th>Status</th><th>Jobs</th><th>Take (90d)</th><th>Rating</th><th>Onboarding</th></tr></thead><tbody id="ho-pros"></tbody></table></div></div></div>
+      <div class="card" style="margin-top:16px"><div class="card-hd"><div class="card-hd-title">Pro recruiting pipeline <span style="font-weight:400;font-size:.7rem;color:var(--text3)">— worked by Tyler Walsh (follow-up) &amp; Marcus Hill (documents, background checks)</span></div></div><div class="card-body" id="ho-recruit-summary"></div><div class="card-body" style="padding:0"><div class="tbl-wrap"><table><thead><tr><th>Applicant</th><th>Trades</th><th>Stage</th><th>Setup</th><th>Steps left</th><th>Days</th></tr></thead><tbody id="ho-recruit"></tbody></table></div></div></div>
       <div class="card" style="margin-top:16px">
         <div class="card-hd"><div class="card-hd-title">⚡ Run an action as an IEBC employee</div></div>
         <div class="card-body">
@@ -10918,6 +10919,7 @@ async function hoInit(){
     hoCall('arthur','POST',{action:'read.alerts',params:{},reason:'MasterHub dashboard'}),
     hoCall('marcushr','POST',{action:'read.pro_scorecards',params:{},reason:'MasterHub dashboard'}),
   ]);
+  hoRecruiting();
   const K=k1.result||{};
   const m=(v,l)=>`<div class="bs-metric"><b>${v}</b><span>${l}</span></div>`;
   document.getElementById('ho-metrics').innerHTML=m(K.bookings??'—','Bookings (30d)')+m(K.completed??'—','Completed')+m(hoMoney(K.gross_bookings),'Bookings $')+m(hoMoney(K.our_take),'Our take')+m(K.avg_rating??'—','Avg rating');
@@ -10928,6 +10930,20 @@ async function hoInit(){
   document.getElementById('ho-alerts').innerHTML=A.length?A.slice(0,12).map(a=>`<div style="padding:6px 0;border-bottom:1px solid var(--border,#eee)"><b>${bsEsc(a.severity)}</b> · ${bsEsc(a.title)}</div>`).join(''):'<div class="empty-state">No open alerts</div>';
   const P=pros.result||[];
   document.getElementById('ho-pros').innerHTML=P.length?P.map(p=>`<tr><td>${bsEsc(p.business_name)}</td><td>${bsEsc(p.status)}</td><td>${p.jobs_completed??0}</td><td>${hoMoney(p.take_90d)}</td><td>${p.rating??'—'}★</td><td>${p.onboarding_complete?'✅ complete':'⚠️ '+bsEsc((p.missing||[]).join(', '))}</td></tr>`).join(''):'<tr><td colspan="6" class="empty-state">No pros yet</td></tr>';
+}
+/* Recruiting pipeline (added 2026-10-02_0157 UTC): Tyler Walsh's read of the automated
+   sign-up → setup → background check → live funnel. Invites, verifications and activation
+   still go through Handled Hub approvals. */
+async function hoRecruiting(){
+  const r=await hoCall('tylerw','POST',{action:'recruiting.pipeline',params:{limit:200},reason:'MasterHub dashboard'});
+  const rows=r.result||[], sum=document.getElementById('ho-recruit-summary'), tb=document.getElementById('ho-recruit');
+  if(!sum||!tb) return;
+  if(r.http!==200||r.status!=='executed'){ sum.innerHTML='<span style="color:var(--text3)">'+bsEsc(r.error||'Recruiting pipeline unavailable')+'</span>'; tb.innerHTML=''; return; }
+  const order=['applied','screened','invited','onboarding','verifying','background','active','dropped'];
+  const cnt={}; rows.forEach(x=>{cnt[x.stage]=(cnt[x.stage]||0)+1;});
+  sum.innerHTML=order.filter(s=>cnt[s]).map(s=>`<span class="bs-metric" style="display:inline-block;margin:0 8px 6px 0"><b>${cnt[s]}</b><span>${bsEsc(s)}</span></span>`).join('')||'<span style="color:var(--text3)">No applicants yet — share /pros</span>';
+  const open=rows.filter(x=>!['active','rejected'].includes(x.stage)).slice(0,30);
+  tb.innerHTML=open.length?open.map(x=>`<tr><td><b>${bsEsc(x.business)}</b><div style="font-size:.6rem;color:var(--text3)">${bsEsc(x.contact||'')}${x.source?' · '+bsEsc(x.source):''}${x.ai_score!=null?' · AI '+x.ai_score:''}</div></td><td>${bsEsc((x.trades||[]).join(', '))}</td><td>${bsEsc(x.stage_label||x.stage)}</td><td>${bsEsc(x.setup||'—')}</td><td style="font-size:.7rem">${bsEsc((x.steps_left||[]).join(' · '))}</td><td>${x.days_since_applied??'—'}</td></tr>`).join(''):'<tr><td colspan="6" class="empty-state">Nobody waiting 🎉</td></tr>';
 }
 function hoLoadActions(){
   const id=document.getElementById('ho-agent').value, sel=document.getElementById('ho-action');
