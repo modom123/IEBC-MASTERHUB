@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <!--
+  UPDATED   : 2026-10-06_0528 UTC — Handled Services LLC cards: 54 services (dead animal removal added).
+  UPDATED   : 2026-10-06_0510 UTC — Portfolio: added Handled Services LLC (AI-run home & business services,
+              Metro Detroit, handledsvc.com) to the home-page section and the Portfolio page.
+              Portfolio grid is now two columns so four companies sit 2 x 2.
   UPDATED   : 2026-10-01_1538 UTC — Added IEBC Academy: new "Academy" page + nav link with a
               17-class catalog (free webinar, self-paced, industry tracks, live cohorts,
               team training, certification), full syllabi, membership, and an enrollment
@@ -528,7 +532,7 @@ footer{background:var(--navy);padding:52px 5vw 28px}
 
 <!-- ═══ PORTFOLIO COMPANIES — added 2026-09-25_1639 UTC ═══ -->
 <style>
-.pf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
 .pf-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:26px;display:flex;flex-direction:column;transition:all .22s}
 .pf-card:hover{border-color:var(--gold);box-shadow:var(--shadow-lg);transform:translateY(-3px)}
 .pf-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -890,6 +894,11 @@ footer{background:var(--navy);padding:52px 5vw 28px}
           <div class="pf-blurb">A Detroit nonprofit that rebuilds neighborhoods and futures through skilled-trades training.</div>
           <div class="pf-foot"><a class="pf-visit" href="https://joatamp.org" target="_blank" rel="noopener" onclick="event.stopPropagation()">Visit joatamp.org ↗</a><span class="pf-loc">📍 Detroit, MI</span></div>
         </div>
+        <div class="pf-card pf-mini" style="border-top:3px solid #15803d" onclick="showPage('portfolio')">
+          <div class="pf-top"><div class="pf-logo" style="background:#dcfce7">🏠</div><div><div class="pf-name">Handled Services LLC</div><div class="pf-ind">Home & Business Services</div></div></div>
+          <div class="pf-blurb">One app for 54 home and business services, from cleaning and repairs to moves, events, rides and security, done by vetted local pros and run by the IEBC AI Workforce.</div>
+          <div class="pf-foot"><a class="pf-visit" href="https://handledsvc.com" target="_blank" rel="noopener" onclick="event.stopPropagation()">Visit handledsvc.com ↗</a><span class="pf-loc">📍 Metro Detroit, MI</span></div>
+        </div>
       </div>
       <div style="text-align:center;margin-top:30px"><a onclick="showPage('portfolio')" class="btn-navy">See What We Built for Each →</a></div>
     </div>
@@ -982,6 +991,14 @@ footer{background:var(--navy);padding:52px 5vw 28px}
           <div class="pf-built-lbl">What IEBC built</div>
           <ul class="pf-built"><li>Full nonprofit website: mission, programs, impact, get involved, shop and contact</li><li>50/50 raffle hub with tiers, a countdown, and Zeffy ticketing with QR codes</li><li>Before-and-after renovation gallery and a live impact tracker</li><li>Online enrollment for trades training and volunteer sign-up</li><li>Command Center admin for leads, fundraising totals and renovation milestones, with SMS outreach</li></ul>
           <div class="pf-foot"><a class="pf-visit" href="https://joatamp.org" target="_blank" rel="noopener">Visit joatamp.org ↗</a><span class="pf-loc">📍 Detroit, MI</span></div>
+        </div>
+        <div class="pf-card" id="pf-handled" style="border-top:3px solid #15803d">
+          <div class="pf-top"><div class="pf-logo" style="background:#dcfce7">🏠</div><div><div class="pf-name">Handled Services LLC</div><div class="pf-ind">Home & Business Services</div></div></div>
+          <span class="pf-stack" style="background:#dcfce7;color:#15803d">Website + Mobile App + Command Center + AI Workforce</span>
+          <div class="pf-blurb">An AI-run services company: 54 home and business services in 9 categories, with upfront prices, vetted local pros and an AI operations team that makes sure every job is done right.</div>
+          <div class="pf-built-lbl">What IEBC built</div>
+          <ul class="pf-built"><li>Instant pricing for every service, with an AI photo check that never underbids</li><li>Online booking and Stripe checkout with deposits, balances and change orders</li><li>AI dispatch that matches each job to a pro by availability, quality and distance, with photo QA</li><li>Customer and pro mobile app with Uber-style job offers, plus a Pro Program with instant pay</li><li>Handled Hub command center, run by 9 IEBC AI employees through the IEBC Workforce API</li></ul>
+          <div class="pf-foot"><a class="pf-visit" href="https://handledsvc.com" target="_blank" rel="noopener">Visit handledsvc.com ↗</a><span class="pf-loc">📍 Metro Detroit, MI</span></div>
         </div>
       </div>
     </div>

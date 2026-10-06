@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <!--
   FILE      : IEBC_MasterHub_CONNECTED (1).html  (IEBC MasterHub)
+  UPDATED   : 2026-10-06_0528 UTC — Handled card: 54 services (dead animal removal).
+  UPDATED   : 2026-10-06_0510 UTC — Portfolio: Handled listed as "Handled Services LLC" (site handledsvc.com);
+              saved cards named "Handled (myhumanai)" are renamed on load.
+  UPDATED   : 2026-10-06_0505 UTC — Handled card: 53 services in 9 categories (moves & delivery, unit turnover, courier, plumbing/water heaters/HVAC/installs, event security, security guards & patrol).
   UPDATED   : 2026-10-02_0251 UTC — Handled card: 47 services (game day & concert rides).
   UPDATED   : 2026-10-02_0244 UTC — Handled card: 46 services (adds grocery pickup & delivery,
               mobile car detailing, medical deliveries).
@@ -4201,8 +4205,16 @@ function migrateCecesPiecesName(){
       fields.forEach(f=>{ if(typeof r[f]==='string' && re.test(r[f])){ re.lastIndex=0; r[f]=r[f].replace(re,'$1Ceces Pieces'); } re.lastIndex=0; });
       if(/^https?:\/\/(www\.)?cecethepiece\.com\/?$/i.test(r.site||'')) r.site='https://www.cecespieces.shop/'; }); });
 }
+// 2026-10-06: Handled is listed under its legal name, "Handled Services LLC". Hubs that saved the
+// card earlier still say "Handled (myhumanai)" with no site; update those on render.
+function migrateHandledName(){
+  const co=(DATA.portfolio||[]).find(c=>c&&c.id==='pf-handled'); if(!co) return;
+  if(/^Handled( \(myhumanai\))?$/.test(co.name||'')) co.name='Handled Services LLC';
+  if(!co.site) co.site='https://handledsvc.com';
+}
 function renderAll(){
   migrateCecesPiecesName();
+  migrateHandledName();
   renderDashboard();
   renderClients();
   renderPipeline();
@@ -7462,11 +7474,11 @@ const SEED_PORTFOLIO=[
    parts:['Lead Pipeline Tracker','Job Board & Task Management','Email Campaign & Outreach Manager','Reporting & Analytics Dashboard'],
    custom:['50/50 raffle engine (Zeffy and QR codes)','Before-and-after renovation showcase','Program enrollment and volunteer forms','Merch shop','SMS outreach'],
    owners:[]},
-  {id:'pf-handled',name:'Handled (myhumanai)',industry:'Home & Business Services',location:'Metro Detroit, MI',status:'In Build',
-   site:'',hub:'',demo_id:'',
-   blurb:'An 80% AI-driven services company with 47 services in 8 categories (cleaning, power washing and mobile car detailing, lawn and snow, pet care, hauling and week-long junk containers, repairs, interior and exterior painting and remodels, errands with grocery and medical deliveries, events, and transportation by licensed operators, including game day and concert rides), done by vetted subcontractors and run by the IEBC AI Workforce.',
+  {id:'pf-handled',name:'Handled Services LLC',industry:'Home & Business Services',location:'Metro Detroit, MI',status:'In Build',
+   site:'https://handledsvc.com',hub:'',demo_id:'',
+   blurb:'An 80% AI-driven services company with 54 services in 9 categories (cleaning, power washing and mobile car detailing, lawn, trees and snow, pet care, hauling, small moves, same-day large-item delivery, staging moves, rental unit turnover, dead animal removal and week-long junk containers, repairs, plumbing, water heaters, HVAC, lighting and camera installs, interior and exterior painting and remodels, errands with same-day courier and medical deliveries, events with catering, food trucks, DJs, rentals, venues and event security, transportation by licensed operators including game day and concert rides, and licensed security guards and patrol), done by vetted subcontractors and run by the IEBC AI Workforce.',
    parts:['Job Board & Task Management','Booking & Deposit Management','Invoice Generator & Payment Tracker','Client & Contact Management (CRM)','Lead Pipeline Tracker','Email Campaign & Outreach Manager','Revenue Dashboard & P&L','Reporting & Analytics Dashboard'],
-   custom:['Instant pricing engine for 47 services (removal priced by item weight), with an AI photo check that never underbids','Stripe checkout with deposits, balances, change orders and Quick Charge links','AI dispatch by availability, quality and distance, with photo QA','Pro Program: tiers, pay protection, show-up pay, instant pay, materials at cost','Customer + pro mobile app (Expo) with Uber-style job offers','Handled Hub command center with an AI-driven-rate KPI','IEBC Workforce API: 9 AI employees with scoped permissions and approvals'],
+   custom:['Instant pricing engine for 54 services (removal priced by item weight), with an AI photo check that never underbids','Stripe checkout with deposits, balances, change orders and Quick Charge links','AI dispatch by availability, quality and distance, with photo QA','Pro Program: tiers, pay protection, show-up pay, instant pay, materials at cost','Customer + pro mobile app (Expo) with Uber-style job offers','Handled Hub command center with an AI-driven-rate KPI','IEBC Workforce API: 9 AI employees with scoped permissions and approvals'],
    owners:[]},
 ];
 
